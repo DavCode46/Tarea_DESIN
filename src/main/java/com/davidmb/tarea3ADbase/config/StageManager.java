@@ -42,7 +42,7 @@ public class StageManager {
         primaryStage.setScene(scene);
         primaryStage.sizeToScene();
         primaryStage.centerOnScreen();
-        
+        primaryStage.setMaximized(true);
         try {
             primaryStage.show();
         } catch (Exception exception) {
