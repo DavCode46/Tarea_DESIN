@@ -5,41 +5,41 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1" 
-fx:controller="com.davidmb.tarea3ADbase.controller.LoginController">
-   <children>
-	<Rectangle fill="DODGERBLUE" height="250.0"
-		stroke="#ffffff8b" strokeType="INSIDE" width="400.0" />
-	<Label fx:id="lblLogin" layoutX="97.0" layoutY="46.0"
-		text="Login" textFill="WHITE">
-		<font>
-			<Font size="20.0" />
-		</font>
-	</Label>
-	<TextField fx:id="username" layoutX="98.0" layoutY="92.0"
-		prefHeight="36.0" prefWidth="204.0" promptText="Username" />
-	<PasswordField fx:id="password" layoutX="98.0"
-		layoutY="141.0" onAction="#login" prefHeight="36.0" prefWidth="204.0"
-		promptText="Password" />
-	<Button fx:id="btnLogin" layoutX="215.0" layoutY="193.0"
-		mnemonicParsing="false" onAction="#login" prefHeight="30.0"
-		prefWidth="86.0" styleClass="btnGreen" text="Sign In" textFill="WHITE">
-		<font>
-			<Font size="15.0" />
-		</font>
-		<effect>
-			<DropShadow blurType="ONE_PASS_BOX" />
-		</effect>
-	</Button>
-	
-	 <Button layoutX="138.0" layoutY="240.0" mnemonicParsing="false" onAction="#openForgotPasswordView" text="Recuperar Contraseña" />
-</children>
-   <opaqueInsets>
-      <Insets />
-   </opaqueInsets>
-</AnchorPane>
+<StackPane xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1"
+    fx:controller="com.davidmb.tarea3ADbase.controller.LoginController"
+    style="-fx-background-color: #f8f9fa;">
+    <children>
+        <!-- Contenedor principal centrado -->
+        <VBox alignment="CENTER" spacing="20" maxWidth="600" style="-fx-padding: 20; -fx-background-color: #ffffff; -fx-border-color: #d3d3d3; -fx-border-radius: 10px; -fx-background-radius: 10px;">
+            <!-- Título -->
+            <Label fx:id="lblLogin" text="Bienvenido" textFill="#333333"
+                style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+
+            <!-- Campos de entrada -->
+            <VBox spacing="10" alignment="CENTER" prefWidth="350">
+                <TextField fx:id="username" promptText="Usuario"
+                    style="-fx-background-color: #ffffff; -fx-border-color: #dcdcdc; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-padding: 8px; -fx-pref-width: 300px;" />
+                <PasswordField fx:id="password" promptText="Contraseña"
+                    style="-fx-background-color: #ffffff; -fx-border-color: #dcdcdc; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-padding: 8px; -fx-pref-width: 300px;" />
+            </VBox>
+
+            <!-- Botón de inicio de sesión -->
+            <Button fx:id="btnLogin" text="Iniciar Sesión" onAction="#login"
+                style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 5px; -fx-padding: 10px; -fx-pref-width: 300px;" />
+
+            <!-- Botones secundarios -->
+            <HBox spacing="10" alignment="CENTER">
+                <Button text="¿Olvidaste tu contraseña?" onAction="#openForgotPasswordView"
+                    style="-fx-background-color: transparent; -fx-text-fill: #2196F3; -fx-font-size: 14px; -fx-underline: true;" />
+                <Button text="Regístrate como peregrino" onAction="#openRegisterPilgrimView"
+                    style="-fx-background-color: #FF5722; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5px; -fx-padding: 10px;" />
+            </HBox>
+        </VBox>
+    </children>
+</StackPane>

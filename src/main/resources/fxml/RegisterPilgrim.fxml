@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<StackPane xmlns="http://javafx.com/javafx/8.0.72"
+    xmlns:fx="http://javafx.com/fxml/1"
+    fx:controller="com.davidmb.tarea3ADbase.controller.RegisterPilgrimController"
+    style="-fx-background-color: #f4f4f9;">
+    <children>
+        <!-- Contenedor principal centrado -->
+        <VBox alignment="CENTER" spacing="20" maxWidth="600" style="-fx-padding: 20; -fx-background-color: #ffffff; -fx-border-color: #d3d3d3; -fx-border-radius: 10px; -fx-background-radius: 10px;">
+            <!-- Título -->
+            <Label text="Registro de Peregrino"
+                style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333333;" />
+
+            <!-- Campos de entrada -->
+            <TextField fx:id="nameField" promptText="Nombre completo"
+                style="-fx-background-color: #ffffff; -fx-border-color: #dcdcdc; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-padding: 8px; -fx-pref-width: 300px;" />
+
+            <TextField fx:id="usernameField" promptText="Nombre de usuario"
+                style="-fx-background-color: #ffffff; -fx-border-color: #dcdcdc; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-padding: 8px; -fx-pref-width: 300px;" />
+
+            <PasswordField fx:id="passwordField" promptText="Contraseña"
+                style="-fx-background-color: #ffffff; -fx-border-color: #dcdcdc; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-padding: 8px; -fx-pref-width: 300px;" />
+
+            <PasswordField fx:id="confirmPasswordField" promptText="Repetir contraseña"
+                style="-fx-background-color: #ffffff; -fx-border-color: #dcdcdc; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-padding: 8px; -fx-pref-width: 300px;" />
+
+            <ComboBox fx:id="nationalityComboBox" promptText="Seleccionar nacionalidad"
+                style="-fx-background-color: #ffffff; -fx-border-color: #dcdcdc; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-padding: 5px; -fx-pref-width: 300px;" />
+
+            <!-- Mensaje de error -->
+            <Label fx:id="errorLabel" text=""
+                style="-fx-text-fill: red; -fx-font-size: 14px; -fx-font-style: italic;" visible="false" wrapText="true" />
+
+            <!-- Botones -->
+            <VBox spacing="10" alignment="CENTER">
+                <Button text="Registrar" onAction="#registerPilgrim"
+                    style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 5px; -fx-padding: 10px; -fx-pref-width: 300px;" />
+
+                <Button text="Volver" onAction="#backToLogin"
+                    style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 5px; -fx-padding: 10px; -fx-pref-width: 300px;" />
+            </VBox>
+        </VBox>
+    </children>
+</StackPane>

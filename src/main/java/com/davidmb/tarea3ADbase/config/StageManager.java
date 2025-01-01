@@ -28,6 +28,7 @@ public class StageManager {
     }
 
     public void switchScene(final FxmlView view) {
+    	System.out.println("Cargando vista desde: " + view.getFxmlFile());
         Parent viewRootNodeHierarchy = loadViewNodeHierarchy(view.getFxmlFile());
         show(viewRootNodeHierarchy, view.getTitle());
     }
