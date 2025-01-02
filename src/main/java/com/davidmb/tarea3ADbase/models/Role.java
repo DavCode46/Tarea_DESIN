@@ -1,4 +1,4 @@
-package com.davidmb.tarea3ADbase.modelo;
+package com.davidmb.tarea3ADbase.models;
 
 /**
  * 

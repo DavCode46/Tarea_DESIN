@@ -1,4 +1,4 @@
-package com.davidmb.tarea3ADbase.modelo;
+package com.davidmb.tarea3ADbase.models;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;

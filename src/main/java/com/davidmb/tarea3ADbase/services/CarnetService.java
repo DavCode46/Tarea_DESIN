@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.davidmb.tarea3ADbase.modelo.Carnet;
-import com.davidmb.tarea3ADbase.repositorios.CarnetRepository;
+import com.davidmb.tarea3ADbase.models.Carnet;
+import com.davidmb.tarea3ADbase.repositories.CarnetRepository;
 
 @Service
 public class CarnetService {

@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
 import com.davidmb.tarea3ADbase.config.StageManager;
-import com.davidmb.tarea3ADbase.modelo.User;
+import com.davidmb.tarea3ADbase.models.User;
 import com.davidmb.tarea3ADbase.services.UserService;
 import com.davidmb.tarea3ADbase.view.FxmlView;
 

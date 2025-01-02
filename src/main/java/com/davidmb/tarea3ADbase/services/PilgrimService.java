@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.davidmb.tarea3ADbase.modelo.Pilgrim;
-import com.davidmb.tarea3ADbase.repositorios.PilgrimRepository;
+import com.davidmb.tarea3ADbase.models.Pilgrim;
+import com.davidmb.tarea3ADbase.repositories.PilgrimRepository;
 
 @Service
 public class PilgrimService {

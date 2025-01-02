@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.davidmb.tarea3ADbase.modelo.User;
-import com.davidmb.tarea3ADbase.repositorios.UserRepository;
+import com.davidmb.tarea3ADbase.models.User;
+import com.davidmb.tarea3ADbase.repositories.UserRepository;
 
 @Service
 public class UserService {

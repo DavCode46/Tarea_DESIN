@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.davidmb.tarea3ADbase.modelo.Stop;
-import com.davidmb.tarea3ADbase.repositorios.StopRepository;
+import com.davidmb.tarea3ADbase.models.Stop;
+import com.davidmb.tarea3ADbase.repositories.StopRepository;
 
 @Service
 public class StopService {
