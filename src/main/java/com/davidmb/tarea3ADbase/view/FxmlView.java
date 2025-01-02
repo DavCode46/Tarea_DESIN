@@ -3,7 +3,7 @@ package com.davidmb.tarea3ADbase.view;
 import java.util.ResourceBundle;
 
 public enum FxmlView {
-	USER {
+	ADMIN {
 		@Override
 		public String getTitle() {
 			return getStringFromResourceBundle("admin.title");
@@ -12,6 +12,17 @@ public enum FxmlView {
 		@Override
 		public String getFxmlFile() {
 			return "/fxml/Admin.fxml";
+		}
+	},
+	PILGRIM {
+		@Override
+		public String getTitle() {
+			return getStringFromResourceBundle("pilgrim.title");
+		}
+
+		@Override
+		public String getFxmlFile() {
+			return "/fxml/Pilgrim.fxml";
 		}
 	},
 	FORGOT_PASSWORD {

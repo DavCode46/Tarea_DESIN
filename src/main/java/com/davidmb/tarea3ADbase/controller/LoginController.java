@@ -51,7 +51,14 @@ public class LoginController implements Initializable {
 	private void login(ActionEvent event) throws IOException {
 		if (userService.authenticate(getUsername(), getPassword())) {
 
-			stageManager.switchScene(FxmlView.USER);
+			if (userService.findByEmail(getUsername()).getRole().equalsIgnoreCase("ADMIN")) {
+				stageManager.switchScene(FxmlView.ADMIN);
+			} else if (userService.findByEmail(getUsername()).getRole().equalsIgnoreCase("PEREGRINO")) {
+				stageManager.switchScene(FxmlView.PILGRIM);
+			} else if (userService.findByEmail(getUsername()).getRole().equalsIgnoreCase("PARADA")) {
+				//stageManager.switchScene(FxmlView.STOP);
+			}
+               
 
 		} else {
 			lblLogin.setText("Login Failed.");

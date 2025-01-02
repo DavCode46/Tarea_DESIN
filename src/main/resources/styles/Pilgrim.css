@@ -1,0 +1,55 @@
+/* Fondo general */
+.root {
+    -fx-background-color: #FFFFFF;
+}
+
+/* Nombre del usuario */
+.user-name {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-fill: #333333;
+}
+
+/* Rol del usuario */
+.user-role {
+    -fx-font-size: 14px;
+    -fx-fill: #4682B4; /* Steel Blue */
+}
+
+/* Descripción del usuario */
+.user-description {
+    -fx-font-size: 12px;
+    -fx-fill: #555555;
+    -fx-text-alignment: center;
+}
+
+/* Botones */
+
+.button {
+	-fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 20px;
+}
+
+.button:hover {
+	-fx-cursor: hand;
+}
+.primary-button {
+    -fx-background-color: #708090; /* Slate gray */
+    -fx-text-fill: #FFFFFF; 
+  
+}
+
+.primary-button:hover {
+    -fx-background-color: #5f6e7a;
+}
+
+.secondary-button {
+    -fx-background-color: #4682B4; /* Steel Blue */
+    -fx-text-fill: #FFFFFF; 
+}
+
+.secondary-button:hover {
+    -fx-background-color: #3B6A93;
+}
