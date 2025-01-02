@@ -6,12 +6,12 @@ public enum FxmlView {
 	USER {
 		@Override
 		public String getTitle() {
-			return getStringFromResourceBundle("user.title");
+			return getStringFromResourceBundle("admin.title");
 		}
 
 		@Override
 		public String getFxmlFile() {
-			return "/fxml/User.fxml";
+			return "/fxml/Admin.fxml";
 		}
 	},
 	FORGOT_PASSWORD {

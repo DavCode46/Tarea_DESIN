@@ -52,76 +52,55 @@ import javafx.util.Callback;
  */
 
 @Controller
-public class UserController implements Initializable {
+public class AdminController implements Initializable {
 
 	@FXML
 	private Button btnLogout;
 
 	@FXML
-	private Label userId;
+	private Label stopId;
 
 	@FXML
-	private TextField firstName;
+	private TextField stopName;
 
 	@FXML
-	private TextField lastName;
+	private ComboBox<String> cbregion;
 
 	@FXML
-	private DatePicker dob;
+	private TextField managerEmail;
 
 	@FXML
-	private RadioButton rbMale;
-
-	@FXML
-	private ToggleGroup gender;
-
-	@FXML
-	private RadioButton rbFemale;
-
-	@FXML
-	private ComboBox<String> cbRole;
-
-	@FXML
-	private TextField email;
-
-	@FXML
-	private PasswordField password;
+	private PasswordField managerPassword;
 
 	@FXML
 	private Button reset;
 
 	@FXML
-	private Button saveUser;
+	private Button saveStop;
 
 	@FXML
-	private TableView<User> userTable;
+	private TableView<User> stopTable;
 
 	@FXML
-	private TableColumn<User, Long> colUserId;
+	private TableColumn<User, Long> colStopId;
 
 	@FXML
-	private TableColumn<User, String> colFirstName;
+	private TableColumn<User, String> colStopName;
 
 	@FXML
-	private TableColumn<User, String> colLastName;
+	private TableColumn<User, String> colStopRegion;
 
 	@FXML
-	private TableColumn<User, LocalDate> colDOB;
-
+	private TableColumn<User, String> colManagerEmail;
+	
 	@FXML
-	private TableColumn<User, String> colGender;
-
-	@FXML
-	private TableColumn<User, String> colRole;
-
-	@FXML
-	private TableColumn<User, String> colEmail;
+	private TableColumn<User, String> colManagerId;
 
 	@FXML
 	private TableColumn<User, Boolean> colEdit;
 
 	@FXML
-	private MenuItem deleteUsers;
+	private MenuItem deleteStops;
 
 	@Lazy
 	@Autowired
@@ -152,50 +131,48 @@ public class UserController implements Initializable {
 	}
 
 	@FXML
-	private void saveUser(ActionEvent event) {
+	private void saveStop(ActionEvent event) {
 
-		if (validate("First Name", getFirstName(), "[a-zA-Z]+") && validate("Last Name", getLastName(), "[a-zA-Z]+")
-				&& emptyValidation("DOB", dob.getEditor().getText().isEmpty())
-				&& emptyValidation("Role", getRole() == null)) {
+//		if (validate("First Name", getFirstName(), "[a-zA-Z]+") && validate("Last Name", getLastName(), "[a-zA-Z]+")) {
+//
+//			if (userId.getText() == null || userId.getText() == "") {
+//				if (validate("Email", getEmail(), "[a-zA-Z0-9][a-zA-Z0-9._]*@[a-zA-Z0-9]+([.][a-zA-Z]+)+")
+//						&& emptyValidation("Password", getPassword().isEmpty())) {
+//
+//					User user = new User();
+//					user.setFirstName(getFirstName());
+//					user.setLastName(getLastName());
+//					user.setDob(getDob());
+//					user.setGender(getGender());
+//					user.setRole(getRole());
+//					user.setEmail(getEmail());
+//					user.setPassword(getPassword());
+//
+//					User newUser = userService.save(user);
+//
+//					saveAlert(newUser);
+//				}
+//
+//			} else {
+//				User user = userService.find(Long.parseLong(userId.getText()));
+//				user.setFirstName(getStopName());
+//				//user.setLastName(getStopRegion());
+//				user.setDob(getDob());
+//				user.setGender(getGender());
+//				user.setRole(getRole());
+//				User updatedUser = userService.update(user);
+//				updateAlert(updatedUser);
+//			}
 
-			if (userId.getText() == null || userId.getText() == "") {
-				if (validate("Email", getEmail(), "[a-zA-Z0-9][a-zA-Z0-9._]*@[a-zA-Z0-9]+([.][a-zA-Z]+)+")
-						&& emptyValidation("Password", getPassword().isEmpty())) {
-
-					User user = new User();
-					user.setFirstName(getFirstName());
-					user.setLastName(getLastName());
-					user.setDob(getDob());
-					user.setGender(getGender());
-					user.setRole(getRole());
-					user.setEmail(getEmail());
-					user.setPassword(getPassword());
-
-					User newUser = userService.save(user);
-
-					saveAlert(newUser);
-				}
-
-			} else {
-				User user = userService.find(Long.parseLong(userId.getText()));
-				user.setFirstName(getFirstName());
-				user.setLastName(getLastName());
-				user.setDob(getDob());
-				user.setGender(getGender());
-				user.setRole(getRole());
-				User updatedUser = userService.update(user);
-				updateAlert(updatedUser);
-			}
-
-			clearFields();
-			loadUserDetails();
-		}
+//			clearFields();
+//			loadUserDetails();
+//		}
 
 	}
 
 	@FXML
-	private void deleteUsers(ActionEvent event) {
-		List<User> users = userTable.getSelectionModel().getSelectedItems();
+	private void deleteStops(ActionEvent event) {
+		List<User> users = stopTable.getSelectionModel().getSelectedItems();
 
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Confirmation Dialog");
@@ -210,15 +187,11 @@ public class UserController implements Initializable {
 	}
 
 	private void clearFields() {
-		userId.setText(null);
-		firstName.clear();
-		lastName.clear();
-		dob.getEditor().clear();
-		rbMale.setSelected(true);
-		rbFemale.setSelected(false);
-		cbRole.getSelectionModel().clearSelection();
-		email.clear();
-		password.clear();
+		stopId.setText(null);
+		stopName.clear();
+		cbregion.getSelectionModel().clearSelection();
+		managerEmail.clear();
+		managerPassword.clear();
 	}
 
 	private void saveAlert(User user) {
@@ -226,8 +199,8 @@ public class UserController implements Initializable {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("User saved successfully.");
 		alert.setHeaderText(null);
-		alert.setContentText("The user " + user.getFirstName() + " " + user.getLastName() + " has been created and \n"
-				+ getGenderTitle(user.getGender()) + " id is " + user.getId() + ".");
+//		alert.setContentText("The user " + user.getFirstName() + " " + user.getLastName() + " has been created and \n"
+//				+ getManagerEmail(user.getGender()) + " id is " + user.getId() + ".");
 		alert.showAndWait();
 	}
 
@@ -240,44 +213,31 @@ public class UserController implements Initializable {
 		alert.showAndWait();
 	}
 
-	private String getGenderTitle(String gender) {
-		return (gender.equals("Male")) ? "his" : "her";
+	
+
+	public String getStopName() {
+		return stopName.getText();
 	}
 
-	public String getFirstName() {
-		return firstName.getText();
+
+	public String getRegion() {
+		return cbregion.getSelectionModel().getSelectedItem();
 	}
 
-	public String getLastName() {
-		return lastName.getText();
+	public String getManagerEmail() {
+		return managerEmail.getText();
 	}
 
-	public LocalDate getDob() {
-		return dob.getValue();
-	}
-
-	public String getGender() {
-		return rbMale.isSelected() ? "Male" : "Female";
-	}
-
-	public String getRole() {
-		return cbRole.getSelectionModel().getSelectedItem();
-	}
-
-	public String getEmail() {
-		return email.getText();
-	}
-
-	public String getPassword() {
-		return password.getText();
+	public String getManagerPassword() {
+		return managerPassword.getText();
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
-		cbRole.setItems(roles);
+		cbregion.setItems(roles);
 
-		userTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		stopTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
 		setColumnProperties();
 
@@ -303,13 +263,11 @@ public class UserController implements Initializable {
 		 * return null; } } }));
 		 */
 
-		colUserId.setCellValueFactory(new PropertyValueFactory<>("id"));
-		colFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-		colLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-		colDOB.setCellValueFactory(new PropertyValueFactory<>("dob"));
-		colGender.setCellValueFactory(new PropertyValueFactory<>("gender"));
-		colRole.setCellValueFactory(new PropertyValueFactory<>("role"));
-		colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+		colStopId.setCellValueFactory(new PropertyValueFactory<>("id"));
+		colStopName.setCellValueFactory(new PropertyValueFactory<>("Nombre Parada"));
+		colStopRegion.setCellValueFactory(new PropertyValueFactory<>("Región Parada"));
+		colManagerEmail.setCellValueFactory(new PropertyValueFactory<>("Manager Email"));
+		colManagerId.setCellValueFactory(new PropertyValueFactory<>("Manager Id"));
 		colEdit.setCellFactory(cellFactory);
 	}
 
@@ -347,15 +305,11 @@ public class UserController implements Initializable {
 				}
 
 				private void updateUser(User user) {
-					userId.setText(Long.toString(user.getId()));
-					firstName.setText(user.getFirstName());
-					lastName.setText(user.getLastName());
-					dob.setValue(user.getDob());
-					if (user.getGender().equals("Male"))
-						rbMale.setSelected(true);
-					else
-						rbFemale.setSelected(true);
-					cbRole.getSelectionModel().select(user.getRole());
+					stopId.setText(Long.toString(user.getId()));
+					stopName.setText(user.getFirstName());		
+					cbregion.getSelectionModel().select(user.getRole());
+					managerEmail.setText(user.getEmail());
+					managerPassword.setText(user.getPassword());
 				}
 			};
 			return cell;
@@ -369,7 +323,7 @@ public class UserController implements Initializable {
 		userList.clear();
 		userList.addAll(userService.findAll());
 
-		userTable.setItems(userList);
+		stopTable.setItems(userList);
 	}
 
 	/*
