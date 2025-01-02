@@ -14,53 +14,34 @@
 <?import javafx.scene.text.Font?>
 
 <StackPane xmlns="http://javafx.com/javafx/8.0.72"
-	xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="com.davidmb.tarea3ADbase.controller.RegisterPilgrimController"
-	style="-fx-background-color: #f4f4f9;">
-	<children>
-		<!-- Contenedor principal centrado -->
-		<VBox alignment="CENTER" spacing="20" maxWidth="600"
-			style="-fx-padding: 20; -fx-background-color: #ffffff; -fx-border-color: #d3d3d3; -fx-border-radius: 10px; -fx-background-radius: 10px;">
-			<!-- Título -->
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.davidmb.tarea3ADbase.controller.RegisterPilgrimController"
+           stylesheets="@../styles/Styles.css">
+    <children>
+        <!-- Contenedor principal centrado -->
+        <VBox alignment="CENTER" spacing="20" maxWidth="600" styleClass="form-container">
+            <!-- Título -->
+            <Label text="Registro de Peregrino" styleClass="form-title" />
 
-			<Label text="Registro de Peregrino"
-				style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333333;" />
+            <!-- Campos de entrada -->
+            <TextField fx:id="nameField" promptText="Nombre completo" styleClass="text-field" />
+            <TextField fx:id="usernameField" promptText="Nombre de usuario" styleClass="text-field" />
+            <PasswordField fx:id="passwordField" promptText="Contraseña" styleClass="text-field" />
+            <PasswordField fx:id="confirmPasswordField" promptText="Repetir contraseña" styleClass="text-field" />
 
-			<!-- Campos de entrada -->
-			<TextField fx:id="nameField" promptText="Nombre completo"
-				style="-fx-background-color: #ffffff; -fx-border-color: #dcdcdc; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-padding: 8px; -fx-pref-width: 300px;" />
+            <!-- ComboBox -->
+            <HBox alignment="CENTER_LEFT" styleClass="combo-container">
+                <ComboBox fx:id="nationalityComboBox" promptText="Seleccionar nacionalidad" styleClass="combo-box" />
+            </HBox>
 
-			<TextField fx:id="usernameField"
-				promptText="Nombre de usuario"
-				style="-fx-background-color: #ffffff; -fx-border-color: #dcdcdc; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-padding: 8px; -fx-pref-width: 300px;" />
+            <!-- Mensaje de error -->
+            <Label fx:id="errorLabel" text="" styleClass="error-label" visible="false" wrapText="true" />
 
-			<PasswordField fx:id="passwordField"
-				promptText="Contraseña"
-				style="-fx-background-color: #ffffff; -fx-border-color: #dcdcdc; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-padding: 8px; -fx-pref-width: 300px;" />
-
-			<PasswordField fx:id="confirmPasswordField"
-				promptText="Repetir contraseña"
-				style="-fx-background-color: #ffffff; -fx-border-color: #dcdcdc; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-padding: 8px; -fx-pref-width: 300px;" />
-
-			<HBox alignment="CENTER_LEFT" style="-fx-pref-width: 300px;">
-				<ComboBox fx:id="nationalityComboBox"
-					promptText="Seleccionar nacionalidad"
-					style="-fx-background-color: #ffffff; -fx-border-color: #dcdcdc; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-padding: 5px; -fx-pref-width: 600px;" />
-			</HBox>
-
-			<!-- Mensaje de error -->
-			<Label fx:id="errorLabel" text=""
-				style="-fx-text-fill: red; -fx-font-size: 14px; -fx-font-style: italic;"
-				visible="false" wrapText="true" />
-
-			<!-- Botones -->
-			<HBox spacing="10" alignment="CENTER">
-				<Button text="Registrar" onAction="#registerPilgrim"
-					style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5px;-fx-pref-width: 300px; -fx-padding: 10px;" />
-
-				<Button text="Volver" onAction="#backToLogin"
-					style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5px;-fx-pref-width: 300px; -fx-padding: 10px;" />
-			</HBox>
-		</VBox>
-	</children>
+            <!-- Botones -->
+            <HBox spacing="10" alignment="CENTER">
+                <Button text="Registrarse" onAction="#registerPilgrim" styleClass="primary-button" />
+                <Button text="Volver" onAction="#backToLogin" styleClass="secondary-button" />
+            </HBox>
+        </VBox>
+    </children>
 </StackPane>

@@ -1,10 +1,137 @@
-/* CSS for app */
-
-.btnGreen{
-	-fx-background-color:  #3cbc53;
+/* ESTILOS PARA LOGIN */
+.stack-pane {
+    -fx-background-color: #f8f9fa;
 }
 
-.background{
-	-fx-background-color: DODGERBLUE;
+/* Estilo del contenedor principal */
+.vbox {
+    -fx-padding: 20.0;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d3d3d3;
+    -fx-border-radius: 10.0px;
+    -fx-background-radius: 10.0px;
+}
+
+/* Estilo del título */
+.label#lblLogin {
+    -fx-font-size: 24.0px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+/* Estilo de los campos de texto */
+.text-field, .password-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dcdcdc;
+    -fx-border-radius: 5.0px;
+    -fx-background-radius: 5.0px;
+    -fx-padding: 8.0px;
+    -fx-pref-width: 300.0px;
+}
+
+/* Estilo general de los botones */
+.button {
+    -fx-font-size: 14.0px;
+    -fx-background-radius: 5.0px;
+    -fx-pref-width: 300.0px;
+    -fx-padding: 10.0px;
+}
+
+.button:hover {
+    -fx-cursor: hand;
+}
+
+.button:focused {
+    -fx-border-width: 1.0px;
+}
+
+.primary-button {
+	-fx-background-color: #708090 ; /* Slate gray */
+    -fx-text-fill: #FFFFFF; /* Blanco */
+}
+
+.primary-button:hover {
+	 -fx-background-color: #5f6e7a;
+}
+
+.secondary-button {
+	 -fx-background-color: #4682B4; /* Steel Blue */
+    -fx-text-fill: #FFFFFF; /* Blanco */
+}
+
+.secondary-button:hover {
+	 -fx-background-color: #3B6A93; 
+}
+
+
+
+/* Estilo específico para el botón "¿Olvidaste tu contraseña?" */
+.button.link {
+    -fx-background-color: transparent; 
+    -fx-text-fill: #2196F3; 
+    -fx-font-size: 14.0px;
+    -fx-underline: true; 
+    -fx-padding: 0.0; 
+    -fx-pref-width: auto; 
+}
+
+.button.link:hover {
+    -fx-text-fill: #0b7dda; 
+    -fx-underline: true; 
+}
+
+.button.link:focused {
+    -fx-border-color: transparent; 
+}
+
+/* ESTILOS PARA FORGOT PASSWORD Y REGISTER PILGRIM */
+
+/* Contenedor principal del formulario */
+.form-container {
+    -fx-padding: 20.0;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d3d3d3;
+    -fx-border-radius: 10.0px;
+    -fx-background-radius: 10.0px;
+}
+
+/* Título del formulario */
+.form-title {
+    -fx-font-size: 22.0px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4CAF50;
+}
+
+/* Campos de texto */
+.text-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dcdcdc;
+    -fx-border-radius: 5.0px;
+    -fx-background-radius: 5.0px;
+    -fx-padding: 8.0px;
+    -fx-pref-width: 300.0px;
+}
+
+/* Etiquetas de error */
+.error-label {
+    -fx-font-size: 12.0px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FF0000;
+}
+
+/* ESTILOS ESPECÍFICOS DE REGISTER PILGRIM */
+/* ComboBox */
+.combo-box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dcdcdc;
+    -fx-border-radius: 5.0px;
+    -fx-background-radius: 5.0px;
+    -fx-padding: 5.0px;
+    -fx-pref-width: 600.0px;
+}
+
+/* Contenedor de ComboBox */
+.combo-container {
+    -fx-pref-width: 300.0px;
 }
 

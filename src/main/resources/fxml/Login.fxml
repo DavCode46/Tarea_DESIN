@@ -12,44 +12,29 @@
 <?import javafx.scene.text.Font?>
 
 <StackPane xmlns="http://javafx.com/javafx/8.0.72"
-	xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="com.davidmb.tarea3ADbase.controller.LoginController"
-	style="-fx-background-color: #f8f9fa;">
-	<children>
-		<!-- Contenedor principal centrado -->
-		<VBox alignment="CENTER" spacing="20" maxWidth="600"
-			style="-fx-padding: 20; -fx-background-color: #ffffff; -fx-border-color: #d3d3d3; -fx-border-radius: 10px; -fx-background-radius: 10px;">
-			<!-- Título -->
-			<Label fx:id="lblLogin" text="Bienvenido" textFill="#333333"
-				style="-fx-font-size: 24px; -fx-font-weight: bold;" />
-
-			<!-- Campos de entrada -->
-			<VBox spacing="10" alignment="CENTER" prefWidth="350">
-				<TextField fx:id="username" promptText="Usuario"
-					style="-fx-background-color: #ffffff; -fx-border-color: #dcdcdc; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-padding: 8px; -fx-pref-width: 300px;" />
-				<PasswordField fx:id="password"
-					promptText="Contraseña"
-					style="-fx-background-color: #ffffff; -fx-border-color: #dcdcdc; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-padding: 8px; -fx-pref-width: 300px;" />
-			</VBox>
-			<VBox spacing="10">
-				<HBox spacing="10" alignment="CENTER">
-					<!-- Botón de inicio de sesión -->
-
-					<Button fx:id="btnLogin" text="Iniciar Sesión"
-						onAction="#login"
-						style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5px; -fx-pref-width: 300px; -fx-padding: 10px;" />
-					<Button text="Regístrate como peregrino"
-						onAction="#openRegisterPilgrimView"
-						style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5px;-fx-pref-width: 300px; -fx-padding: 10px;" />
-
-
-				</HBox>
-				<Button text="¿Olvidaste tu contraseña?"
-					onAction="#openForgotPasswordView"
-					style="-fx-background-color: transparent; -fx-text-fill: #2196F3; -fx-font-size: 14px; -fx-underline: true;" />
-
-			</VBox>
-
-		</VBox>
-	</children>
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.davidmb.tarea3ADbase.controller.LoginController"
+           stylesheets="@../styles/Styles.css">
+    <children>
+        <!-- Contenedor principal centrado -->
+        <VBox alignment="CENTER" spacing="20" maxWidth="600">
+            <!-- Título -->
+            <Label fx:id="lblLogin" text="Bienvenido" />
+            
+            <!-- Campos de entrada -->
+            <VBox spacing="10" alignment="CENTER" prefWidth="350">
+                <TextField fx:id="username" promptText="Usuario" />
+                <PasswordField fx:id="password" promptText="Contraseña" />
+            </VBox>
+            
+            <!-- Botones -->
+            <VBox spacing="10">
+                <HBox spacing="10" alignment="CENTER">
+                    <Button fx:id="btnLogin" text="Iniciar Sesión" onAction="#login" styleClass="primary-button" />
+                    <Button text="Regístrate como peregrino" onAction="#openRegisterPilgrimView" styleClass="secondary-button" />
+                </HBox>
+                <Button text="¿Olvidaste tu contraseña?" onAction="#openForgotPasswordView" styleClass="link" />
+            </VBox>
+        </VBox>
+    </children>
 </StackPane>
