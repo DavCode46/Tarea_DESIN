@@ -209,7 +209,7 @@ public class AdminController implements Initializable {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("User updated successfully.");
 		alert.setHeaderText(null);
-		alert.setContentText("The user " + user.getFirstName() + " " + user.getLastName() + " has been updated.");
+	//	alert.setContentText("The user " + user.getFirstName() + " " + user.getLastName() + " has been updated.");
 		alert.showAndWait();
 	}
 
@@ -306,7 +306,7 @@ public class AdminController implements Initializable {
 
 				private void updateUser(User user) {
 					stopId.setText(Long.toString(user.getId()));
-					stopName.setText(user.getFirstName());		
+					//stopName.setText(user.getFirstName());		
 					cbregion.getSelectionModel().select(user.getRole());
 					managerEmail.setText(user.getEmail());
 					managerPassword.setText(user.getPassword());

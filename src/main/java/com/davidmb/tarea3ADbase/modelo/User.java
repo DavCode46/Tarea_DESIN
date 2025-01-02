@@ -1,6 +1,6 @@
 package com.davidmb.tarea3ADbase.modelo;
 
-import java.time.LocalDate;
+import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,12 +10,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 /**
- * @author Ram Alapure
- * @since 05-04-2017
+ * 
  */
 
 @Entity
-@Table(name = "User")
+@Table(name = "Usuarios")
 public class User {
 
 	@Id
@@ -23,13 +22,8 @@ public class User {
 	@Column(name = "id", updatable = false, nullable = false)
 	private long id;
 
-	private String firstName;
-
-	private String lastName;
-
-	private LocalDate dob;
-
-	private String gender;
+	@Column(name = "nombre", nullable = false, length = 100)
+	private String username;
 
 	private String role;
 
@@ -46,36 +40,12 @@ public class User {
 		this.id = id;
 	}
 
-	public String getFirstName() {
-		return firstName;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public LocalDate getDob() {
-		return dob;
-	}
-
-	public void setDob(LocalDate dob) {
-		this.dob = dob;
-	}
-
-	public String getGender() {
-		return gender;
-	}
-
-	public void setGender(String gender) {
-		this.gender = gender;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getRole() {
@@ -103,9 +73,27 @@ public class User {
 	}
 
 	@Override
+	public int hashCode() {
+		return Objects.hash(email, id, password, role, username);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		return Objects.equals(email, other.email) && id == other.id && Objects.equals(password, other.password)
+				&& Objects.equals(role, other.role) && Objects.equals(username, other.username);
+	}
+
+	@Override
 	public String toString() {
-		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", email="
-				+ email + "]";
+		return "User [id=" + id + ", username=" + username + ", role=" + role + ", email=" + email + ", password="
+				+ password + "]";
 	}
 
 }
