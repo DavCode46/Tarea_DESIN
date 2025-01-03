@@ -32,7 +32,10 @@
             <!-- ComboBox -->
             <HBox alignment="CENTER_LEFT" styleClass="combo-container">
                 <ComboBox fx:id="nationalityComboBox" promptText="Seleccionar nacionalidad" styleClass="combo-box" />
+                 <ComboBox fx:id="stopComboBox" promptText="Seleccionar su parada actual" styleClass="combo-box" />
             </HBox>
+            
+            
 
             <!-- Mensaje de error -->
             <Label fx:id="errorLabel" text="" styleClass="error-label" visible="false" wrapText="true" />

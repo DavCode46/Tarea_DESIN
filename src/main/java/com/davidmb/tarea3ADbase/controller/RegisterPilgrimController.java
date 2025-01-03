@@ -14,6 +14,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import com.davidmb.tarea3ADbase.config.StageManager;
+import com.davidmb.tarea3ADbase.models.Carnet;
+import com.davidmb.tarea3ADbase.models.Pilgrim;
+import com.davidmb.tarea3ADbase.models.User;
+import com.davidmb.tarea3ADbase.services.StopService;
 import com.davidmb.tarea3ADbase.services.UserService;
 import com.davidmb.tarea3ADbase.view.FxmlView;
 
@@ -42,6 +46,9 @@ public class RegisterPilgrimController implements Initializable {
 
 	@FXML
 	private ComboBox<String> nationalityComboBox;
+	
+	@FXML
+	private ComboBox<String> stopComboBox;
 
 	@FXML
 	private Label errorLabel;
@@ -52,10 +59,20 @@ public class RegisterPilgrimController implements Initializable {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private StopService stopService;
 
 	@FXML
 	private void registerPilgrim() {
-		// TODO Auto-generated method stub
+		String name = nameField.getText();
+		String username = usernameField.getText();
+		String password = passwordField.getText();
+		String confirmPassword = confirmPasswordField.getText();
+		String nationality = nationalityComboBox.getValue();
+		Carnet carnet = new Carnet();
+		User user = new User();
+		Pilgrim pilgrim = new Pilgrim();
 	}
 
 	@FXML
@@ -66,6 +83,7 @@ public class RegisterPilgrimController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		loadStops();
 		loadNationalities();
 	}
 
@@ -92,5 +110,10 @@ public class RegisterPilgrimController implements Initializable {
 			errorLabel.setStyle("-fx-text-fill: red;");
 			e.printStackTrace();
 		}
+	}
+	
+	private void loadStops() {
+		stopComboBox.getItems().clear();
+		stopService.findAll().forEach(stop -> stopComboBox.getItems().add(stop.getName()));
 	}
 }

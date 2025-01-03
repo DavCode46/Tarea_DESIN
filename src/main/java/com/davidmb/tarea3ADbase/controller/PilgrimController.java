@@ -86,6 +86,8 @@ public class PilgrimController implements Initializable {
        
     }
     
+    
+    
     @FXML
 	private void logout(ActionEvent event) throws IOException {
 		stageManager.switchScene(FxmlView.LOGIN);
