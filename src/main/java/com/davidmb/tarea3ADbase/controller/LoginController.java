@@ -56,7 +56,7 @@ public class LoginController implements Initializable {
 			} else if (userService.findByEmail(getUsername()).getRole().equalsIgnoreCase("PEREGRINO")) {
 				stageManager.switchScene(FxmlView.PILGRIM);
 			} else if (userService.findByEmail(getUsername()).getRole().equalsIgnoreCase("PARADA")) {
-				//stageManager.switchScene(FxmlView.STOP);
+				stageManager.switchScene(FxmlView.STOP);
 			}
                
 

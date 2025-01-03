@@ -51,6 +51,8 @@
 					styleClass="text-field" />
 				<ComboBox fx:id="cbregion"
 					promptText="Selecciona la región" styleClass="combo-box" />
+					<TextField fx:id="managerName"
+					promptText="Nombre del responsable" styleClass="text-field" />
 				<TextField fx:id="managerEmail"
 					promptText="Email del responsable" styleClass="text-field" />
 				<PasswordField fx:id="managerPassword"

@@ -1,20 +1,27 @@
 package com.davidmb.tarea3ADbase.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import com.davidmb.tarea3ADbase.config.StageManager;
+import com.davidmb.tarea3ADbase.models.Stop;
 import com.davidmb.tarea3ADbase.models.User;
+import com.davidmb.tarea3ADbase.services.StopService;
 import com.davidmb.tarea3ADbase.services.UserService;
 import com.davidmb.tarea3ADbase.view.FxmlView;
 
@@ -30,25 +37,21 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
 
 /**
- * @author Ram Alapure
- * @since 05-04-2017
+ * 
  */
 
 @Controller
@@ -65,6 +68,9 @@ public class AdminController implements Initializable {
 
 	@FXML
 	private ComboBox<String> cbregion;
+	
+	@FXML
+	private TextField managerName;
 
 	@FXML
 	private TextField managerEmail;
@@ -79,25 +85,25 @@ public class AdminController implements Initializable {
 	private Button saveStop;
 
 	@FXML
-	private TableView<User> stopTable;
+	private TableView<Stop> stopTable;
 
 	@FXML
-	private TableColumn<User, Long> colStopId;
+	private TableColumn<Stop, Long> colStopId;
 
 	@FXML
-	private TableColumn<User, String> colStopName;
+	private TableColumn<Stop, String> colStopName;
 
 	@FXML
-	private TableColumn<User, String> colStopRegion;
+	private TableColumn<Stop, String> colStopRegion;
 
 	@FXML
-	private TableColumn<User, String> colManagerEmail;
+	private TableColumn<Stop, String> colManagerEmail;
 	
 	@FXML
-	private TableColumn<User, String> colManagerId;
+	private TableColumn<Stop, String> colManagerId;
 
 	@FXML
-	private TableColumn<User, Boolean> colEdit;
+	private TableColumn<Stop, Boolean> colEdit;
 
 	@FXML
 	private MenuItem deleteStops;
@@ -107,10 +113,12 @@ public class AdminController implements Initializable {
 	private StageManager stageManager;
 
 	@Autowired
+	private StopService stopService;
+	@Autowired
 	private UserService userService;
 
-	private ObservableList<User> userList = FXCollections.observableArrayList();
-	private ObservableList<String> roles = FXCollections.observableArrayList("Admin", "User");
+	private ObservableList<Stop> stopList = FXCollections.observableArrayList();
+	private ObservableList<String> regions = FXCollections.observableArrayList();
 
 	@FXML
 	private void exit(ActionEvent event) {
@@ -132,47 +140,50 @@ public class AdminController implements Initializable {
 
 	@FXML
 	private void saveStop(ActionEvent event) {
+		
+		if (validate("Stop Name", getStopName(), "[a-zA-Z]+") && emptyValidation("Region", getRegion().isEmpty())
+				&& validate("Manager Email", getManagerEmail(), "[a-zA-Z0-9][a-zA-Z0-9._]*@[a-zA-Z0-9]+([.][a-zA-Z]+)+")
+				&& emptyValidation("Manager Password", getManagerPassword().isEmpty())) {
 
-//		if (validate("First Name", getFirstName(), "[a-zA-Z]+") && validate("Last Name", getLastName(), "[a-zA-Z]+")) {
-//
-//			if (userId.getText() == null || userId.getText() == "") {
-//				if (validate("Email", getEmail(), "[a-zA-Z0-9][a-zA-Z0-9._]*@[a-zA-Z0-9]+([.][a-zA-Z]+)+")
-//						&& emptyValidation("Password", getPassword().isEmpty())) {
-//
-//					User user = new User();
-//					user.setFirstName(getFirstName());
-//					user.setLastName(getLastName());
-//					user.setDob(getDob());
-//					user.setGender(getGender());
-//					user.setRole(getRole());
-//					user.setEmail(getEmail());
-//					user.setPassword(getPassword());
-//
-//					User newUser = userService.save(user);
-//
-//					saveAlert(newUser);
-//				}
-//
-//			} else {
-//				User user = userService.find(Long.parseLong(userId.getText()));
-//				user.setFirstName(getStopName());
-//				//user.setLastName(getStopRegion());
-//				user.setDob(getDob());
-//				user.setGender(getGender());
-//				user.setRole(getRole());
-//				User updatedUser = userService.update(user);
-//				updateAlert(updatedUser);
-//			}
+			if (stopId.getText() == null || stopId.getText() == "") {
+				Stop stop = new Stop();
+				User user = new User();
+				user.setUsername(getManagerName());
+				user.setEmail(getManagerEmail());
+				user.setPassword(getManagerPassword());
+				user.setRole("Parada");
+				User newUser = userService.save(user);
+				
+				stop.setName(getStopName());
+				stop.setRegion(getRegion().charAt(0));
+				stop.setManager(newUser.getUsername());
+				stop.setUserId(newUser.getId());
 
-//			clearFields();
-//			loadUserDetails();
-//		}
+				Stop newStop = stopService.save(stop);
 
+				saveAlert(newStop);
+			} else {
+				Stop stop = stopService.find(Long.parseLong(stopId.getText()));
+				stop.setName(getStopName());
+				stop.setRegion(getRegion().charAt(0));
+				stop.setManager(userService.find(stop.getUserId()).getUsername());
+				stop.setUserId(userService.find(stop.getUserId()).getId());
+
+				Stop updatedStop = stopService.update(stop);
+				updateAlert(updatedStop);
+			}
+
+			clearFields();
+			loadStopDetails();
+		}
 	}
+		
+
+	
 
 	@FXML
 	private void deleteStops(ActionEvent event) {
-		List<User> users = stopTable.getSelectionModel().getSelectedItems();
+		List<Stop> users = stopTable.getSelectionModel().getSelectedItems();
 
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Confirmation Dialog");
@@ -181,39 +192,42 @@ public class AdminController implements Initializable {
 		Optional<ButtonType> action = alert.showAndWait();
 
 		if (action.get() == ButtonType.OK)
-			userService.deleteInBatch(users);
+			stopService.deleteInBatch(users);
 
-		loadUserDetails();
+		loadStopDetails();
 	}
 
 	private void clearFields() {
 		stopId.setText(null);
 		stopName.clear();
+		managerName.clear();
 		cbregion.getSelectionModel().clearSelection();
 		managerEmail.clear();
 		managerPassword.clear();
 	}
 
-	private void saveAlert(User user) {
+	private void saveAlert(Stop stop) {
 
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("User saved successfully.");
 		alert.setHeaderText(null);
-//		alert.setContentText("The user " + user.getFirstName() + " " + user.getLastName() + " has been created and \n"
-//				+ getManagerEmail(user.getGender()) + " id is " + user.getId() + ".");
+		alert.setContentText("La parada " + stop.getName() + " " + stop.getRegion() + " ha sido creada y el responsable es \n"
+				+ getManagerEmail() + " con id " +  + userService.find(stop.getUserId()).getId() + ".");
 		alert.showAndWait();
 	}
 
-	private void updateAlert(User user) {
+	private void updateAlert(Stop stop) {
 
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("User updated successfully.");
 		alert.setHeaderText(null);
-	//	alert.setContentText("The user " + user.getFirstName() + " " + user.getLastName() + " has been updated.");
+		alert.setContentText("Parada " + stop.getName() + " en región " + stop.getRegion() + " ha sido actualizada con éxito.");
 		alert.showAndWait();
 	}
-
 	
+	public String getManagerName() {
+		return managerName.getText();
+	}
 
 	public String getStopName() {
 		return stopName.getText();
@@ -235,46 +249,35 @@ public class AdminController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
-		cbregion.setItems(roles);
+		loadNationalities();
+		
+		cbregion.setItems(regions);
 
 		stopTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
 		setColumnProperties();
 
-		// Add all users into table
-		loadUserDetails();
+		// Add all stops into table
+		loadStopDetails();
 	}
 
 	/*
 	 * Set All userTable column properties
 	 */
 	private void setColumnProperties() {
-		/*
-		 * Override date format in table
-		 * colDOB.setCellFactory(TextFieldTableCell.forTableColumn(new
-		 * StringConverter<LocalDate>() { String pattern = "dd/MM/yyyy";
-		 * DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
-		 * 
-		 * @Override public String toString(LocalDate date) { if (date != null) { return
-		 * dateFormatter.format(date); } else { return ""; } }
-		 * 
-		 * @Override public LocalDate fromString(String string) { if (string != null &&
-		 * !string.isEmpty()) { return LocalDate.parse(string, dateFormatter); } else {
-		 * return null; } } }));
-		 */
-
+		
 		colStopId.setCellValueFactory(new PropertyValueFactory<>("id"));
-		colStopName.setCellValueFactory(new PropertyValueFactory<>("Nombre Parada"));
-		colStopRegion.setCellValueFactory(new PropertyValueFactory<>("Región Parada"));
-		colManagerEmail.setCellValueFactory(new PropertyValueFactory<>("Manager Email"));
-		colManagerId.setCellValueFactory(new PropertyValueFactory<>("Manager Id"));
-		colEdit.setCellFactory(cellFactory);
+		colStopName.setCellValueFactory(new PropertyValueFactory<>("name"));
+		colStopRegion.setCellValueFactory(new PropertyValueFactory<>("region"));
+		colManagerEmail.setCellValueFactory(new PropertyValueFactory<>("manager"));
+		colManagerId.setCellValueFactory(new PropertyValueFactory<>("userId"));
+        colEdit.setCellFactory(cellFactory);
 	}
 
-	Callback<TableColumn<User, Boolean>, TableCell<User, Boolean>> cellFactory = new Callback<TableColumn<User, Boolean>, TableCell<User, Boolean>>() {
+	Callback<TableColumn<Stop, Boolean>, TableCell<Stop, Boolean>> cellFactory = new Callback<TableColumn<Stop, Boolean>, TableCell<Stop, Boolean>>() {
 		@Override
-		public TableCell<User, Boolean> call(final TableColumn<User, Boolean> param) {
-			final TableCell<User, Boolean> cell = new TableCell<User, Boolean>() {
+		public TableCell<Stop, Boolean> call(final TableColumn<Stop, Boolean> param) {
+			final TableCell<Stop, Boolean> cell = new TableCell<Stop, Boolean>() {
 				Image imgEdit = new Image(getClass().getResourceAsStream("/images/edit.png"));
 				final Button btnEdit = new Button();
 
@@ -286,8 +289,8 @@ public class AdminController implements Initializable {
 						setText(null);
 					} else {
 						btnEdit.setOnAction(e -> {
-							User user = getTableView().getItems().get(getIndex());
-							updateUser(user);
+							Stop stop = getTableView().getItems().get(getIndex());
+							updateStop(stop);
 						});
 
 						btnEdit.setStyle("-fx-background-color: transparent;");
@@ -304,12 +307,13 @@ public class AdminController implements Initializable {
 					}
 				}
 
-				private void updateUser(User user) {
-					stopId.setText(Long.toString(user.getId()));
-					//stopName.setText(user.getFirstName());		
-					cbregion.getSelectionModel().select(user.getRole());
-					managerEmail.setText(user.getEmail());
-					managerPassword.setText(user.getPassword());
+				private void updateStop(Stop stop) {
+					stopId.setText(Long.toString(stop.getId()));
+					stopName.setText(stop.getName());		
+					cbregion.getSelectionModel().select(stop.getRegion());
+					managerName.setText(userService.find(stop.getUserId()).getUsername());
+					managerEmail.setText(userService.find(stop.getUserId()).getEmail());
+					managerPassword.setText(userService.find(stop.getUserId()).getPassword());
 				}
 			};
 			return cell;
@@ -319,11 +323,32 @@ public class AdminController implements Initializable {
 	/*
 	 * Add All users to observable list and update table
 	 */
-	private void loadUserDetails() {
-		userList.clear();
-		userList.addAll(userService.findAll());
+	private void loadStopDetails() {
+		stopList.clear();
+		stopList.addAll(stopService.findAll());
 
-		stopTable.setItems(userList);
+		stopTable.setItems(stopList);
+	}
+	
+	private void loadNationalities() {
+		try {
+			File file = new File("src/main/resources/paises.xml"); 
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document document = builder.parse(file);
+			document.getDocumentElement().normalize();
+
+			// Obtener todos los nodos <nombre> del XML
+			NodeList countryNodes = document.getElementsByTagName("nombre");
+			for (int i = 0; i < countryNodes.getLength(); i++) {
+				String countryName = countryNodes.item(i).getTextContent();
+				regions.add(countryName);
+			}
+
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
 	}
 
 	/*

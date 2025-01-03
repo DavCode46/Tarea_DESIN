@@ -22,7 +22,7 @@ public class Stop implements Serializable {
     @Column(name = "nombre", nullable = false, length = 100)
     private String name;
 
-    @Column(name = "region", nullable = false, length = 1)
+    @Column(name = "region", nullable = false, length = 2)
     private char region;
 
     @Column(name = "responsable", nullable = false, length = 100)

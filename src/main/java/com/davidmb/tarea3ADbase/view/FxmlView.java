@@ -25,6 +25,17 @@ public enum FxmlView {
 			return "/fxml/Pilgrim.fxml";
 		}
 	},
+	STOP {
+		@Override
+		public String getTitle() {
+			return getStringFromResourceBundle("stop.title");
+		}
+
+		@Override
+		public String getFxmlFile() {
+			return "/fxml/Stop.fxml";
+		}
+	},
 	FORGOT_PASSWORD {
 		@Override
 		public String getTitle() {
