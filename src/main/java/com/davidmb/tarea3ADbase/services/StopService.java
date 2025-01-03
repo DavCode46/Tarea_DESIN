@@ -42,6 +42,10 @@ public class StopService {
 	public List<Stop> findAll() {
 		return stopRepository.findAll();
 	}
+	
+	public Stop findByName(String name) {
+		return stopRepository.findByName(name);
+	}
 
 	public void deleteInBatch(List<Stop> users) {
 		stopRepository.deleteAll(users);

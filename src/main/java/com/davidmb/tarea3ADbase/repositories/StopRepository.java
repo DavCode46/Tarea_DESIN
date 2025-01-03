@@ -9,5 +9,6 @@ import com.davidmb.tarea3ADbase.models.Stop;
 @Repository
 public interface StopRepository extends JpaRepository<Stop, Long> {
 
+	Stop findByName(String name);
 	
 }

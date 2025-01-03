@@ -16,7 +16,10 @@ import org.w3c.dom.NodeList;
 import com.davidmb.tarea3ADbase.config.StageManager;
 import com.davidmb.tarea3ADbase.models.Carnet;
 import com.davidmb.tarea3ADbase.models.Pilgrim;
+import com.davidmb.tarea3ADbase.models.Stop;
 import com.davidmb.tarea3ADbase.models.User;
+import com.davidmb.tarea3ADbase.services.CarnetService;
+import com.davidmb.tarea3ADbase.services.PilgrimService;
 import com.davidmb.tarea3ADbase.services.StopService;
 import com.davidmb.tarea3ADbase.services.UserService;
 import com.davidmb.tarea3ADbase.view.FxmlView;
@@ -61,6 +64,12 @@ public class RegisterPilgrimController implements Initializable {
 	private UserService userService;
 	
 	@Autowired
+	private CarnetService carnetService;
+	
+	@Autowired
+	private PilgrimService pilgrimService;
+	
+	@Autowired
 	private StopService stopService;
 
 	@FXML
@@ -70,9 +79,15 @@ public class RegisterPilgrimController implements Initializable {
 		String password = passwordField.getText();
 		String confirmPassword = confirmPasswordField.getText();
 		String nationality = nationalityComboBox.getValue();
-		Carnet carnet = new Carnet();
-		User user = new User();
-		Pilgrim pilgrim = new Pilgrim();
+		String stop = stopComboBox.getValue();
+		Stop currentStop = stopService.findByName(stop);
+		Carnet carnet = new Carnet(currentStop);
+		//carnetService.save(carnet);
+		// Segundo username sería email
+		User user = new User(username, "Peregrino", username, password);
+		User newUser = userService.save(user);
+		Pilgrim pilgrim = new Pilgrim(name, nationality, carnet, newUser.getId());
+		pilgrimService.save(pilgrim);
 	}
 
 	@FXML
