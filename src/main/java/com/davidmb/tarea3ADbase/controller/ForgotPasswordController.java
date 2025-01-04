@@ -8,14 +8,17 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
 import com.davidmb.tarea3ADbase.config.StageManager;
+import com.davidmb.tarea3ADbase.models.Stop;
 import com.davidmb.tarea3ADbase.models.User;
 import com.davidmb.tarea3ADbase.services.UserService;
 import com.davidmb.tarea3ADbase.view.FxmlView;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 
 @Controller
 public class ForgotPasswordController implements Initializable{
@@ -47,7 +50,7 @@ public class ForgotPasswordController implements Initializable{
  
     @FXML
     private void resetPassword() {
-        if (!validateInputs()) {
+        if (!validateData()) {
             return; 
         }
 
@@ -58,11 +61,12 @@ public class ForgotPasswordController implements Initializable{
         try {
             
             userService.resetPassword(user, newPassword);
-           // showSuccessMessage("Contraseña restablecida con éxito. Revisa tu correo.");
+            showSuccessAlert(email);
+            stageManager.switchScene(FxmlView.LOGIN);
         } catch (IllegalArgumentException e) {
-            showError(lblEmailError, e.getMessage());
+            e.printStackTrace();
         } catch (Exception e) {
-            showError(lblEmailError, "Ocurrió un error inesperado. Inténtalo de nuevo.");
+           e.printStackTrace();
         }
     }
 
@@ -73,59 +77,68 @@ public class ForgotPasswordController implements Initializable{
 		stageManager.switchScene(FxmlView.LOGIN);
     }
     
-    private boolean validateInputs() {
-        boolean isValid = true;
+    private boolean validateData() {
 
-        // Validar email
-        if (isNullOrEmpty(emailField.getText())) {
-            showError(lblEmailError, "El campo de email no puede estar vacío");
-            isValid = false;
-        } else if (!emailField.getText().matches(EMAIL_PATTERN)) {
-            showError(lblEmailError, "El email no tiene un formato válido");
-            isValid = false;
-        } else {
-            hideError(lblEmailError);
-        }
+        boolean ret = false;
+		StringBuilder message = new StringBuilder();
+		String email = emailField.getText();
+		String password = passwordField.getText();
+		String confirmPassword = passwordField2.getText();
+		User emailExists = userService.findByEmail(email);
+		
+        // Validar Email
+      		if (email.isEmpty()) {
+      			message.append("El Email no puede estar vacío.\n");
+      		} else if(emailExists == null) {
+      			message.append("El Email no existe.\n");
+      		}
+      		else if (email.length() > 50) {
+      			message.append("El Email no puede tener más de 50 caracteres.\n");
+      		} else if (!email.matches(EMAIL_PATTERN)) {
+                  message.append("El Email no tiene un formato válido.\n");
+      		}
+      		
+      		// Validar Password
+      		if (password.isEmpty()) {
+      			message.append("La contraseña no puede estar vacía.\n");
+              } else if (password.length() < 8) {
+                  message.append("La contraseña debe tener al menos 8 caracteres.\n");
+      		} else if (!password.matches(".*\\d.*")) {
+      			message.append("La contraseña debe contener al menos un número.\n");
+      		} else if (!password.matches(".*[a-z].*")) {
+      			message.append("La contraseña debe contener al menos una letra minúscula.\n");
+      		} else if (!password.matches(".*[A-Z].*")) {
+      			message.append("La contraseña debe contener al menos una letra mayúscula.\n");
+      		} else if (!password.matches(".*[!@#$%^&*].*")) {
+      			message.append("La contraseña debe contener al menos un carácter especial.\n");
+      		} else if (!password.equals(confirmPassword)) {
+      			message.append("Las contraseñas no coinciden.\n");
+      		}
 
-        // Validar contraseña
-        if (isNullOrEmpty(passwordField.getText())) {
-            showError(lblPasswordError, "El campo de contraseña no puede estar vacío");
-            isValid = false;
-        } else if (!passwordField.getText().matches(PASSWORD_PATTERN)) {
-            showError(lblPasswordError, "La contraseña debe tener al menos 8 caracteres, incluir una mayúscula, una minúscula, un número y un carácter especial");
-            isValid = false;
-        } else {
-            hideError(lblPasswordError);
-        }
-
-        // Validar confirmación de contraseña
-        if (isNullOrEmpty(passwordField2.getText())) {
-            showError(lblPasswordError, "El campo de confirmación de contraseña no puede estar vacío");
-            isValid = false;
-        } else if (!passwordField.getText().equals(passwordField2.getText())) {
-            showError(lblPasswordError, "Las contraseñas no coinciden");
-            isValid = false;
-        } else {
-            hideError(lblPasswordError);
-        }
-
-        return isValid;
+      		if (message.length() > 0) {
+      			showErrorAlert(message);
+      		} else {
+      			ret = true;
+      		}
+      		return ret;
     }
 
-    private boolean isNullOrEmpty(String text) {
-        return text == null || text.isEmpty();
-    }
+    private void showSuccessAlert(String email) {
 
-    private void showError(Label label, String message) {
-        label.setText(message);
-        label.setVisible(true);
-        label.setStyle("-fx-text-fill: red;");
-    }
-
-    private void hideError(Label label) {
-        label.setVisible(false);
-        label.setText("");
-    }
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Contraseña restablecida.");
+		alert.setHeaderText("Contraseña restablecida.");
+		alert.setContentText("La contraseña del usuario " + email + " se ha restablecido con éxito.");
+		alert.showAndWait();
+	}
+	
+	private void showErrorAlert(StringBuilder message) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error al registrar parada");
+		alert.setHeaderText("Error al registrar parada");
+		alert.setContentText(message.toString());
+		alert.showAndWait();
+	}
 
     
     @Override
