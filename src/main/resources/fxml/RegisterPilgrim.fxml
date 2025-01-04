@@ -19,7 +19,7 @@
            stylesheets="@../styles/Styles.css">
     <children>
         <!-- Contenedor principal centrado -->
-        <VBox alignment="CENTER" spacing="20" maxWidth="600" styleClass="form-container">
+        <VBox alignment="CENTER" spacing="20" maxWidth="600" maxHeight="600" styleClass="form-container">
             <!-- Título -->
             <Label text="Registro de Peregrino" styleClass="form-title" />
 

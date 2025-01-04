@@ -15,6 +15,8 @@ import com.davidmb.tarea3ADbase.view.FxmlView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -58,11 +60,24 @@ public class LoginController implements Initializable {
 			} else if (userService.findByEmail(getUsername()).getRole().equalsIgnoreCase("PARADA")) {
 				stageManager.switchScene(FxmlView.STOP);
 			}
-               
+			clearFields();          
 
 		} else {
-			lblLogin.setText("Login Failed.");
+			showErrorAlert();
 		}
+	}
+	
+	private void showErrorAlert() {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle("Error al iniciar sesión");
+        alert.setHeaderText("Usuario o contraseña incorrectos");
+        alert.setContentText("Por favor, introduzca un usuario y contraseña válidos");
+        alert.showAndWait();
+	}
+	
+	private void clearFields() {
+		username.clear();
+		password.clear();
 	}
 
 	@FXML
