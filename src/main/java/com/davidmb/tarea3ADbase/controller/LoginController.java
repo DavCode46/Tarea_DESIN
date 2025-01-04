@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
 import com.davidmb.tarea3ADbase.config.StageManager;
+import com.davidmb.tarea3ADbase.models.User;
 import com.davidmb.tarea3ADbase.services.UserService;
 import com.davidmb.tarea3ADbase.view.FxmlView;
 
@@ -53,6 +54,7 @@ public class LoginController implements Initializable {
 	private void login(ActionEvent event) throws IOException {
 		if (userService.authenticate(getUsername(), getPassword())) {
 
+			showSuccessAlert(userService.findByEmail(getUsername()));
 			if (userService.findByEmail(getUsername()).getRole().equalsIgnoreCase("ADMIN")) {
 				stageManager.switchScene(FxmlView.ADMIN);
 			} else if (userService.findByEmail(getUsername()).getRole().equalsIgnoreCase("PEREGRINO")) {
@@ -73,6 +75,14 @@ public class LoginController implements Initializable {
         alert.setHeaderText("Usuario o contraseña incorrectos");
         alert.setContentText("Por favor, introduzca un usuario y contraseña válidos");
         alert.showAndWait();
+	}
+	
+	private void showSuccessAlert(User user) {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Sesión iniciada como: " + user.getEmail());
+		alert.setHeaderText(null);
+		alert.setContentText("¡Bienvenido: " + user.getEmail() + "!\n");
+		alert.showAndWait();
 	}
 	
 	private void clearFields() {
