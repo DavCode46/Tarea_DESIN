@@ -24,13 +24,13 @@
             <Label text="Registro de Peregrino" styleClass="form-title" />
 
             <!-- Campos de entrada -->
-            <TextField fx:id="nameField" promptText="Nombre completo" styleClass="text-field" />
-            <TextField fx:id="usernameField" promptText="Nombre de usuario" styleClass="text-field" />
+            <TextField fx:id="nameField" promptText="Nombre" styleClass="text-field" />
+            <TextField fx:id="emailField" promptText="Email" styleClass="text-field" />
             <PasswordField fx:id="passwordField" promptText="Contraseña" styleClass="text-field" />
             <PasswordField fx:id="confirmPasswordField" promptText="Repetir contraseña" styleClass="text-field" />
 
             <!-- ComboBox -->
-            <HBox alignment="CENTER_LEFT" styleClass="combo-container">
+            <HBox alignment="CENTER_LEFT" spacing="5" styleClass="combo-container">
                 <ComboBox fx:id="nationalityComboBox" promptText="Seleccionar nacionalidad" styleClass="combo-box" />
                  <ComboBox fx:id="stopComboBox" promptText="Seleccionar su parada actual" styleClass="combo-box" />
             </HBox>
