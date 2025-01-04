@@ -22,7 +22,8 @@
 <?import javafx.scene.text.Font?>
 
 <BorderPane prefHeight="600.0" prefWidth="1000.0"
-	stylesheets="@../styles/Admin.css" xmlns="http://javafx.com/javafx/8.0.111"
+	stylesheets="@../styles/Admin.css"
+	xmlns="http://javafx.com/javafx/8.0.111"
 	xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="com.davidmb.tarea3ADbase.controller.AdminController">
 
@@ -51,19 +52,22 @@
 					styleClass="text-field" />
 				<ComboBox fx:id="cbregion"
 					promptText="Selecciona la región" styleClass="combo-box" />
-					<TextField fx:id="managerName"
+				<TextField fx:id="managerName"
 					promptText="Nombre del responsable" styleClass="text-field" />
 				<TextField fx:id="managerEmail"
 					promptText="Email del responsable" styleClass="text-field" />
 				<PasswordField fx:id="managerPassword"
 					promptText="Contraseña del manager" styleClass="text-field" />
+				<PasswordField fx:id="confirmManagerPassword"
+					promptText="Confirma contraseña del manager"
+					styleClass="text-field" />
 
 
 
 				<HBox spacing="10.0" alignment="CENTER">
 					<children>
-						<Button fx:id="reset" text="Cancelar" styleClass="white-button"
-							onAction="#reset" />
+						<Button fx:id="reset" text="Cancelar"
+							styleClass="white-button" onAction="#reset" />
 						<Button fx:id="saveStop" text="Guardar"
 							styleClass="primary-button" onAction="#saveStop" />
 					</children>
@@ -83,7 +87,8 @@
 			<children>
 				<HBox alignment="TOP_RIGHT" prefHeight="41.0" prefWidth="640.0">
 					<children>
-						 <Button fx:id="btnLogout" text="Cerrar sesión" styleClass="btnLogout" onAction="#logout" >
+						<Button fx:id="btnLogout" text="Cerrar sesión"
+							styleClass="btnLogout" onAction="#logout">
 							<font>
 								<Font size="14.0" />
 							</font>

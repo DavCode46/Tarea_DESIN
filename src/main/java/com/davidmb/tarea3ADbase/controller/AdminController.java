@@ -77,6 +77,9 @@ public class AdminController implements Initializable {
 
 	@FXML
 	private PasswordField managerPassword;
+	
+	@FXML
+	private PasswordField confirmManagerPassword;
 
 	@FXML
 	private Button reset;
@@ -141,9 +144,7 @@ public class AdminController implements Initializable {
 	@FXML
 	private void saveStop(ActionEvent event) {
 		
-		if (validate("Stop Name", getStopName(), "[a-zA-Z]+") && emptyValidation("Region", getRegion().isEmpty())
-				&& validate("Manager Email", getManagerEmail(), "[a-zA-Z0-9][a-zA-Z0-9._]*@[a-zA-Z0-9]+([.][a-zA-Z]+)+")
-				&& emptyValidation("Manager Password", getManagerPassword().isEmpty())) {
+		if (validateData()) {
 
 			if (stopId.getText() == null || stopId.getText() == "") {
 				Stop stop = new Stop();
@@ -204,13 +205,14 @@ public class AdminController implements Initializable {
 		cbregion.getSelectionModel().clearSelection();
 		managerEmail.clear();
 		managerPassword.clear();
+		confirmManagerPassword.clear();
 	}
 
 	private void saveAlert(Stop stop) {
 
 		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("User saved successfully.");
-		alert.setHeaderText(null);
+		alert.setTitle("Parada registrada con éxito.");
+		alert.setHeaderText("Parada registrada con éxito.");
 		alert.setContentText("La parada " + stop.getName() + " " + stop.getRegion() + " ha sido creada y el responsable es \n"
 				+ getManagerEmail() + " con id " +  + userService.find(stop.getUserId()).getId() + ".");
 		alert.showAndWait();
@@ -219,11 +221,91 @@ public class AdminController implements Initializable {
 	private void updateAlert(Stop stop) {
 
 		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("User updated successfully.");
-		alert.setHeaderText(null);
+		alert.setTitle("Parada actualizada con éxito.");
+		alert.setHeaderText("Parada actualizada con éxito.");
 		alert.setContentText("Parada " + stop.getName() + " en región " + stop.getRegion() + " ha sido actualizada con éxito.");
 		alert.showAndWait();
 	}
+	
+	private void showErrorAlert(StringBuilder message) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error al registrar parada");
+		alert.setHeaderText("Error al registrar parada");
+		alert.setContentText(message.toString());
+		alert.showAndWait();
+	}
+	
+	private boolean validateData() {
+		boolean ret = false;
+		StringBuilder message = new StringBuilder();
+		String name = stopName.getText();
+		String manager = managerName.getText();
+		String email = managerEmail.getText();
+		String password = managerPassword.getText();
+		String confirmPassword = confirmManagerPassword.getText();
+		User emailExists = userService.findByEmail(email);
+
+		  // Validar nombre de la parada
+        if(name.isEmpty()) {
+        	message.append("El nombre de la parada no puede estar vacío.\n");
+        } else if(name.length() > 20) {
+        	message.append("El nombre de la parada no puede tener más de 20 caracteres.\n");
+		} else if (name.chars().anyMatch(Character::isDigit)) {
+			message.append("El nombre de la parada no puede contener números.\n");
+		}
+        
+        // Validar nombre del responsable
+        if(manager.isEmpty()) {
+        	message.append("El nombre del responsable no puede estar vacío.\n");
+        } else if(manager.length() > 20) {
+        	message.append("El nombre del responsable no puede tener más de 20 caracteres.\n");
+		} else if (manager.chars().anyMatch(Character::isDigit)) {
+			message.append("El nombre del responsable no puede contener números.\n");
+		}
+        
+        // Validar región
+		if (cbregion.getValue() == null) {
+			message.append("Debes seleccionar una región.\n");
+		}
+              
+        // Validar Email
+		if (email.isEmpty()) {
+			message.append("El Email no puede estar vacío.\n");
+		} else if (emailExists != null) {
+			message.append("El Email ya está registrado.\n");
+		} 
+		else if (email.length() > 50) {
+			message.append("El Email no puede tener más de 50 caracteres.\n");
+		} else if (!email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
+            message.append("El Email no tiene un formato válido.\n");
+		}
+		
+		// Validar Password
+		if (password.isEmpty()) {
+			message.append("La contraseña no puede estar vacía.\n");
+        } else if (password.length() < 8) {
+            message.append("La contraseña debe tener al menos 8 caracteres.\n");
+		} else if (!password.matches(".*\\d.*")) {
+			message.append("La contraseña debe contener al menos un número.\n");
+		} else if (!password.matches(".*[a-z].*")) {
+			message.append("La contraseña debe contener al menos una letra minúscula.\n");
+		} else if (!password.matches(".*[A-Z].*")) {
+			message.append("La contraseña debe contener al menos una letra mayúscula.\n");
+		} else if (!password.matches(".*[!@#$%^&*].*")) {
+			message.append("La contraseña debe contener al menos un carácter especial.\n");
+		} else if (!password.equals(confirmPassword)) {
+			message.append("Las contraseñas no coinciden.\n");
+		}
+
+		if (message.length() > 0) {
+			showErrorAlert(message);
+		} else {
+			ret = true;
+		}
+		return ret;
+	}
+	
+	
 	
 	public String getManagerName() {
 		return managerName.getText();

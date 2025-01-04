@@ -80,13 +80,12 @@ public class RegisterPilgrimController implements Initializable {
 			String stop = stopComboBox.getValue();
 			Stop currentStop = stopService.findByName(stop);
 			Carnet carnet = new Carnet(currentStop);
-			//carnetService.save(carnet);
-			// Segundo username sería email
 			User user = new User(name, "Peregrino", email, password);
 			User newUser = userService.save(user);
 			Pilgrim pilgrim = new Pilgrim(name, nationality, carnet, newUser.getId());
 			pilgrimService.save(pilgrim);
 			showInfoAlert(user);
+			clearFields();
 			stageManager.switchScene(FxmlView.LOGIN);
 		} else {
 			errorLabel.setText("Error al registrar.");
@@ -146,8 +145,8 @@ public class RegisterPilgrimController implements Initializable {
 	
 	private void showErrorAlert(StringBuilder message) {
 		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error al registrar");
-		alert.setHeaderText("Error al registrar");
+		alert.setTitle("Error al registrar peregrino");
+		alert.setHeaderText("Error al registrar peregrino");
 		alert.setContentText(message.toString());
 		alert.showAndWait();
 	}
@@ -218,6 +217,15 @@ public class RegisterPilgrimController implements Initializable {
 		
         return ret;
         
+	}
+	
+	private void clearFields() {
+		nameField.clear();
+		emailField.clear();
+		passwordField.clear();
+		confirmPasswordField.clear();
+		nationalityComboBox.getSelectionModel().clearSelection();
+		stopComboBox.getSelectionModel().clearSelection();
 	}
 	
 	
