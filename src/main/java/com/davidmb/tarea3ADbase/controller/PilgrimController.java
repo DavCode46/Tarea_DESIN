@@ -2,6 +2,7 @@ package com.davidmb.tarea3ADbase.controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -90,7 +92,13 @@ public class PilgrimController implements Initializable {
     
     @FXML
 	private void logout(ActionEvent event) throws IOException {
-		stageManager.switchScene(FxmlView.LOGIN);
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Logout");
+		alert.setHeaderText("¿Estás seguro que quieres cerrar sesión?");
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == ButtonType.OK) {
+			stageManager.switchScene(FxmlView.LOGIN);
+		}
 	}
 
     /**

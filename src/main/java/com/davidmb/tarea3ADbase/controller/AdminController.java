@@ -133,7 +133,13 @@ public class AdminController implements Initializable {
 	 */
 	@FXML
 	private void logout(ActionEvent event) throws IOException {
-		stageManager.switchScene(FxmlView.LOGIN);
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Logout");
+		alert.setHeaderText("¿Estás seguro que quieres cerrar sesión?");
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == ButtonType.OK) {
+			stageManager.switchScene(FxmlView.LOGIN);
+		}
 	}
 
 	@FXML
@@ -207,6 +213,8 @@ public class AdminController implements Initializable {
 		managerPassword.clear();
 		confirmManagerPassword.clear();
 	}
+	
+	
 
 	private void saveAlert(Stop stop) {
 
