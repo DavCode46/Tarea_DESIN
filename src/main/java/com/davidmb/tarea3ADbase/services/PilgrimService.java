@@ -41,6 +41,10 @@ public class PilgrimService {
 	public Pilgrim find(Long id) {
 		return pilgrimRepository.findById(id).get();
 	}
+	
+	public Pilgrim findByUserId(Long id) {
+		return pilgrimRepository.findByUserId(id);
+	}
 
 	public List<Pilgrim> findAll() {
 		return pilgrimRepository.findAll();

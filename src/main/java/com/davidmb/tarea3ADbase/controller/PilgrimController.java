@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
 import com.davidmb.tarea3ADbase.config.StageManager;
+import com.davidmb.tarea3ADbase.models.Pilgrim;
 import com.davidmb.tarea3ADbase.models.User;
 import com.davidmb.tarea3ADbase.services.UserService;
 import com.davidmb.tarea3ADbase.view.FxmlView;
@@ -18,8 +19,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 
@@ -56,19 +57,21 @@ public class PilgrimController implements Initializable {
 
     // Usuario actual --> IdUsuario en tabla peregrinos
     private User currentUser;
+    private Pilgrim currentPilgrim;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
        
-        loadUserProfile(1L); // Recibe ID de usuario
+        loadUserProfile(); // Recibe ID de usuario
     }
 
     /**
      * Cargar los datos del usuario y actualizarlos en la vista
      */
-    private void loadUserProfile(Long userId) {
+    private void loadUserProfile() {
         
-        currentUser = userService.find(userId);
+     //   currentUser = userService.find();
+        
 
         if (currentUser != null) {
             

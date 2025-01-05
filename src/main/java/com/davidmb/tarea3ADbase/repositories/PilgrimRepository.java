@@ -9,5 +9,6 @@ import com.davidmb.tarea3ADbase.models.Pilgrim;
 @Repository
 public interface PilgrimRepository extends JpaRepository<Pilgrim, Long> {
 
+	Pilgrim findByUserId(Long id);
 	
 }

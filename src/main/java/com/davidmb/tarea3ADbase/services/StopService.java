@@ -44,7 +44,7 @@ public class StopService {
 	}
 	
 	public List<Stop> findAllByPilgrimId(Long id) {
-		return stopRepository.findAllByPilgrim_Id(id);
+		return stopRepository.findAllByPilgrimId(id);
 	}
 	
 	public Stop findByName(String name) {
