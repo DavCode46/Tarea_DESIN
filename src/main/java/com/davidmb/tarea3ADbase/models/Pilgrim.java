@@ -129,7 +129,14 @@ public class Pilgrim {
 
     @Override
     public String toString() {
-        return "Pilgrim [id=" + id + ", name=" + name + ", nationality=" + nationality + ", userId=" + userId
-                + ", carnet=" + carnet + ", stays=" + stays + ", stops=" + stops + "]";
+        return "Pilgrim{" +
+               "id=" + id +
+               ", name='" + name + '\'' +
+               ", nationality='" + nationality + '\'' +
+               ", userId=" + userId +
+               ", carnet=" + (carnet != null ? carnet.getId() : "null") +
+               ", stops=" + stops.size() +
+               '}';
     }
+
 }

@@ -98,6 +98,6 @@ public class Carnet {
     @Override
     public String toString() {
         return "Carnet [id=" + id + ", doExp=" + doExp + ", distance=" + distance + ", nVips=" + nVips
-                + ", initialStop=" + initialStop + "]";
+                + ", initialStop=" + (initialStop != null ? initialStop.getName() : "null") + "]";
     }
 }
