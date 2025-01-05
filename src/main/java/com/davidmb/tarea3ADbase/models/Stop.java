@@ -31,7 +31,7 @@ public class Stop implements Serializable {
     @Column(name = "id_usuario", nullable = true)
     private Long userId;
 
-    @ManyToMany(mappedBy = "stops", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "stops", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Pilgrim> pilgrims = new ArrayList<>();
 
 

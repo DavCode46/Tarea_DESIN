@@ -25,7 +25,7 @@ public class Carnet {
     @Column(name = "nVips", nullable = false)
     private int nVips = 0;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "paradaInicial", referencedColumnName = "id")
     private Stop initialStop;
 

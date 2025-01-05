@@ -28,11 +28,9 @@
 			<!-- Imagen de Perfil -->
 			<StackPane alignment="CENTER" style="-fx-translate-y: -50;">
 				<Circle radius="50" fill="white" />
-				<ImageView fitHeight="90" fitWidth="90"
+				<ImageView fx:id="avatarImageView"  fitHeight="120" fitWidth="120"
 					pickOnBounds="true" preserveRatio="true">
-					<image>
-						<!-- <Image url="@profile.jpg" /> -->
-					</image>
+					
 				</ImageView>
 			</StackPane>
 
