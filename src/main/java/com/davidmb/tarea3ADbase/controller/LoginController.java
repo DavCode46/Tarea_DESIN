@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
+import com.davidmb.tarea3ADbase.auth.Session;
 import com.davidmb.tarea3ADbase.config.StageManager;
 import com.davidmb.tarea3ADbase.models.User;
 import com.davidmb.tarea3ADbase.services.UserService;
@@ -49,19 +50,24 @@ public class LoginController implements Initializable {
 	@Lazy
 	@Autowired
 	private StageManager stageManager;
+	
+	@Autowired
+	private Session session;
 
 	@FXML
 	private void login(ActionEvent event) throws IOException {
 		if (userService.authenticate(getUsername(), getPassword())) {
 
-			showSuccessAlert(userService.findByEmail(getUsername()));
-			if (userService.findByEmail(getUsername()).getRole().equalsIgnoreCase("ADMIN")) {
-				stageManager.switchScene(FxmlView.ADMIN);
-			} else if (userService.findByEmail(getUsername()).getRole().equalsIgnoreCase("PEREGRINO")) {
-				stageManager.switchScene(FxmlView.PILGRIM);
-			} else if (userService.findByEmail(getUsername()).getRole().equalsIgnoreCase("PARADA")) {
-				stageManager.switchScene(FxmlView.STOP);
+			User user = userService.findByEmail(getUsername());
+			session.setLoggedInUser(user);
+			showSuccessAlert(user);
+			
+			switch(user.getRole().toUpperCase()) {
+				case "ADMIN" -> stageManager.switchScene(FxmlView.ADMIN);
+				case "PEREGRINO" -> stageManager.switchScene(FxmlView.PILGRIM);
+				case "PARADA" -> stageManager.switchScene(FxmlView.STOP);
 			}
+			
 			clearFields();          
 
 		} else {

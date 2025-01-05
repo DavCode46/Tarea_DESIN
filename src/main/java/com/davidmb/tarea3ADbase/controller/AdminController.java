@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import com.davidmb.tarea3ADbase.auth.Session;
 import com.davidmb.tarea3ADbase.config.StageManager;
 import com.davidmb.tarea3ADbase.models.Stop;
 import com.davidmb.tarea3ADbase.models.User;
@@ -62,6 +63,9 @@ public class AdminController implements Initializable {
 
 	@FXML
 	private Label stopId;
+	
+	@FXML
+	private Label loggedInUser;
 
 	@FXML
 	private TextField stopName;
@@ -114,6 +118,9 @@ public class AdminController implements Initializable {
 	@Lazy
 	@Autowired
 	private StageManager stageManager;
+	
+	@Autowired
+	private Session session;
 
 	@Autowired
 	private StopService stopService;
@@ -338,6 +345,11 @@ public class AdminController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		User user = session.getLoggedInUser();
+		
+		if (user != null) {
+            loggedInUser.setText(user.getUsername() + " - " + user.getId());
+		}
 
 		loadNationalities();
 		

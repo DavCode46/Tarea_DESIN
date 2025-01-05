@@ -41,7 +41,7 @@
 				</Label>
 				<HBox prefHeight="30.0" prefWidth="265.0">
 					<children>
-						<Label text="ID Parada -" styleClass="form-title-small" />
+						<Label fx:id="loggedInUser" text="ID -" styleClass="form-title-small" />
 						<Label fx:id="stopId" styleClass="form-title-small" />
 					</children>
 					<VBox.margin>
