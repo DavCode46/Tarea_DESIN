@@ -14,7 +14,8 @@ import com.davidmb.tarea3ADbase.config.StageManager;
 import com.davidmb.tarea3ADbase.models.Pilgrim;
 import com.davidmb.tarea3ADbase.models.User;
 import com.davidmb.tarea3ADbase.services.PilgrimService;
-import com.davidmb.tarea3ADbase.services.UserService;
+import com.davidmb.tarea3ADbase.services.StayService;
+import com.davidmb.tarea3ADbase.services.StopService;
 import com.davidmb.tarea3ADbase.utils.ExportarCarnetXML;
 import com.davidmb.tarea3ADbase.view.FxmlView;
 
@@ -53,10 +54,16 @@ public class PilgrimController implements Initializable {
 	private ImageView avatarImageView;
 
 	@Autowired
-	private UserService userService;
-
-	@Autowired
 	private PilgrimService pilgrimService;
+	
+	@Autowired
+	private ExportarCarnetXML exportarCarnet;
+	
+	@Autowired 
+	StayService stayService;
+	
+	@Autowired 
+	StopService stopService;
 
 	@Autowired
 	private Session session;
@@ -98,7 +105,7 @@ public class PilgrimController implements Initializable {
 	 */
 	@FXML
 	private void exportCarnet() {
-		ExportarCarnetXML exportarCarnet = new ExportarCarnetXML();
+		exportarCarnet = new ExportarCarnetXML(stayService, stopService);
 		try {
 			exportarCarnet.exportarCarnet(pilgrimService.findByUserId(session.getLoggedInUser().getId()));
 		} catch (Exception e) {
