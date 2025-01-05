@@ -11,23 +11,20 @@ import com.davidmb.tarea3ADbase.repositories.StayRepository;
 @Service
 public class StayService {
 
-	
-
 	public StayService() {
-		
+
 	}
 
 	@Autowired
 	private StayRepository stayRepository;
 
 	public Stay save(Stay entity) {
-	    return stayRepository.save(entity);
+		return stayRepository.save(entity);
 	}
 
 	public Stay update(Stay entity) {
-	    return stayRepository.save(entity);
+		return stayRepository.save(entity);
 	}
-
 
 	public void delete(Stay entity) {
 		stayRepository.delete(entity);
@@ -37,9 +34,12 @@ public class StayService {
 		stayRepository.deleteById(id);
 	}
 
-
 	public Stay find(Long id) {
 		return stayRepository.findById(id).get();
+	}
+
+	public List<Stay> findAllByPilgrimId(Long id) {
+		return stayRepository.findAllByPilgrim_Id(id);
 	}
 
 	public List<Stay> findAll() {

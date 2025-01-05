@@ -43,6 +43,10 @@ public class StopService {
 		return stopRepository.findAll();
 	}
 	
+	public List<Stop> findAllByPilgrimId(Long id) {
+		return stopRepository.findAllByPilgrim_Id(id);
+	}
+	
 	public Stop findByName(String name) {
 		return stopRepository.findByName(name);
 	}
