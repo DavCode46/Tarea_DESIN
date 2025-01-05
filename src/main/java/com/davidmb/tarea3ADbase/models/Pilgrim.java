@@ -36,7 +36,7 @@ public class Pilgrim {
     @OneToMany(mappedBy = "pilgrim", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Stay> stays = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(
             name = "peregrinos_paradas",
             joinColumns = @JoinColumn(name = "id_peregrino"),

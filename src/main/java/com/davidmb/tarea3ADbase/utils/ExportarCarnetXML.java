@@ -48,7 +48,9 @@ public class ExportarCarnetXML {
     public void exportarCarnet(Pilgrim pilgrim) throws Exception {
     	
     	List<Stay> staysList = stayService.findAllByPilgrimId(pilgrim.getId());
+    	System.out.println(staysList);
     	List<Stop> stopsList = stopService.findAllByPilgrimId(pilgrim.getId());
+    	System.out.println(stopsList);
     	
     	       
        

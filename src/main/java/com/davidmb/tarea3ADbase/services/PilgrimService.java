@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.davidmb.tarea3ADbase.models.Pilgrim;
 import com.davidmb.tarea3ADbase.repositories.PilgrimRepository;
@@ -19,6 +20,7 @@ public class PilgrimService {
 	@Autowired
 	private PilgrimRepository pilgrimRepository;
 
+	@Transactional
 	public Pilgrim save(Pilgrim entity) {
 	    return pilgrimRepository.save(entity);
 	}

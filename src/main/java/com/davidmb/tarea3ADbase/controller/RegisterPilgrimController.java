@@ -2,6 +2,8 @@ package com.davidmb.tarea3ADbase.controller;
 
 import java.io.File;
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -73,20 +75,31 @@ public class RegisterPilgrimController implements Initializable {
 	@FXML
 	private void registerPilgrim() {
 		if(validateData()) {
-			String name = nameField.getText();
-			String email = emailField.getText();
-			String password = passwordField.getText();
-			String nationality = nationalityComboBox.getValue();
-			String stop = stopComboBox.getValue();
-			Stop currentStop = stopService.findByName(stop);
-			Carnet carnet = new Carnet(currentStop);
-			User user = new User(name, "Peregrino", email, password);
-			User newUser = userService.save(user);
-			Pilgrim pilgrim = new Pilgrim(name, nationality, carnet, newUser.getId());
-			pilgrimService.save(pilgrim);
-			showInfoAlert(user);
-			clearFields();
-			stageManager.switchScene(FxmlView.LOGIN);
+			 List<Stop> stops = new LinkedList<>();
+		        String name = nameField.getText();
+		        String email = emailField.getText();
+		        String password = passwordField.getText();
+		        String nationality = nationalityComboBox.getValue();
+		        String stop = stopComboBox.getValue();
+
+		        Stop currentStop = stopService.findByName(stop);
+
+		       
+		        currentStop = stopService.merge(currentStop);
+
+		        Carnet carnet = new Carnet(currentStop);
+		        stops.add(currentStop);
+		        User user = new User(name, "Peregrino", email, password);
+		        User newUser = userService.save(user);
+
+		        Pilgrim pilgrim = new Pilgrim(name, nationality, carnet, newUser.getId());
+		        pilgrim.setStops(stops);
+
+		        pilgrimService.save(pilgrim);
+
+		        showInfoAlert(user);
+		        clearFields();
+		        stageManager.switchScene(FxmlView.LOGIN);
 		} else {
 			errorLabel.setText("Error al registrar.");
 			errorLabel.setStyle("-fx-text-fill: red;");

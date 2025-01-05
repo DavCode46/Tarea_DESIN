@@ -4,9 +4,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.davidmb.tarea3ADbase.models.Stop;
 import com.davidmb.tarea3ADbase.repositories.StopRepository;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 @Service
 public class StopService {
@@ -17,6 +21,10 @@ public class StopService {
 
 	@Autowired
 	private StopRepository stopRepository;
+	
+	@PersistenceContext
+	private EntityManager entityManager;
+
 
 	public Stop save(Stop entity) {
 
@@ -42,17 +50,22 @@ public class StopService {
 	public List<Stop> findAll() {
 		return stopRepository.findAll();
 	}
-	
+
 	public List<Stop> findAllByPilgrimId(Long id) {
 		return stopRepository.findAllByPilgrimId(id);
 	}
-	
+
 	public Stop findByName(String name) {
 		return stopRepository.findByName(name);
 	}
 
 	public void deleteInBatch(List<Stop> users) {
 		stopRepository.deleteAll(users);
+	}
+	
+	@Transactional
+	public Stop merge(Stop stop) {
+	    return entityManager.merge(stop);
 	}
 
 }
