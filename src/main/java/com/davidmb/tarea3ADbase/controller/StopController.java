@@ -6,8 +6,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -16,9 +14,7 @@ import org.springframework.stereotype.Controller;
 import com.davidmb.tarea3ADbase.config.StageManager;
 import com.davidmb.tarea3ADbase.dtos.StayView;
 import com.davidmb.tarea3ADbase.models.Pilgrim;
-import com.davidmb.tarea3ADbase.models.Stop;
 import com.davidmb.tarea3ADbase.services.PilgrimService;
-import com.davidmb.tarea3ADbase.services.UserService;
 import com.davidmb.tarea3ADbase.view.FxmlView;
 
 import javafx.application.Platform;
@@ -27,14 +23,14 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -42,7 +38,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.util.Callback;
 
 /**
  * 
@@ -56,6 +51,15 @@ public class StopController implements Initializable {
 
 	@FXML
 	private Label stopId;
+	
+	@FXML
+	private CheckBox cbStay;
+	
+	@FXML
+	private RadioButton rbYes;
+	
+	@FXML
+	private RadioButton rbNo;
 
 	@FXML
 	private ComboBox<String> cbPilgrims;
@@ -90,9 +94,6 @@ public class StopController implements Initializable {
 
 	@Autowired
 	private PilgrimService pilgrimService;
-	
-
-	private ObservableList<String> pilgrims = FXCollections.observableArrayList();
 
 	@FXML
 	private void exit(ActionEvent event) {
@@ -122,12 +123,13 @@ public class StopController implements Initializable {
 	private void stampCard(ActionEvent event) {
 		
 		if (validateData()) {
-				Pilgrim stop = pilgrimService.find(null);
+				Pilgrim pilgrim = pilgrimService.find(Long.valueOf(cbPilgrims.getValue().split(" ")[1]));
+				System.out.println("Pilgrim: " + pilgrim);
 			
 
-				Pilgrim newPilgrimStop = pilgrimService.save(stop);
+				//Pilgrim newPilgrimStop = pilgrimService.save(stop);
 
-				saveAlert(newPilgrimStop);
+				saveAlert(pilgrim);
 			}
 
 			clearFields();
@@ -180,8 +182,8 @@ public class StopController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
-		cbPilgrims.setItems(pilgrims);
+
+		loadPilgrims();
 
 		pilgrimsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
@@ -251,6 +253,11 @@ public class StopController implements Initializable {
 		stayViews.addAll(stayViewList);
 
 		pilgrimsTable.setItems(stayViews);
+	}
+	
+	private void loadPilgrims() {
+		cbPilgrims.getItems().clear();
+		pilgrimService.findAll().forEach(pilgrim -> cbPilgrims.getItems().addAll("ID: " + pilgrim.getId() + " - " + pilgrim.getName()));
 	}
 
 	/*
