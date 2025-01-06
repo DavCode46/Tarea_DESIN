@@ -14,11 +14,14 @@ import com.davidmb.tarea3ADbase.models.Pilgrim;
 public interface PilgrimRepository extends JpaRepository<Pilgrim, Long> {
 	
 	@Query("SELECT new com.davidmb.tarea3ADbase.dtos.StayView( "
-	         + "p.id, p.name, p.nationality, s.date, s.vip, sp.id) "
-	         + "FROM Pilgrim p "
-	         + "JOIN p.stays s "
-	         + "JOIN p.stops sp")
-	    List<StayView> findAllStayViews();
+		     + "p.name, p.nationality, "
+		     + "CASE WHEN s IS NOT NULL THEN true ELSE false END, "
+		     + "s.date, s.vip) "
+		     + "FROM Pilgrim p "
+		     + "LEFT JOIN p.stays s " 
+		     + "JOIN p.stops sp")
+		List<StayView> findAllStayViews();
+
 
 	Pilgrim findByUserId(Long id);
 	

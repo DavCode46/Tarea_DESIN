@@ -1,6 +1,5 @@
 package com.davidmb.tarea3ADbase.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -10,19 +9,14 @@ import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 
 import com.davidmb.tarea3ADbase.config.StageManager;
+import com.davidmb.tarea3ADbase.dtos.StayView;
 import com.davidmb.tarea3ADbase.models.Pilgrim;
 import com.davidmb.tarea3ADbase.models.Stop;
-import com.davidmb.tarea3ADbase.models.User;
 import com.davidmb.tarea3ADbase.services.PilgrimService;
 import com.davidmb.tarea3ADbase.services.UserService;
 import com.davidmb.tarea3ADbase.view.FxmlView;
@@ -73,31 +67,22 @@ public class StopController implements Initializable {
 	private Button stampCard;
 
 	@FXML
-	private TableView<Pilgrim> pilgrimsTable;
+	private TableView<StayView> pilgrimsTable;
 
 	@FXML
-	private TableColumn<Stop, Long> colStopId;
+	private TableColumn<StayView, String> colPilgrimName;
 
 	@FXML
-	private TableColumn<Stop, String> colPilgrimName;
+	private TableColumn<StayView, String> colPilgrimNationality;
 
 	@FXML
-	private TableColumn<Stop, String> colPilgrimNationality;
-
-	@FXML
-	private TableColumn<Stop, LocalDate> colDoS;
+	private TableColumn<StayView, LocalDate> colDoS;
 	
 	@FXML
-	private TableColumn<Stop, ImageView> colStay;
+	private TableColumn<StayView, Boolean> colStay;
 	
 	@FXML
-	private TableColumn<Stop, ImageView> colVip;
-
-	@FXML
-	private TableColumn<Stop, Boolean> colEdit;
-
-	@FXML
-	private MenuItem deleteStops;
+	private TableColumn<StayView, Boolean> colVip;
 
 	@Lazy
 	@Autowired
@@ -105,10 +90,8 @@ public class StopController implements Initializable {
 
 	@Autowired
 	private PilgrimService pilgrimService;
-	@Autowired
-	private UserService userService;
+	
 
-	private ObservableList<Pilgrim> pilgrimsList = FXCollections.observableArrayList();
 	private ObservableList<String> pilgrims = FXCollections.observableArrayList();
 
 	@FXML
@@ -148,29 +131,9 @@ public class StopController implements Initializable {
 			}
 
 			clearFields();
-			loadPilgrims();
+			loadStayViews();
 		}
 	
-
-		
-
-	
-
-	@FXML
-	private void deleteStops(ActionEvent event) {
-		List<Pilgrim> pilgrims = pilgrimsTable.getSelectionModel().getSelectedItems();
-
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle("Confirmation Dialog");
-		alert.setHeaderText(null);
-		alert.setContentText("Are you sure you want to delete selected?");
-		Optional<ButtonType> action = alert.showAndWait();
-
-		if (action.get() == ButtonType.OK)
-			pilgrimService.deleteInBatch(pilgrims);
-
-		loadPilgrims();
-	}
 
 	private void clearFields() {
 		stopId.setText(null);
@@ -224,7 +187,7 @@ public class StopController implements Initializable {
 
 		setColumnProperties();
 
-		loadPilgrims();
+		loadStayViews();
 	}
 
 	/*
@@ -232,110 +195,66 @@ public class StopController implements Initializable {
 	 */
 	private void setColumnProperties() {
 		
-		colStopId.setCellValueFactory(new PropertyValueFactory<>("id"));
-		colPilgrimName.setCellValueFactory(new PropertyValueFactory<>("name"));
-		colPilgrimNationality.setCellValueFactory(new PropertyValueFactory<>("nationality"));
-		colManagerEmail.setCellValueFactory(new PropertyValueFactory<>("manager"));
-		colManagerId.setCellValueFactory(new PropertyValueFactory<>("userId"));
-        colEdit.setCellFactory(cellFactory);
+		colPilgrimName.setCellValueFactory(new PropertyValueFactory<>("pilgrimName"));
+		colPilgrimNationality.setCellValueFactory(new PropertyValueFactory<>("pilgrimNationality"));
+		
+		colStay.setCellValueFactory(new PropertyValueFactory<>("stay"));
+		
+		colStay.setCellFactory(column -> new TableCell<StayView, Boolean>() {
+			private final ImageView imageView = new ImageView();
+			
+			@Override
+			protected void updateItem(Boolean stay, boolean empty) {
+				super.updateItem(stay, empty);
+				if(empty || stay == null) {
+					setGraphic(null);
+				} else {
+					Image image = new Image(stay ? "/icons/check.png" : "/icons/cross.png");
+					imageView.setImage(image);
+					imageView.setFitHeight(16);
+					imageView.setFitWidth(16);
+					setGraphic(imageView);
+				}
+			}
+		});
+		
+		colDoS.setCellValueFactory(new PropertyValueFactory<>("stayDate"));
+		
+		colVip.setCellValueFactory(new PropertyValueFactory<>("isVip"));
+		colVip.setCellFactory(column -> new TableCell<StayView, Boolean>() {
+			private final ImageView imageView = new ImageView();
+			
+			@Override
+			protected void updateItem(Boolean isVip, boolean empty) {
+				super.updateItem(isVip, empty);
+				if(empty || isVip == null) {
+					setGraphic(null);
+				} else {
+					Image image = new Image(isVip ? "/icons/check.png" : "/icons/cross.png");
+					imageView.setImage(image);
+					imageView.setFitHeight(16);
+					imageView.setFitWidth(16);
+					setGraphic(imageView);
+				}
+			}
+		});
+      
 	}
-
-	Callback<TableColumn<Pilgrim, Boolean>, TableCell<Pilgrim, Boolean>> cellFactory = new Callback<TableColumn<Pilgrim, Boolean>, TableCell<Pilgrim, Boolean>>() {
-		@Override
-		public TableCell<Pilgrim, Boolean> call(final TableColumn<Pilgrim, Boolean> param) {
-			final TableCell<Pilgrim, Boolean> cell = new TableCell<Pilgrim, Boolean>() {
-				Image imgEdit = new Image(getClass().getResourceAsStream("/images/edit.png"));
-				final Button btnEdit = new Button();
-
-				@Override
-				public void updateItem(Boolean check, boolean empty) {
-					super.updateItem(check, empty);
-					if (empty) {
-						setGraphic(null);
-						setText(null);
-					} else {
-						btnEdit.setOnAction(e -> {
-							Stop stop = getTableView().getItems().get(getIndex());
-							updateStop(stop);
-						});
-
-						btnEdit.setStyle("-fx-background-color: transparent;");
-						ImageView iv = new ImageView();
-						iv.setImage(imgEdit);
-						iv.setPreserveRatio(true);
-						iv.setSmooth(true);
-						iv.setCache(true);
-						btnEdit.setGraphic(iv);
-
-						setGraphic(btnEdit);
-						setAlignment(Pos.CENTER);
-						setText(null);
-					}
-				}
-
-				private void updateStop(Stop stop) {
-					stopId.setText(Long.toString(stop.getId()));
-					stopName.setText(stop.getName());		
-					cbregion.getSelectionModel().select(stop.getRegion());
-					managerName.setText(userService.find(stop.getUserId()).getUsername());
-					managerEmail.setText(userService.find(stop.getUserId()).getEmail());
-					managerPassword.setText(userService.find(stop.getUserId()).getPassword());
-				}
-			};
-			return cell;
-		}
-	};
 
 	/*
 	 * Add All users to observable list and update table
 	 */
-	private void loadPilgrims() {
-		pilgrimsList.clear();
-		pilgrimsList.addAll(pilgrimService.findAll());
+	private void loadStayViews() {
+		ObservableList<StayView> stayViews = FXCollections.observableArrayList();
+		
+		List<StayView> stayViewList = pilgrimService.findAllStayViews();
+		stayViews.addAll(stayViewList);
 
-		pilgrimsTable.setItems(pilgrimsList);
+		pilgrimsTable.setItems(stayViews);
 	}
 
 	/*
 	 * Validations
 	 */
-	private boolean validate(String field, String value, String pattern) {
-		if (!value.isEmpty()) {
-			Pattern p = Pattern.compile(pattern);
-			Matcher m = p.matcher(value);
-			if (m.find() && m.group().equals(value)) {
-				return true;
-			} else {
-				validationAlert(field, false);
-				return false;
-			}
-		} else {
-			validationAlert(field, true);
-			return false;
-		}
-	}
-
-	private boolean emptyValidation(String field, boolean empty) {
-		if (!empty) {
-			return true;
-		} else {
-			validationAlert(field, true);
-			return false;
-		}
-	}
-
-	private void validationAlert(String field, boolean empty) {
-		Alert alert = new Alert(AlertType.WARNING);
-		alert.setTitle("Validation Error");
-		alert.setHeaderText(null);
-		if (field.equals("Role"))
-			alert.setContentText("Please Select " + field);
-		else {
-			if (empty)
-				alert.setContentText("Please Enter " + field);
-			else
-				alert.setContentText("Please Enter Valid " + field);
-		}
-		alert.showAndWait();
-	}
+	
 }

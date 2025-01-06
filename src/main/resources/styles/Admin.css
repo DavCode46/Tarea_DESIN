@@ -91,3 +91,8 @@
     -fx-text-fill: #333333;
     -fx-alignment: CENTER_LEFT;
 }
+
+.table-cell {
+    -fx-alignment: center; 
+}
+
