@@ -13,7 +13,7 @@ import com.davidmb.tarea3ADbase.models.Pilgrim;
 @Repository
 public interface PilgrimRepository extends JpaRepository<Pilgrim, Long> {
 	
-	@Query("SELECT new com.davidmb.tarea3ADbase.models.StayView( "
+	@Query("SELECT new com.davidmb.tarea3ADbase.dtos.StayView( "
 	         + "p.id, p.name, p.nationality, s.date, s.vip, sp.id) "
 	         + "FROM Pilgrim p "
 	         + "JOIN p.stays s "
