@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.davidmb.tarea3ADbase.dtos.StayView;
 import com.davidmb.tarea3ADbase.models.Pilgrim;
 import com.davidmb.tarea3ADbase.repositories.PilgrimRepository;
 
@@ -51,6 +52,10 @@ public class PilgrimService {
 	public List<Pilgrim> findAll() {
 		return pilgrimRepository.findAll();
 	}
+	
+	 public List<StayView> findAllStayViews() {
+	        return pilgrimRepository.findAllStayViews();
+	    }
 
 
 	public void deleteInBatch(List<Pilgrim> pilgrims) {

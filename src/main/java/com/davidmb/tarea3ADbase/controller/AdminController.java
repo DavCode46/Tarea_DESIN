@@ -159,7 +159,7 @@ public class AdminController implements Initializable {
 		
 		if (validateData()) {
 
-			if (stopId.getText() == null || stopId.getText() == "") {
+			
 				Stop stop = new Stop();
 				User user = new User();
 				user.setUsername(getManagerName());
@@ -176,16 +176,16 @@ public class AdminController implements Initializable {
 				Stop newStop = stopService.save(stop);
 
 				saveAlert(newStop);
-			} else {
-				Stop stop = stopService.find(Long.parseLong(stopId.getText()));
-				stop.setName(getStopName());
-				stop.setRegion(getRegion().charAt(0));
-				stop.setManager(userService.find(stop.getUserId()).getUsername());
-				stop.setUserId(userService.find(stop.getUserId()).getId());
-
-				Stop updatedStop = stopService.update(stop);
-				updateAlert(updatedStop);
-			}
+//			} else {
+//				Stop stop = stopService.find(Long.parseLong(stopId.getText()));
+//				stop.setName(getStopName());
+//				stop.setRegion(getRegion().charAt(0));
+//				stop.setManager(userService.find(stop.getUserId()).getUsername());
+//				stop.setUserId(userService.find(stop.getUserId()).getId());
+//
+//				Stop updatedStop = stopService.update(stop);
+//				updateAlert(updatedStop);
+//			}
 
 			clearFields();
 			loadStopDetails();
@@ -348,7 +348,7 @@ public class AdminController implements Initializable {
 		User user = session.getLoggedInUser();
 		
 		if (user != null) {
-            loggedInUser.setText(user.getUsername() + " - " + user.getId());
+            loggedInUser.setText("Usuario: " + user.getUsername() + " - ID: " + user.getId());
 		}
 
 		loadNationalities();

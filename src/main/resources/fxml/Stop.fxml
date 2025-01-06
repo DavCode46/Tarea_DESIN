@@ -31,7 +31,7 @@
 		<VBox prefHeight="571.0" prefWidth="306.0" spacing="10.0"
 			styleClass="background" BorderPane.alignment="CENTER">
 			<children>
-				<Label text="Crear parada" styleClass="form-title">
+				<Label text="Sellar Carnet" styleClass="form-title">
 					<font>
 						<Font size="20.0" />
 					</font>
@@ -41,35 +41,21 @@
 				</Label>
 				<HBox prefHeight="30.0" prefWidth="265.0">
 					<children>
-						<Label text="ID Parada -" styleClass="form-title-small" />
-						<Label fx:id="stopId" styleClass="form-title-small" />
+						<Label fx:id="stopId" text="ID Parada -" styleClass="form-title-small" />
 					</children>
 					<VBox.margin>
 						<Insets left="25.0" />
 					</VBox.margin>
 				</HBox>
-				<TextField fx:id="stopName" promptText="Nombre Parada"
-					styleClass="text-field" />
-				<ComboBox fx:id="cbregion"
-					promptText="Selecciona la región" styleClass="combo-box" />
-				<TextField fx:id="managerName"
-					promptText="Nombre del responsable" styleClass="text-field" />
-				<TextField fx:id="managerEmail"
-					promptText="Email del responsable" styleClass="text-field" />
-				<PasswordField fx:id="managerPassword"
-					promptText="Contraseña del manager" styleClass="text-field" />
-				<PasswordField fx:id="confirmManagerPassword"
-					promptText="Confirma contraseña del manager"
-					styleClass="text-field" />
-
-
+				<ComboBox fx:id="cbPilgrims"
+					promptText="Selecciona el peregrino" styleClass="combo-box" />
 
 				<HBox spacing="10.0" alignment="CENTER">
 					<children>
 						<Button fx:id="reset" text="Cancelar"
 							styleClass="white-button" onAction="#reset" />
-						<Button fx:id="saveStop" text="Guardar"
-							styleClass="primary-button" onAction="#saveStop" />
+						<Button fx:id="stampCard" text="Sellar Carnet"
+							styleClass="primary-button" onAction="#stampCard" />
 					</children>
 				</HBox>
 			</children>
@@ -101,19 +87,21 @@
 						</Button>
 					</children>
 				</HBox>
-				<TableView fx:id="stopTable" prefHeight="300.0"
+				<TableView fx:id="pilgrimsTable" prefHeight="300.0"
 					prefWidth="679.0" tableMenuButtonVisible="true">
 					<columns>
 						<TableColumn fx:id="colStopId" maxWidth="700.0"
 							prefWidth="20.0" text="ID" />
-						<TableColumn fx:id="colStopName" maxWidth="4000.0"
-							prefWidth="75.0" text="Nombre Parada" />
-						<TableColumn fx:id="colStopRegion" maxWidth="4000.0"
-							prefWidth="75.0" text="Región Parada" />
-						<TableColumn fx:id="colManagerEmail" maxWidth="4000.0"
-							prefWidth="75.0" text="Email del Responsable" />
-						<TableColumn fx:id="colManagerId" maxWidth="4000.0"
-							prefWidth="60.0" text="ID del Responsable" />
+						<TableColumn fx:id="colPilgrimName" maxWidth="4000.0"
+							prefWidth="75.0" text="Nombre Peregrino" />
+						<TableColumn fx:id="colPilgrimNationality"
+							maxWidth="4000.0" prefWidth="75.0" text="Nacionalidad" />
+						<TableColumn fx:id="colDoS" maxWidth="4000.0"
+							prefWidth="75.0" text="Fecha parada" />
+						<TableColumn fx:id="colStay" maxWidth="4000.0"
+							prefWidth="75.0" text="Estancia" />
+						<TableColumn fx:id="colVip" maxWidth="4000.0"
+							prefWidth="60.0" text="VIP" />
 						<TableColumn fx:id="colEdit" maxWidth="4000.0"
 							prefWidth="60.0" text="Acciones" />
 					</columns>

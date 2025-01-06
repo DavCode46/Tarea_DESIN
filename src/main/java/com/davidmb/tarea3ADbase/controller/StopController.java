@@ -3,6 +3,7 @@ package com.davidmb.tarea3ADbase.controller;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -19,9 +20,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import com.davidmb.tarea3ADbase.config.StageManager;
+import com.davidmb.tarea3ADbase.models.Pilgrim;
 import com.davidmb.tarea3ADbase.models.Stop;
 import com.davidmb.tarea3ADbase.models.User;
-import com.davidmb.tarea3ADbase.services.StopService;
+import com.davidmb.tarea3ADbase.services.PilgrimService;
 import com.davidmb.tarea3ADbase.services.UserService;
 import com.davidmb.tarea3ADbase.view.FxmlView;
 
@@ -39,12 +41,10 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -64,46 +64,34 @@ public class StopController implements Initializable {
 	private Label stopId;
 
 	@FXML
-	private TextField stopName;
-
-	@FXML
-	private ComboBox<String> cbregion;
-	
-	@FXML
-	private TextField managerName;
-
-	@FXML
-	private TextField managerEmail;
-
-	@FXML
-	private PasswordField managerPassword;
-	
-	@FXML
-	private PasswordField confirmManagerPassword;
+	private ComboBox<String> cbPilgrims;
 
 	@FXML
 	private Button reset;
 
 	@FXML
-	private Button saveStop;
+	private Button stampCard;
 
 	@FXML
-	private TableView<Stop> stopTable;
+	private TableView<Pilgrim> pilgrimsTable;
 
 	@FXML
 	private TableColumn<Stop, Long> colStopId;
 
 	@FXML
-	private TableColumn<Stop, String> colStopName;
+	private TableColumn<Stop, String> colPilgrimName;
 
 	@FXML
-	private TableColumn<Stop, String> colStopRegion;
+	private TableColumn<Stop, String> colPilgrimNationality;
 
 	@FXML
-	private TableColumn<Stop, String> colManagerEmail;
+	private TableColumn<Stop, LocalDate> colDoS;
 	
 	@FXML
-	private TableColumn<Stop, String> colManagerId;
+	private TableColumn<Stop, ImageView> colStay;
+	
+	@FXML
+	private TableColumn<Stop, ImageView> colVip;
 
 	@FXML
 	private TableColumn<Stop, Boolean> colEdit;
@@ -116,12 +104,12 @@ public class StopController implements Initializable {
 	private StageManager stageManager;
 
 	@Autowired
-	private StopService stopService;
+	private PilgrimService pilgrimService;
 	@Autowired
 	private UserService userService;
 
-	private ObservableList<Stop> stopList = FXCollections.observableArrayList();
-	private ObservableList<String> regions = FXCollections.observableArrayList();
+	private ObservableList<Pilgrim> pilgrimsList = FXCollections.observableArrayList();
+	private ObservableList<String> pilgrims = FXCollections.observableArrayList();
 
 	@FXML
 	private void exit(ActionEvent event) {
@@ -148,49 +136,29 @@ public class StopController implements Initializable {
 	}
 
 	@FXML
-	private void saveStop(ActionEvent event) {
+	private void stampCard(ActionEvent event) {
 		
 		if (validateData()) {
+				Pilgrim stop = pilgrimService.find(null);
+			
 
-			if (stopId.getText() == null || stopId.getText() == "") {
-				Stop stop = new Stop();
-				User user = new User();
-				user.setUsername(getManagerName());
-				user.setEmail(getManagerEmail());
-				user.setPassword(getManagerPassword());
-				user.setRole("Parada");
-				User newUser = userService.save(user);
-				
-				stop.setName(getStopName());
-				stop.setRegion(getRegion().charAt(0));
-				stop.setManager(newUser.getUsername());
-				stop.setUserId(newUser.getId());
+				Pilgrim newPilgrimStop = pilgrimService.save(stop);
 
-				Stop newStop = stopService.save(stop);
-
-				saveAlert(newStop);
-			} else {
-				Stop stop = stopService.find(Long.parseLong(stopId.getText()));
-				stop.setName(getStopName());
-				stop.setRegion(getRegion().charAt(0));
-				stop.setManager(userService.find(stop.getUserId()).getUsername());
-				stop.setUserId(userService.find(stop.getUserId()).getId());
-
-				Stop updatedStop = stopService.update(stop);
-				updateAlert(updatedStop);
+				saveAlert(newPilgrimStop);
 			}
 
 			clearFields();
-			loadStopDetails();
+			loadPilgrims();
 		}
-	}
+	
+
 		
 
 	
 
 	@FXML
 	private void deleteStops(ActionEvent event) {
-		List<Stop> users = stopTable.getSelectionModel().getSelectedItems();
+		List<Pilgrim> pilgrims = pilgrimsTable.getSelectionModel().getSelectedItems();
 
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Confirmation Dialog");
@@ -199,46 +167,31 @@ public class StopController implements Initializable {
 		Optional<ButtonType> action = alert.showAndWait();
 
 		if (action.get() == ButtonType.OK)
-			stopService.deleteInBatch(users);
+			pilgrimService.deleteInBatch(pilgrims);
 
-		loadStopDetails();
+		loadPilgrims();
 	}
 
 	private void clearFields() {
 		stopId.setText(null);
-		stopName.clear();
-		managerName.clear();
-		cbregion.getSelectionModel().clearSelection();
-		managerEmail.clear();
-		managerPassword.clear();
-		confirmManagerPassword.clear();
+		cbPilgrims.getSelectionModel().clearSelection();
 	}
 	
 	
 
-	private void saveAlert(Stop stop) {
+	private void saveAlert(Pilgrim pilgrim) {
 
 		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("Parada registrada con éxito.");
-		alert.setHeaderText("Parada registrada con éxito.");
-		alert.setContentText("La parada " + stop.getName() + " " + stop.getRegion() + " ha sido creada y el responsable es \n"
-				+ getManagerEmail() + " con id " +  + userService.find(stop.getUserId()).getId() + ".");
-		alert.showAndWait();
-	}
-
-	private void updateAlert(Stop stop) {
-
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("Parada actualizada con éxito.");
-		alert.setHeaderText("Parada actualizada con éxito.");
-		alert.setContentText("Parada " + stop.getName() + " en región " + stop.getRegion() + " ha sido actualizada con éxito.");
+		alert.setTitle("Parada del peregrino registrada con éxito.");
+		alert.setHeaderText("Parada del peregrino registrada con éxito.");
+		alert.setContentText("La parada del peregrino " + pilgrim.getName() + " con ID: " + pilgrim.getId() + " ha sido registrada  \n");
 		alert.showAndWait();
 	}
 	
 	private void showErrorAlert(StringBuilder message) {
 		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error al registrar parada");
-		alert.setHeaderText("Error al registrar parada");
+		alert.setTitle("Error al sellar el carnet del peregrino");
+		alert.setHeaderText("Error al sellar el carnet del peregrino");
 		alert.setContentText(message.toString());
 		alert.showAndWait();
 	}
@@ -246,63 +199,10 @@ public class StopController implements Initializable {
 	private boolean validateData() {
 		boolean ret = false;
 		StringBuilder message = new StringBuilder();
-		String name = stopName.getText();
-		String manager = managerName.getText();
-		String email = managerEmail.getText();
-		String password = managerPassword.getText();
-		String confirmPassword = confirmManagerPassword.getText();
-		User emailExists = userService.findByEmail(email);
-
-		  // Validar nombre de la parada
-        if(name.isEmpty()) {
-        	message.append("El nombre de la parada no puede estar vacío.\n");
-        } else if(name.length() > 20) {
-        	message.append("El nombre de la parada no puede tener más de 20 caracteres.\n");
-		} else if (name.chars().anyMatch(Character::isDigit)) {
-			message.append("El nombre de la parada no puede contener números.\n");
-		}
-        
-        // Validar nombre del responsable
-        if(manager.isEmpty()) {
-        	message.append("El nombre del responsable no puede estar vacío.\n");
-        } else if(manager.length() > 20) {
-        	message.append("El nombre del responsable no puede tener más de 20 caracteres.\n");
-		} else if (manager.chars().anyMatch(Character::isDigit)) {
-			message.append("El nombre del responsable no puede contener números.\n");
-		}
         
         // Validar región
-		if (cbregion.getValue() == null) {
-			message.append("Debes seleccionar una región.\n");
-		}
-              
-        // Validar Email
-		if (email.isEmpty()) {
-			message.append("El Email no puede estar vacío.\n");
-		} else if (emailExists != null) {
-			message.append("El Email ya está registrado.\n");
-		} 
-		else if (email.length() > 50) {
-			message.append("El Email no puede tener más de 50 caracteres.\n");
-		} else if (!email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
-            message.append("El Email no tiene un formato válido.\n");
-		}
-		
-		// Validar Password
-		if (password.isEmpty()) {
-			message.append("La contraseña no puede estar vacía.\n");
-        } else if (password.length() < 8) {
-            message.append("La contraseña debe tener al menos 8 caracteres.\n");
-		} else if (!password.matches(".*\\d.*")) {
-			message.append("La contraseña debe contener al menos un número.\n");
-		} else if (!password.matches(".*[a-z].*")) {
-			message.append("La contraseña debe contener al menos una letra minúscula.\n");
-		} else if (!password.matches(".*[A-Z].*")) {
-			message.append("La contraseña debe contener al menos una letra mayúscula.\n");
-		} else if (!password.matches(".*[!@#$%^&*].*")) {
-			message.append("La contraseña debe contener al menos un carácter especial.\n");
-		} else if (!password.equals(confirmPassword)) {
-			message.append("Las contraseñas no coinciden.\n");
+		if (cbPilgrims.getValue() == null) {
+			message.append("Debes seleccionar un peregrino.\n");
 		}
 
 		if (message.length() > 0) {
@@ -314,41 +214,17 @@ public class StopController implements Initializable {
 	}
 	
 	
-	
-	public String getManagerName() {
-		return managerName.getText();
-	}
-
-	public String getStopName() {
-		return stopName.getText();
-	}
-
-
-	public String getRegion() {
-		return cbregion.getSelectionModel().getSelectedItem();
-	}
-
-	public String getManagerEmail() {
-		return managerEmail.getText();
-	}
-
-	public String getManagerPassword() {
-		return managerPassword.getText();
-	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
-		loadNationalities();
 		
-		cbregion.setItems(regions);
+		cbPilgrims.setItems(pilgrims);
 
-		stopTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		pilgrimsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
 		setColumnProperties();
 
-		// Add all stops into table
-		loadStopDetails();
+		loadPilgrims();
 	}
 
 	/*
@@ -357,17 +233,17 @@ public class StopController implements Initializable {
 	private void setColumnProperties() {
 		
 		colStopId.setCellValueFactory(new PropertyValueFactory<>("id"));
-		colStopName.setCellValueFactory(new PropertyValueFactory<>("name"));
-		colStopRegion.setCellValueFactory(new PropertyValueFactory<>("region"));
+		colPilgrimName.setCellValueFactory(new PropertyValueFactory<>("name"));
+		colPilgrimNationality.setCellValueFactory(new PropertyValueFactory<>("nationality"));
 		colManagerEmail.setCellValueFactory(new PropertyValueFactory<>("manager"));
 		colManagerId.setCellValueFactory(new PropertyValueFactory<>("userId"));
         colEdit.setCellFactory(cellFactory);
 	}
 
-	Callback<TableColumn<Stop, Boolean>, TableCell<Stop, Boolean>> cellFactory = new Callback<TableColumn<Stop, Boolean>, TableCell<Stop, Boolean>>() {
+	Callback<TableColumn<Pilgrim, Boolean>, TableCell<Pilgrim, Boolean>> cellFactory = new Callback<TableColumn<Pilgrim, Boolean>, TableCell<Pilgrim, Boolean>>() {
 		@Override
-		public TableCell<Stop, Boolean> call(final TableColumn<Stop, Boolean> param) {
-			final TableCell<Stop, Boolean> cell = new TableCell<Stop, Boolean>() {
+		public TableCell<Pilgrim, Boolean> call(final TableColumn<Pilgrim, Boolean> param) {
+			final TableCell<Pilgrim, Boolean> cell = new TableCell<Pilgrim, Boolean>() {
 				Image imgEdit = new Image(getClass().getResourceAsStream("/images/edit.png"));
 				final Button btnEdit = new Button();
 
@@ -413,32 +289,11 @@ public class StopController implements Initializable {
 	/*
 	 * Add All users to observable list and update table
 	 */
-	private void loadStopDetails() {
-		stopList.clear();
-		stopList.addAll(stopService.findAll());
+	private void loadPilgrims() {
+		pilgrimsList.clear();
+		pilgrimsList.addAll(pilgrimService.findAll());
 
-		stopTable.setItems(stopList);
-	}
-	
-	private void loadNationalities() {
-		try {
-			File file = new File("src/main/resources/paises.xml"); 
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document document = builder.parse(file);
-			document.getDocumentElement().normalize();
-
-			// Obtener todos los nodos <nombre> del XML
-			NodeList countryNodes = document.getElementsByTagName("nombre");
-			for (int i = 0; i < countryNodes.getLength(); i++) {
-				String countryName = countryNodes.item(i).getTextContent();
-				regions.add(countryName);
-			}
-
-		} catch (Exception e) {
-			
-			e.printStackTrace();
-		}
+		pilgrimsTable.setItems(pilgrimsList);
 	}
 
 	/*
