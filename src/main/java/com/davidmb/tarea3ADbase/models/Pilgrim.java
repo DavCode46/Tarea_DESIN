@@ -33,10 +33,10 @@ public class Pilgrim {
     private Carnet carnet;
 
   
-    @OneToMany(mappedBy = "pilgrim", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "pilgrim", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Stay> stays = new ArrayList<>();
 
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(
         name = "peregrinos_paradas",
         joinColumns = @JoinColumn(name = "id_peregrino"),

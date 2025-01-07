@@ -77,6 +77,7 @@ public class PilgrimService {
 		// Recuperar datos actualizados desde la base de datos
 		Pilgrim dbPilgrim = pilgrimRepository.findById(pilgrim.getId())
 				.orElseThrow(() -> new IllegalArgumentException("Peregrino no encontrado"));
+		
 		Stop dbStop = stopService.find(stop.getId());
 
 		// Asociar la parada al peregrino
@@ -95,8 +96,9 @@ public class PilgrimService {
 
 			if (!stayExists) {
 				Stay stay = new Stay(LocalDate.now(), isVip, dbPilgrim, dbStop);
-				System.out.println("Estancia creada: " + stay);
+				
 				dbPilgrim.getStays().add(stay);
+				System.out.println(dbPilgrim.getStays());
 
 				// Incrementar VIP si corresponde
 				if (isVip) {
@@ -106,18 +108,14 @@ public class PilgrimService {
 			}
 		}
 
-		Pilgrim updatedPilgrim = pilgrimRepository.save(dbPilgrim);
-		System.out.println("-: ".repeat(1000));
-		System.out.println("Peregrino: " + dbPilgrim);
-		System.out.println("-: ".repeat(1000));
-		System.out.println("Peregrino actualizado: " + updatedPilgrim);
-		System.out.println("-: ".repeat(1000));
-		System.out.println("Parada: " + dbStop);
-		// entityManager.flush();
+		if (stampStop) {
+			pilgrimRepository.save(dbPilgrim);
+		}
+		
 		if (stampStop && stampStay) {
-			return new ServiceResponse<>(true, updatedPilgrim, "Parada y estancia sellada con éxito.");
+			return new ServiceResponse<>(true, dbPilgrim, "Parada y estancia sellada con éxito.");
 		} else if (stampStop) {
-			return new ServiceResponse<>(true, updatedPilgrim, "Parada sellada con éxito.");
+			return new ServiceResponse<>(true, dbPilgrim, "Parada sellada con éxito.");
 		} else {
 			return new ServiceResponse<>(false, null, "No se ha podido actualizar el peregrino, ya ha sellado en la parada.");
 		}

@@ -32,7 +32,7 @@ public class Stop implements Serializable {
 	@Column(name = "id_usuario", nullable = true)
 	private Long userId;
 
-	@ManyToMany(mappedBy = "stops", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+	@ManyToMany(mappedBy = "stops", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	private List<Pilgrim> pilgrims = new ArrayList<>();
 
 	public Stop() {

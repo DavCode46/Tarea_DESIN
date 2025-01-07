@@ -2,7 +2,7 @@ package com.davidmb.tarea3ADbase.controller;
 
 import java.io.File;
 import java.net.URL;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -29,12 +29,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.image.Image;
-import javafx.stage.Stage;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 
 
 @Controller
@@ -77,7 +77,7 @@ public class RegisterPilgrimController implements Initializable {
 	@FXML
 	private void registerPilgrim() {
 		if(validateData()) {
-			 List<Stop> stops = new LinkedList<>();
+			
 		        String name = nameField.getText();
 		        String email = emailField.getText();
 		        String password = passwordField.getText();
@@ -86,26 +86,20 @@ public class RegisterPilgrimController implements Initializable {
 
 		        Stop currentStop = stopService.findByName(stop);
 
-		       
-		        currentStop = stopService.merge(currentStop);
-
 		        Carnet carnet = new Carnet(currentStop);
-		        stops.add(currentStop);
+		      
 		        User user = new User(name, "Peregrino", email, password);
 		        User newUser = userService.save(user);
 
 		        Pilgrim pilgrim = new Pilgrim(name, nationality, carnet, newUser.getId());
-		        pilgrim.setStops(stops);
+		        pilgrim.getStops().add(currentStop);
 
 		        pilgrimService.save(pilgrim);
 
 		        showInfoAlert(user);
 		        clearFields();
 		        stageManager.switchScene(FxmlView.LOGIN);
-		} else {
-			errorLabel.setText("Error al registrar.");
-			errorLabel.setStyle("-fx-text-fill: red;");
-		}
+		} 
 	}
 
 	@FXML

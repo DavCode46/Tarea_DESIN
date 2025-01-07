@@ -144,6 +144,9 @@ public class AdminController implements Initializable {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Logout");
 		alert.setHeaderText("¿Estás seguro que quieres cerrar sesión?");
+		 // Cambiar el ícono de la ventana
+	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/logout.png")));
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK) {
 			stageManager.switchScene(FxmlView.LOGIN);

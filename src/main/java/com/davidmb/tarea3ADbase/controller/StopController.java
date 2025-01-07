@@ -122,6 +122,9 @@ public class StopController implements Initializable {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Logout");
 		alert.setHeaderText("¿Estás seguro que quieres cerrar sesión?");
+		 // Cambiar el ícono de la ventana
+	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/logout.png")));
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK) {
 			stageManager.switchScene(FxmlView.LOGIN);
@@ -136,6 +139,9 @@ public class StopController implements Initializable {
 	@FXML
 	private void stampCard(ActionEvent event) {
 	    if (validateData()) {
+	    	if(!cbStay.isSelected()) {
+				rbNo.setSelected(true);
+	    	}
 	        Pilgrim pilgrim = pilgrimService.find(Long.valueOf(cbPilgrims.getValue().split(" ")[1]));
 	        Stop stop = stopService.findByUserId(user.getId());
 	        ServiceResponse<Pilgrim> serviceResponse = pilgrimService.stampCard(pilgrim, stop, rbYes.isSelected(), cbStay.isSelected());
