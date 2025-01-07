@@ -6,7 +6,7 @@ public class PasswordHasher {
 	public static void main(String args[]) {
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		
-		String rawPassword = "Admin1234@";
+		String rawPassword = "Rambo4646@";
 		
 		String hashedPassword = passwordEncoder.encode(rawPassword);
 		

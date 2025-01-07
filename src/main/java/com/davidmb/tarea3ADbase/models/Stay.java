@@ -83,20 +83,21 @@ public class Stay {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(date, id, pilgrim, stop, vip);
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Stay stay = (Stay) obj;
+        return Objects.equals(id, stay.id) ||
+               (Objects.equals(date, stay.date) && 
+                stop != null && Objects.equals(stop, stay.stop));
     }
 
+
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null || getClass() != obj.getClass())
-            return false;
-        Stay other = (Stay) obj;
-        return Objects.equals(date, other.date) && Objects.equals(id, other.id)
-                && Objects.equals(pilgrim, other.pilgrim) && Objects.equals(stop, other.stop) && vip == other.vip;
+    public int hashCode() {
+        return Objects.hash(id, date, stop); 
     }
+
 
     @Override
     public String toString() {

@@ -28,6 +28,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 
 @Controller
 public class PilgrimController implements Initializable {
@@ -133,6 +134,9 @@ public class PilgrimController implements Initializable {
 		alert.setTitle(title);
 		alert.setHeaderText(null);
 		alert.setContentText(message);
+		 // Cambiar el ícono de la ventana
+	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
 		alert.showAndWait();
 	}
 
@@ -144,6 +148,9 @@ public class PilgrimController implements Initializable {
 		alert.setTitle(title);
 		alert.setHeaderText(null);
 		alert.setContentText(message);
+		 // Cambiar el ícono de la ventana
+	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/error.png")));
 		alert.showAndWait();
 	}
 }

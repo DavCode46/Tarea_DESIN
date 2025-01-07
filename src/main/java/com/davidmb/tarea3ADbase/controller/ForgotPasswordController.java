@@ -19,6 +19,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 
 @Controller
 public class ForgotPasswordController implements Initializable{
@@ -129,6 +131,9 @@ public class ForgotPasswordController implements Initializable{
 		alert.setTitle("Contraseña restablecida.");
 		alert.setHeaderText("Contraseña restablecida.");
 		alert.setContentText("La contraseña del usuario " + email + " se ha restablecido con éxito.");
+		 // Cambiar el ícono de la ventana
+	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
 		alert.showAndWait();
 	}
 	
@@ -137,6 +142,9 @@ public class ForgotPasswordController implements Initializable{
 		alert.setTitle("Error al registrar parada");
 		alert.setHeaderText("Error al registrar parada");
 		alert.setContentText(message.toString());
+		 // Cambiar el ícono de la ventana
+	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/error.png")));
 		alert.showAndWait();
 	}
 

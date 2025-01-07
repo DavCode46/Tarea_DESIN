@@ -49,6 +49,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 /**
@@ -230,6 +231,9 @@ public class AdminController implements Initializable {
 		alert.setHeaderText("Parada registrada con éxito.");
 		alert.setContentText("La parada " + stop.getName() + " " + stop.getRegion() + " ha sido creada y el responsable es \n"
 				+ getManagerEmail() + " con id " +  + userService.find(stop.getUserId()).getId() + ".");
+		 // Cambiar el ícono de la ventana
+	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
 		alert.showAndWait();
 	}
 
@@ -239,6 +243,9 @@ public class AdminController implements Initializable {
 		alert.setTitle("Parada actualizada con éxito.");
 		alert.setHeaderText("Parada actualizada con éxito.");
 		alert.setContentText("Parada " + stop.getName() + " en región " + stop.getRegion() + " ha sido actualizada con éxito.");
+		 // Cambiar el ícono de la ventana
+	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
 		alert.showAndWait();
 	}
 	
@@ -247,6 +254,9 @@ public class AdminController implements Initializable {
 		alert.setTitle("Error al registrar parada");
 		alert.setHeaderText("Error al registrar parada");
 		alert.setContentText(message.toString());
+		 // Cambiar el ícono de la ventana
+	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/error.png")));
 		alert.showAndWait();
 	}
 	

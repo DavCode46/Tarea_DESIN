@@ -46,6 +46,10 @@ public class StopService {
 	public Stop find(Long id) {
 		return stopRepository.findById(id).get();
 	}
+	
+	public Stop findByUserId(Long id) {
+		return stopRepository.findByUserId(id);
+	}
 
 	public List<Stop> findAll() {
 		return stopRepository.findAll();

@@ -33,14 +33,14 @@ public class Pilgrim {
     private Carnet carnet;
 
   
-    @OneToMany(mappedBy = "pilgrim", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "pilgrim", cascade = CascadeType.PERSIST)
     private List<Stay> stays = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinTable(
-            name = "peregrinos_paradas",
-            joinColumns = @JoinColumn(name = "id_peregrino"),
-            inverseJoinColumns = @JoinColumn(name = "id_parada")
+        name = "peregrinos_paradas",
+        joinColumns = @JoinColumn(name = "id_peregrino"),
+        inverseJoinColumns = @JoinColumn(name = "id_parada")
     )
     private List<Stop> stops = new LinkedList<>();
 
@@ -112,7 +112,7 @@ public class Pilgrim {
 
     @Override
     public int hashCode() {
-        return Objects.hash(carnet, id, name, nationality, stays, stops, userId);
+        return Objects.hash(id, name, nationality, userId);
     }
 
     @Override
@@ -122,10 +122,12 @@ public class Pilgrim {
         if (obj == null || getClass() != obj.getClass())
             return false;
         Pilgrim other = (Pilgrim) obj;
-        return Objects.equals(carnet, other.carnet) && Objects.equals(id, other.id) && Objects.equals(name, other.name)
-                && Objects.equals(nationality, other.nationality) && Objects.equals(stays, other.stays)
-                && Objects.equals(stops, other.stops) && Objects.equals(userId, other.userId);
+        return Objects.equals(id, other.id) &&
+               Objects.equals(name, other.name) &&
+               Objects.equals(nationality, other.nationality) &&
+               Objects.equals(userId, other.userId);
     }
+
 
     @Override
     public String toString() {

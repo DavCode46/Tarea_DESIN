@@ -15,6 +15,8 @@ public interface StopRepository extends JpaRepository<Stop, Long> {
 
 	Stop findByName(String name);
 	
+	Stop findByUserId(Long id);
+	
 	 @Query("SELECT s FROM Stop s JOIN s.pilgrims p WHERE p.id = :pilgrimId")
 	    List<Stop> findAllByPilgrimId(@Param("pilgrimId") Long pilgrimId);
 	

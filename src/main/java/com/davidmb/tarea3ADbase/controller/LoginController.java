@@ -19,6 +19,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -80,6 +82,9 @@ public class LoginController implements Initializable {
         alert.setTitle("Error al iniciar sesión");
         alert.setHeaderText("Usuario o contraseña incorrectos");
         alert.setContentText("Por favor, introduzca un usuario y contraseña válidos");
+        // Cambiar el ícono de la ventana
+	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/error.png")));
         alert.showAndWait();
 	}
 	
@@ -88,6 +93,9 @@ public class LoginController implements Initializable {
 		alert.setTitle("Sesión iniciada como: " + user.getEmail());
 		alert.setHeaderText(null);
 		alert.setContentText("¡Bienvenido: " + user.getEmail() + "!\n");
+		 // Cambiar el ícono de la ventana
+	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
 		alert.showAndWait();
 	}
 	

@@ -11,10 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
+import com.davidmb.tarea3ADbase.auth.Session;
 import com.davidmb.tarea3ADbase.config.StageManager;
+import com.davidmb.tarea3ADbase.dtos.ServiceResponse;
 import com.davidmb.tarea3ADbase.dtos.StayView;
 import com.davidmb.tarea3ADbase.models.Pilgrim;
+import com.davidmb.tarea3ADbase.models.Stop;
+import com.davidmb.tarea3ADbase.models.User;
 import com.davidmb.tarea3ADbase.services.PilgrimService;
+import com.davidmb.tarea3ADbase.services.StopService;
 import com.davidmb.tarea3ADbase.view.FxmlView;
 
 import javafx.application.Platform;
@@ -38,6 +43,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 
 /**
  * 
@@ -51,13 +57,13 @@ public class StopController implements Initializable {
 
 	@FXML
 	private Label stopId;
-	
+
 	@FXML
 	private CheckBox cbStay;
-	
+
 	@FXML
 	private RadioButton rbYes;
-	
+
 	@FXML
 	private RadioButton rbNo;
 
@@ -81,10 +87,10 @@ public class StopController implements Initializable {
 
 	@FXML
 	private TableColumn<StayView, LocalDate> colDoS;
-	
+
 	@FXML
 	private TableColumn<StayView, Boolean> colStay;
-	
+
 	@FXML
 	private TableColumn<StayView, Boolean> colVip;
 
@@ -94,6 +100,14 @@ public class StopController implements Initializable {
 
 	@Autowired
 	private PilgrimService pilgrimService;
+
+	@Autowired
+	private StopService stopService;
+
+	@Autowired
+	private Session session;
+
+	private User user;
 
 	@FXML
 	private void exit(ActionEvent event) {
@@ -121,51 +135,72 @@ public class StopController implements Initializable {
 
 	@FXML
 	private void stampCard(ActionEvent event) {
-		
-		if (validateData()) {
-				Pilgrim pilgrim = pilgrimService.find(Long.valueOf(cbPilgrims.getValue().split(" ")[1]));
-				System.out.println("Pilgrim: " + pilgrim);
-			
-
-				//Pilgrim newPilgrimStop = pilgrimService.save(stop);
-
-				saveAlert(pilgrim);
-			}
-
-			clearFields();
-			loadStayViews();
-		}
-	
+	    if (validateData()) {
+	        Pilgrim pilgrim = pilgrimService.find(Long.valueOf(cbPilgrims.getValue().split(" ")[1]));
+	        Stop stop = stopService.findByUserId(user.getId());
+	        ServiceResponse<Pilgrim> serviceResponse = pilgrimService.stampCard(pilgrim, stop, rbYes.isSelected(), cbStay.isSelected());
+	       if( (serviceResponse != null)) {
+               if(serviceResponse.isSuccess()) {
+					saveAlert(serviceResponse, pilgrim);
+				} else {
+					showServiceResponseError(serviceResponse, pilgrim);
+               }
+               clearFields();
+	       } else {
+               showErrorAlert(new StringBuilder("Error al sellar el carnet del peregrino"));
+	       }
+	        loadStayViews();
+	    }
+	}
 
 	private void clearFields() {
 		stopId.setText(null);
 		cbPilgrims.getSelectionModel().clearSelection();
 	}
-	
-	
 
-	private void saveAlert(Pilgrim pilgrim) {
+	private void saveAlert(ServiceResponse<Pilgrim> serviceResponse, Pilgrim pilgrim) {
+	    Alert alert = new Alert(AlertType.INFORMATION);
+	    alert.setTitle(serviceResponse.getMessage());
+	    alert.setHeaderText(serviceResponse.getMessage());
+	    alert.setContentText("La parada del peregrino " + pilgrim.getName() + " con ID: " + pilgrim.getId()
+	            + " ha sido registrada  \n");
 
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("Parada del peregrino registrada con éxito.");
-		alert.setHeaderText("Parada del peregrino registrada con éxito.");
-		alert.setContentText("La parada del peregrino " + pilgrim.getName() + " con ID: " + pilgrim.getId() + " ha sido registrada  \n");
+	    // Cambiar el ícono de la ventana
+	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
+
+	    alert.showAndWait();
+	}
+
+	
+	private void showServiceResponseError(ServiceResponse<Pilgrim> serviceResponse, Pilgrim pilgrim) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error al sellar el carnet del peregrino");
+		alert.setHeaderText("Ha ocurrido un error al sellar el carnet del peregrino");
+		alert.setContentText("Ha ocurrido un error al sellar el carnet del peregrino " + pilgrim.getName() + " con ID: "
+				+ pilgrim.getId() + "\n" + serviceResponse.getMessage());
+		 // Cambiar el ícono de la ventana
+	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/error.png")));
 		alert.showAndWait();
 	}
-	
+
 	private void showErrorAlert(StringBuilder message) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error al sellar el carnet del peregrino");
 		alert.setHeaderText("Error al sellar el carnet del peregrino");
 		alert.setContentText(message.toString());
+		 // Cambiar el ícono de la ventana
+	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/error.png")));
 		alert.showAndWait();
 	}
-	
+
 	private boolean validateData() {
 		boolean ret = false;
 		StringBuilder message = new StringBuilder();
-        
-        // Validar región
+
+		// Validar peregrino
 		if (cbPilgrims.getValue() == null) {
 			message.append("Debes seleccionar un peregrino.\n");
 		}
@@ -177,11 +212,13 @@ public class StopController implements Initializable {
 		}
 		return ret;
 	}
-	
-	
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+
+		user = session.getLoggedInUser();
+
+		stopId.setText("ID: " + user.getId() + " - " + user.getUsername());
 
 		loadPilgrims();
 
@@ -196,19 +233,19 @@ public class StopController implements Initializable {
 	 * Set All userTable column properties
 	 */
 	private void setColumnProperties() {
-		
+
 		colPilgrimName.setCellValueFactory(new PropertyValueFactory<>("pilgrimName"));
 		colPilgrimNationality.setCellValueFactory(new PropertyValueFactory<>("pilgrimNationality"));
-		
+
 		colStay.setCellValueFactory(new PropertyValueFactory<>("stay"));
-		
+
 		colStay.setCellFactory(column -> new TableCell<StayView, Boolean>() {
 			private final ImageView imageView = new ImageView();
-			
+
 			@Override
 			protected void updateItem(Boolean stay, boolean empty) {
 				super.updateItem(stay, empty);
-				if(empty || stay == null) {
+				if (empty || stay == null) {
 					setGraphic(null);
 				} else {
 					Image image = new Image(stay ? "/icons/check.png" : "/icons/cross.png");
@@ -219,17 +256,17 @@ public class StopController implements Initializable {
 				}
 			}
 		});
-		
+
 		colDoS.setCellValueFactory(new PropertyValueFactory<>("stayDate"));
-		
+
 		colVip.setCellValueFactory(new PropertyValueFactory<>("isVip"));
 		colVip.setCellFactory(column -> new TableCell<StayView, Boolean>() {
 			private final ImageView imageView = new ImageView();
-			
+
 			@Override
 			protected void updateItem(Boolean isVip, boolean empty) {
 				super.updateItem(isVip, empty);
-				if(empty || isVip == null) {
+				if (empty || isVip == null) {
 					setGraphic(null);
 				} else {
 					Image image = new Image(isVip ? "/icons/check.png" : "/icons/cross.png");
@@ -240,7 +277,7 @@ public class StopController implements Initializable {
 				}
 			}
 		});
-      
+
 	}
 
 	/*
@@ -248,20 +285,22 @@ public class StopController implements Initializable {
 	 */
 	private void loadStayViews() {
 		ObservableList<StayView> stayViews = FXCollections.observableArrayList();
-		
-		List<StayView> stayViewList = pilgrimService.findAllStayViews();
+
+		List<StayView> stayViewList = pilgrimService
+				.findAllStayViewsByStop(stopService.findByUserId(user.getId()).getId());
 		stayViews.addAll(stayViewList);
 
 		pilgrimsTable.setItems(stayViews);
 	}
-	
+
 	private void loadPilgrims() {
 		cbPilgrims.getItems().clear();
-		pilgrimService.findAll().forEach(pilgrim -> cbPilgrims.getItems().addAll("ID: " + pilgrim.getId() + " - " + pilgrim.getName()));
+		pilgrimService.findAll()
+				.forEach(pilgrim -> cbPilgrims.getItems().addAll("ID: " + pilgrim.getId() + " - " + pilgrim.getName()));
 	}
 
 	/*
 	 * Validations
 	 */
-	
+
 }

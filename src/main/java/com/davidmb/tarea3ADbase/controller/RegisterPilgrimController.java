@@ -29,6 +29,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -153,6 +155,9 @@ public class RegisterPilgrimController implements Initializable {
 		alert.setTitle("Registro completado");
 		alert.setHeaderText("Registro completado");
 		alert.setContentText("Usuario " + user.getEmail() + " registrado correctamente.");
+		 // Cambiar el ícono de la ventana
+	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
 		alert.showAndWait();
 	}
 	
@@ -161,6 +166,9 @@ public class RegisterPilgrimController implements Initializable {
 		alert.setTitle("Error al registrar peregrino");
 		alert.setHeaderText("Error al registrar peregrino");
 		alert.setContentText(message.toString());
+		 // Cambiar el ícono de la ventana
+	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/error.png")));
 		alert.showAndWait();
 	}
 	

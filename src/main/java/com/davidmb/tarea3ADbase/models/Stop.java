@@ -32,7 +32,7 @@ public class Stop implements Serializable {
 	@Column(name = "id_usuario", nullable = true)
 	private Long userId;
 
-	@ManyToMany(mappedBy = "stops", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany(mappedBy = "stops", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
 	private List<Pilgrim> pilgrims = new ArrayList<>();
 
 	public Stop() {
@@ -99,21 +99,19 @@ public class Stop implements Serializable {
 	}
 
 	@Override
-	public int hashCode() {
-		return Objects.hash(id, manager, name, pilgrims, region, userId);
+	public boolean equals(Object obj) {
+	    if (this == obj) return true;
+	    if (obj == null || getClass() != obj.getClass()) return false;
+	    Stop stop = (Stop) obj;
+	    return Objects.equals(id, stop.id); 
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null || getClass() != obj.getClass())
-			return false;
-		Stop other = (Stop) obj;
-		return Objects.equals(id, other.id) && Objects.equals(manager, other.manager)
-				&& Objects.equals(name, other.name) && Objects.equals(pilgrims, other.pilgrims)
-				&& region == other.region && Objects.equals(userId, other.userId);
+	public int hashCode() {
+	    return Objects.hash(id);
 	}
+
+
 
 	@Override
 	public String toString() {
