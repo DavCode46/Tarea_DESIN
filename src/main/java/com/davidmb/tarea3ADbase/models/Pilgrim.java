@@ -1,10 +1,25 @@
 package com.davidmb.tarea3ADbase.models;
 
-import jakarta.persistence.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.Table;
 
 /**
  * Clase que representa a un peregrino, cuando se crea un peregrino
@@ -29,20 +44,22 @@ public class Pilgrim {
     private Long userId;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "id_carnet", referencedColumnName = "id")
+    @PrimaryKeyJoinColumn
     private Carnet carnet;
 
-  
+    //@Embeddable --> N:M con atributos extras
+  // Puede Set
     @OneToMany(mappedBy = "pilgrim", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Stay> stays = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    // Implementar interfaz comparable en paradas
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(
         name = "peregrinos_paradas",
         joinColumns = @JoinColumn(name = "id_peregrino"),
         inverseJoinColumns = @JoinColumn(name = "id_parada")
     )
-    private List<Stop> stops = new LinkedList<>();
+    private List<Stop> stops = new ArrayList<>();
 
     public Pilgrim() {
     }

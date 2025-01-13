@@ -1,8 +1,20 @@
 package com.davidmb.tarea3ADbase.models;
 
-import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.Objects;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.Table;
 
 /**
  * Clase que representa un carnet de peregrino
@@ -28,6 +40,10 @@ public class Carnet {
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "paradaInicial", referencedColumnName = "id")
     private Stop initialStop;
+    
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @PrimaryKeyJoinColumn
+    private Pilgrim pilgrim;
 
     public Carnet() {
         super();
@@ -38,66 +54,79 @@ public class Carnet {
         this.initialStop = initialStop;
     }
 
-    public Long getId() {
-        return id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public LocalDate getDoExp() {
-        return doExp;
-    }
+	public LocalDate getDoExp() {
+		return doExp;
+	}
 
-    public void setDoExp(LocalDate doExp) {
-        this.doExp = doExp;
-    }
+	public void setDoExp(LocalDate doExp) {
+		this.doExp = doExp;
+	}
 
-    public double getDistance() {
-        return distance;
-    }
+	public double getDistance() {
+		return distance;
+	}
 
-    public void setDistance(double distance) {
-        this.distance = distance;
-    }
+	public void setDistance(double distance) {
+		this.distance = distance;
+	}
 
-    public int getnVips() {
-        return nVips;
-    }
+	public int getnVips() {
+		return nVips;
+	}
 
-    public void setnVips(int nVips) {
-        this.nVips = nVips;
-    }
+	public void setnVips(int nVips) {
+		this.nVips = nVips;
+	}
 
-    public Stop getInitialStop() {
-        return initialStop;
-    }
+	public Stop getInitialStop() {
+		return initialStop;
+	}
 
-    public void setInitialStop(Stop initialStop) {
-        this.initialStop = initialStop;
-    }
+	public void setInitialStop(Stop initialStop) {
+		this.initialStop = initialStop;
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(distance, doExp, id, initialStop, nVips);
-    }
+	public Pilgrim getPilgrim() {
+		return pilgrim;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null || getClass() != obj.getClass())
-            return false;
-        Carnet other = (Carnet) obj;
-        return Double.doubleToLongBits(distance) == Double.doubleToLongBits(other.distance)
-                && Objects.equals(doExp, other.doExp) && Objects.equals(id, other.id)
-                && Objects.equals(initialStop, other.initialStop) && nVips == other.nVips;
-    }
+	public void setPilgrim(Pilgrim pilgrim) {
+		this.pilgrim = pilgrim;
+	}
 
-    @Override
-    public String toString() {
-        return "Carnet [id=" + id + ", doExp=" + doExp + ", distance=" + distance + ", nVips=" + nVips
-                + ", initialStop=" + (initialStop != null ? initialStop.getName() : "null") + "]";
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(distance, doExp, id, initialStop, nVips, pilgrim);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Carnet other = (Carnet) obj;
+		return Double.doubleToLongBits(distance) == Double.doubleToLongBits(other.distance)
+				&& Objects.equals(doExp, other.doExp) && Objects.equals(id, other.id)
+				&& Objects.equals(initialStop, other.initialStop) && nVips == other.nVips
+				&& Objects.equals(pilgrim, other.pilgrim);
+	}
+
+	@Override
+	public String toString() {
+		return "Carnet [id=" + id + ", doExp=" + doExp + ", distance=" + distance + ", nVips=" + nVips
+				+ ", initialStop=" + initialStop + ", pilgrim=" + pilgrim + "]";
+	}
+
+   
 }

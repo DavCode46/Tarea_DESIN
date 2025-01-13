@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <carnet>
-    <id>8</id>
-    <fechaexp>2025-01-05</fechaexp>
-    <expedidoen>Cantabria</expedidoen>
+    <id>1</id>
+    <fechaexp>2025-01-13</fechaexp>
+    <expedidoen>Siero</expedidoen>
     <peregrino>
         <nombre>David</nombre>
-        <nacionalidad>Austria</nacionalidad>
+        <nacionalidad>Indonesia</nacionalidad>
     </peregrino>
-    <hoy>2025-01-05</hoy>
+    <hoy>2025-01-13</hoy>
     <distanciatotal>0,0</distanciatotal>
     <paradas>
         <parada>
             <orden>1</orden>
-            <nombre>Cantabria</nombre>
-            <region>C</region>
+            <nombre>Siero</nombre>
+            <region>A</region>
         </parada>
     </paradas>
     <estancias/>

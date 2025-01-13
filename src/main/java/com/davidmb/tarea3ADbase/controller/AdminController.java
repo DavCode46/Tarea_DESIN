@@ -64,7 +64,7 @@ public class AdminController implements Initializable {
 
 	@FXML
 	private Label stopId;
-	
+
 	@FXML
 	private Label loggedInUser;
 
@@ -73,7 +73,7 @@ public class AdminController implements Initializable {
 
 	@FXML
 	private ComboBox<String> cbregion;
-	
+
 	@FXML
 	private TextField managerName;
 
@@ -82,7 +82,7 @@ public class AdminController implements Initializable {
 
 	@FXML
 	private PasswordField managerPassword;
-	
+
 	@FXML
 	private PasswordField confirmManagerPassword;
 
@@ -106,7 +106,7 @@ public class AdminController implements Initializable {
 
 	@FXML
 	private TableColumn<Stop, String> colManagerEmail;
-	
+
 	@FXML
 	private TableColumn<Stop, String> colManagerId;
 
@@ -119,7 +119,7 @@ public class AdminController implements Initializable {
 	@Lazy
 	@Autowired
 	private StageManager stageManager;
-	
+
 	@Autowired
 	private Session session;
 
@@ -144,9 +144,9 @@ public class AdminController implements Initializable {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Logout");
 		alert.setHeaderText("¿Estás seguro que quieres cerrar sesión?");
-		 // Cambiar el ícono de la ventana
-	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/logout.png")));
+		// Cambiar el ícono de la ventana
+		Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+		alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/logout.png")));
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK) {
 			stageManager.switchScene(FxmlView.LOGIN);
@@ -160,44 +160,31 @@ public class AdminController implements Initializable {
 
 	@FXML
 	private void saveStop(ActionEvent event) {
-		
+
 		if (validateData()) {
 
-			
-				Stop stop = new Stop();
-				User user = new User();
-				user.setUsername(getManagerName());
-				user.setEmail(getManagerEmail());
-				user.setPassword(getManagerPassword());
-				user.setRole("Parada");
-				User newUser = userService.save(user);
-				
-				stop.setName(getStopName());
-				stop.setRegion(getRegion().charAt(0));
-				stop.setManager(newUser.getUsername());
-				stop.setUserId(newUser.getId());
+			Stop stop = new Stop();
+			User user = new User();
+			user.setUsername(getManagerName());
+			user.setEmail(getManagerEmail());
+			user.setPassword(getManagerPassword());
+			user.setRole("Parada");
+			User newUser = userService.save(user);
 
-				Stop newStop = stopService.save(stop);
+			stop.setName(getStopName());
+			stop.setRegion(getRegion().substring(0, 3));
+			stop.setManager(newUser.getUsername());
+			stop.setUserId(newUser.getId());
 
-				saveAlert(newStop);
-//			} else {
-//				Stop stop = stopService.find(Long.parseLong(stopId.getText()));
-//				stop.setName(getStopName());
-//				stop.setRegion(getRegion().charAt(0));
-//				stop.setManager(userService.find(stop.getUserId()).getUsername());
-//				stop.setUserId(userService.find(stop.getUserId()).getId());
-//
-//				Stop updatedStop = stopService.update(stop);
-//				updateAlert(updatedStop);
-//			}
+			Stop newStop = stopService.save(stop);
+
+			saveAlert(newStop);
+
 
 			clearFields();
 			loadStopDetails();
 		}
 	}
-		
-
-	
 
 	@FXML
 	private void deleteStops(ActionEvent event) {
@@ -224,45 +211,32 @@ public class AdminController implements Initializable {
 		managerPassword.clear();
 		confirmManagerPassword.clear();
 	}
-	
-	
 
 	private void saveAlert(Stop stop) {
 
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Parada registrada con éxito.");
 		alert.setHeaderText("Parada registrada con éxito.");
-		alert.setContentText("La parada " + stop.getName() + " " + stop.getRegion() + " ha sido creada y el responsable es \n"
-				+ getManagerEmail() + " con id " +  + userService.find(stop.getUserId()).getId() + ".");
-		 // Cambiar el ícono de la ventana
-	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
+		alert.setContentText(
+				"La parada " + stop.getName() + " " + stop.getRegion() + " ha sido creada y el responsable es \n"
+						+ getManagerEmail() + " con id " + +userService.find(stop.getUserId()).getId() + ".");
+		// Cambiar el ícono de la ventana
+		Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+		alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
 		alert.showAndWait();
 	}
 
-	private void updateAlert(Stop stop) {
-
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("Parada actualizada con éxito.");
-		alert.setHeaderText("Parada actualizada con éxito.");
-		alert.setContentText("Parada " + stop.getName() + " en región " + stop.getRegion() + " ha sido actualizada con éxito.");
-		 // Cambiar el ícono de la ventana
-	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
-		alert.showAndWait();
-	}
-	
 	private void showErrorAlert(StringBuilder message) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error al registrar parada");
 		alert.setHeaderText("Error al registrar parada");
 		alert.setContentText(message.toString());
-		 // Cambiar el ícono de la ventana
-	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/error.png")));
+		// Cambiar el ícono de la ventana
+		Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+		alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/error.png")));
 		alert.showAndWait();
 	}
-	
+
 	private boolean validateData() {
 		boolean ret = false;
 		StringBuilder message = new StringBuilder();
@@ -273,46 +247,45 @@ public class AdminController implements Initializable {
 		String confirmPassword = confirmManagerPassword.getText();
 		User emailExists = userService.findByEmail(email);
 
-		  // Validar nombre de la parada
-        if(name.isEmpty()) {
-        	message.append("El nombre de la parada no puede estar vacío.\n");
-        } else if(name.length() > 20) {
-        	message.append("El nombre de la parada no puede tener más de 20 caracteres.\n");
+		// Validar nombre de la parada
+		if (name.isEmpty()) {
+			message.append("El nombre de la parada no puede estar vacío.\n");
+		} else if (name.length() > 20) {
+			message.append("El nombre de la parada no puede tener más de 20 caracteres.\n");
 		} else if (name.chars().anyMatch(Character::isDigit)) {
 			message.append("El nombre de la parada no puede contener números.\n");
 		}
-        
-        // Validar nombre del responsable
-        if(manager.isEmpty()) {
-        	message.append("El nombre del responsable no puede estar vacío.\n");
-        } else if(manager.length() > 20) {
-        	message.append("El nombre del responsable no puede tener más de 20 caracteres.\n");
+
+		// Validar nombre del responsable
+		if (manager.isEmpty()) {
+			message.append("El nombre del responsable no puede estar vacío.\n");
+		} else if (manager.length() > 20) {
+			message.append("El nombre del responsable no puede tener más de 20 caracteres.\n");
 		} else if (manager.chars().anyMatch(Character::isDigit)) {
 			message.append("El nombre del responsable no puede contener números.\n");
 		}
-        
-        // Validar región
+
+		// Validar región
 		if (cbregion.getValue() == null) {
 			message.append("Debes seleccionar una región.\n");
 		}
-              
-        // Validar Email
+
+		// Validar Email
 		if (email.isEmpty()) {
 			message.append("El Email no puede estar vacío.\n");
 		} else if (emailExists != null) {
 			message.append("El Email ya está registrado.\n");
-		} 
-		else if (email.length() > 50) {
+		} else if (email.length() > 50) {
 			message.append("El Email no puede tener más de 50 caracteres.\n");
 		} else if (!email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
-            message.append("El Email no tiene un formato válido.\n");
+			message.append("El Email no tiene un formato válido.\n");
 		}
-		
+
 		// Validar Password
 		if (password.isEmpty()) {
 			message.append("La contraseña no puede estar vacía.\n");
-        } else if (password.length() < 8) {
-            message.append("La contraseña debe tener al menos 8 caracteres.\n");
+		} else if (password.length() < 8) {
+			message.append("La contraseña debe tener al menos 8 caracteres.\n");
 		} else if (!password.matches(".*\\d.*")) {
 			message.append("La contraseña debe contener al menos un número.\n");
 		} else if (!password.matches(".*[a-z].*")) {
@@ -332,9 +305,7 @@ public class AdminController implements Initializable {
 		}
 		return ret;
 	}
-	
-	
-	
+
 	public String getManagerName() {
 		return managerName.getText();
 	}
@@ -342,7 +313,6 @@ public class AdminController implements Initializable {
 	public String getStopName() {
 		return stopName.getText();
 	}
-
 
 	public String getRegion() {
 		return cbregion.getSelectionModel().getSelectedItem();
@@ -358,14 +328,16 @@ public class AdminController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		User user = session.getLoggedInUser();
+
 		
+		User user = session.getLoggedInUser();
+
 		if (user != null) {
-            loggedInUser.setText("Usuario: " + user.getUsername() + " - ID: " + user.getId());
+			loggedInUser.setText("Usuario: " + user.getUsername() + " - ID: " + user.getId());
 		}
 
 		loadNationalities();
-		
+
 		cbregion.setItems(regions);
 
 		stopTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -380,13 +352,13 @@ public class AdminController implements Initializable {
 	 * Set All userTable column properties
 	 */
 	private void setColumnProperties() {
-		
+
 		colStopId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		colStopName.setCellValueFactory(new PropertyValueFactory<>("name"));
 		colStopRegion.setCellValueFactory(new PropertyValueFactory<>("region"));
 		colManagerEmail.setCellValueFactory(new PropertyValueFactory<>("manager"));
 		colManagerId.setCellValueFactory(new PropertyValueFactory<>("userId"));
-        colEdit.setCellFactory(cellFactory);
+		colEdit.setCellFactory(cellFactory);
 	}
 
 	Callback<TableColumn<Stop, Boolean>, TableCell<Stop, Boolean>> cellFactory = new Callback<TableColumn<Stop, Boolean>, TableCell<Stop, Boolean>>() {
@@ -424,7 +396,7 @@ public class AdminController implements Initializable {
 
 				private void updateStop(Stop stop) {
 					stopId.setText(Long.toString(stop.getId()));
-					stopName.setText(stop.getName());		
+					stopName.setText(stop.getName());
 					cbregion.getSelectionModel().select(stop.getRegion());
 					managerName.setText(userService.find(stop.getUserId()).getUsername());
 					managerEmail.setText(userService.find(stop.getUserId()).getEmail());
@@ -435,19 +407,17 @@ public class AdminController implements Initializable {
 		}
 	};
 
-	/*
-	 * Add All users to observable list and update table
-	 */
+	
 	private void loadStopDetails() {
 		stopList.clear();
 		stopList.addAll(stopService.findAll());
 
 		stopTable.setItems(stopList);
 	}
-	
+
 	private void loadNationalities() {
 		try {
-			File file = new File("src/main/resources/paises.xml"); 
+			File file = new File("src/main/resources/paises.xml");
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document document = builder.parse(file);
@@ -461,51 +431,10 @@ public class AdminController implements Initializable {
 			}
 
 		} catch (Exception e) {
-			
+
 			e.printStackTrace();
 		}
 	}
 
-	/*
-	 * Validations
-	 */
-	private boolean validate(String field, String value, String pattern) {
-		if (!value.isEmpty()) {
-			Pattern p = Pattern.compile(pattern);
-			Matcher m = p.matcher(value);
-			if (m.find() && m.group().equals(value)) {
-				return true;
-			} else {
-				validationAlert(field, false);
-				return false;
-			}
-		} else {
-			validationAlert(field, true);
-			return false;
-		}
-	}
 
-	private boolean emptyValidation(String field, boolean empty) {
-		if (!empty) {
-			return true;
-		} else {
-			validationAlert(field, true);
-			return false;
-		}
-	}
-
-	private void validationAlert(String field, boolean empty) {
-		Alert alert = new Alert(AlertType.WARNING);
-		alert.setTitle("Validation Error");
-		alert.setHeaderText(null);
-		if (field.equals("Role"))
-			alert.setContentText("Please Select " + field);
-		else {
-			if (empty)
-				alert.setContentText("Please Enter " + field);
-			else
-				alert.setContentText("Please Enter Valid " + field);
-		}
-		alert.showAndWait();
-	}
 }

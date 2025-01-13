@@ -20,7 +20,7 @@ public class Stay {
     private LocalDate date;
 
     @Column(name = "vip", nullable = false)
-    private boolean vip = false;
+    private boolean vip;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_peregrino", referencedColumnName = "id")

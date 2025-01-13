@@ -13,6 +13,7 @@ import com.davidmb.tarea3ADbase.models.Pilgrim;
 import com.davidmb.tarea3ADbase.models.Stay;
 import com.davidmb.tarea3ADbase.models.Stop;
 import com.davidmb.tarea3ADbase.repositories.PilgrimRepository;
+import com.davidmb.tarea3ADbase.repositories.StayRepository;
 
 import jakarta.persistence.EntityManager;
 
@@ -24,6 +25,9 @@ public class PilgrimService {
 
 	@Autowired
 	private PilgrimRepository pilgrimRepository;
+	
+	@Autowired
+	private StayRepository stayRepository;
 
 	@Autowired
 	private EntityManager entityManager;
@@ -91,7 +95,7 @@ public class PilgrimService {
 
 		// Crear estancia si es necesario
 		if (createStay) {
-			boolean stayExists = pilgrimRepository.existsStayByPilgrimIdAndStopIdAndDate(dbPilgrim.getId(),
+			boolean stayExists = stayRepository.existsByPilgrim_IdAndStop_IdAndDate(dbPilgrim.getId(),
 					dbStop.getId(), LocalDate.now());
 
 			if (!stayExists) {

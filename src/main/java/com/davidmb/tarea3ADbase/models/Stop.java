@@ -23,8 +23,8 @@ public class Stop implements Serializable {
 	@Column(name = "nombre", nullable = false, length = 100)
 	private String name;
 
-	@Column(name = "region", nullable = false, length = 2)
-	private char region;
+	@Column(name = "region", nullable = false, length = 3)
+	private String region;
 
 	@Column(name = "responsable", nullable = false, length = 100)
 	private String manager;
@@ -39,7 +39,7 @@ public class Stop implements Serializable {
 		super();
 	}
 
-	public Stop(String name, char region, String manager) {
+	public Stop(String name, String region, String manager) {
 		super();
 		this.name = name;
 		this.region = region;
@@ -62,11 +62,11 @@ public class Stop implements Serializable {
 		this.name = name;
 	}
 
-	public char getRegion() {
+	public String getRegion() {
 		return region;
 	}
 
-	public void setRegion(char region) {
+	public void setRegion(String region) {
 		this.region = region;
 	}
 

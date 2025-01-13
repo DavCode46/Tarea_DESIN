@@ -2,8 +2,7 @@ package com.davidmb.tarea3ADbase.controller;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -92,6 +91,7 @@ public class RegisterPilgrimController implements Initializable {
 		        User newUser = userService.save(user);
 
 		        Pilgrim pilgrim = new Pilgrim(name, nationality, carnet, newUser.getId());
+		       
 		        pilgrim.getStops().add(currentStop);
 
 		        pilgrimService.save(pilgrim);
