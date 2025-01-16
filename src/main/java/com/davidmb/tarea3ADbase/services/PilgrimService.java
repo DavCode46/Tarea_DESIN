@@ -89,7 +89,7 @@ public class PilgrimService {
 			dbPilgrim.getStops().add(dbStop);
 			dbStop.getPilgrims().add(dbPilgrim);
 			int distance = randomDistance(0, 1000);
-			dbPilgrim.getCarnet().setDistance(distance);
+			dbPilgrim.getCarnet().setDistance(dbPilgrim.getCarnet().getDistance() + distance);
 			stampStop = true;
 		}
 

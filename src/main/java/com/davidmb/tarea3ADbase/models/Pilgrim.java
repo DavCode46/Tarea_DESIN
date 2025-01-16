@@ -48,11 +48,9 @@ public class Pilgrim {
     private Carnet carnet;
 
     //@Embeddable --> N:M con atributos extras
-  // Puede Set
     @OneToMany(mappedBy = "pilgrim", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Stay> stays = new ArrayList<>();
 
-    // Implementar interfaz comparable en paradas
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(
         name = "peregrinos_paradas",
