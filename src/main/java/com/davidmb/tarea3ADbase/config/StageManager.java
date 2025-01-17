@@ -11,6 +11,7 @@ import com.davidmb.tarea3ADbase.view.FxmlView;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
@@ -39,7 +40,10 @@ public class StageManager {
         primaryStage.setScene(scene);
         primaryStage.sizeToScene();
         primaryStage.centerOnScreen();
-        primaryStage.setMaximized(true);
+      //  primaryStage.setMaximized(true);
+        primaryStage.setWidth(1000);
+        primaryStage.setHeight(700);
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/pilgrim.png")));
         try {
             primaryStage.show();
         } catch (Exception exception) {

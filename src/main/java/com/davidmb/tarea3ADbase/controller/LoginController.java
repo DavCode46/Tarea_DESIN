@@ -19,16 +19,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.image.Image;
-import javafx.stage.Stage;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 
 /**
- * @author Ram Alapure
- * @since 05-04-2017
  */
 
 @Controller
@@ -43,6 +42,12 @@ public class LoginController implements Initializable {
 	@FXML
 	private TextField username;
 
+	@FXML
+	private CheckBox showPasswordCheckBox;
+	
+	@FXML
+	private TextField passwordVisibleField;
+	
 	@FXML
 	private Label lblLogin;
 
@@ -114,6 +119,25 @@ public class LoginController implements Initializable {
 	private void openRegisterPilgrimView(ActionEvent event) throws IOException {
 		// Cambiar a la vista de "RegisterPilgrim"
 		stageManager.switchScene(FxmlView.REGISTER_PILGRIM);
+	}
+	
+	@FXML
+	private void togglePasswordVisibility() {
+	    if (showPasswordCheckBox.isSelected()) {
+	        // Mostrar la contraseña en el TextField
+	        passwordVisibleField.setText(password.getText());
+	        passwordVisibleField.setVisible(true);
+	        passwordVisibleField.setManaged(true);
+	        password.setVisible(false);
+	        password.setManaged(false);
+	    } else {
+	        // Ocultar la contraseña en el PasswordField
+	        password.setText(passwordVisibleField.getText());
+	        password.setVisible(true);
+	        password.setManaged(true);
+	        passwordVisibleField.setVisible(false);
+	        passwordVisibleField.setManaged(false);
+	    }
 	}
 
 	public String getPassword() {

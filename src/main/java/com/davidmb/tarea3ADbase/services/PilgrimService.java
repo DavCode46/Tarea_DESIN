@@ -12,8 +12,10 @@ import com.davidmb.tarea3ADbase.dtos.StayView;
 import com.davidmb.tarea3ADbase.models.Pilgrim;
 import com.davidmb.tarea3ADbase.models.Stay;
 import com.davidmb.tarea3ADbase.models.Stop;
+import com.davidmb.tarea3ADbase.models.User;
 import com.davidmb.tarea3ADbase.repositories.PilgrimRepository;
 import com.davidmb.tarea3ADbase.repositories.StayRepository;
+import com.davidmb.tarea3ADbase.repositories.UserRepository;
 
 import jakarta.persistence.EntityManager;
 
@@ -28,6 +30,9 @@ public class PilgrimService {
 	
 	@Autowired
 	private StayRepository stayRepository;
+	
+	@Autowired
+	private UserService userService;
 
 	@Autowired
 	private EntityManager entityManager;
@@ -72,6 +77,13 @@ public class PilgrimService {
 
 	public void deleteInBatch(List<Pilgrim> pilgrims) {
 		pilgrimRepository.deleteAll(pilgrims);
+	}
+	
+	@Transactional
+	public Pilgrim registerPilgrimAndUser(User user, Pilgrim pilgrim) {
+		User newUser = userService.save(user);
+		pilgrim.setUserId(newUser.getId());
+		return save(pilgrim);
 	}
 
 	@Transactional

@@ -5,6 +5,9 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -19,21 +22,28 @@
         <!-- Contenedor principal centrado -->
         <VBox alignment="CENTER" spacing="20" maxWidth="600">
             <!-- Título -->
-            <Label fx:id="lblLogin" text="Bienvenido" />
-            
+            <Label fx:id="lblLogin" text="Bienvenido" />          
             <!-- Campos de entrada -->
             <VBox spacing="10" alignment="CENTER" prefWidth="350">
                 <TextField fx:id="username" promptText="Usuario" />
                 <PasswordField fx:id="password" promptText="Contraseña" />
-            </VBox>
-            
+                <TextField fx:id="passwordVisibleField" promptText="Contraseña" VBox.vgrow="NEVER" visible="false" managed="false" />
+                <HBox spacing="10">
+                 <Button text="¿Olvidaste tu contraseña?" onAction="#openForgotPasswordView" styleClass="link" />
+                <Pane HBox.hgrow="ALWAYS"></Pane>
+                
+                <Region />
+                	<CheckBox fx:id="showPasswordCheckBox" onAction="#togglePasswordVisibility"/>
+                    <Label text="Mostrar contraseña" /> 
+                 </HBox>
+            </VBox>   
             <!-- Botones -->
             <VBox spacing="10">
                 <HBox spacing="10" alignment="CENTER">
                     <Button fx:id="btnLogin" text="Iniciar Sesión" onAction="#login" styleClass="primary-button" />
                     <Button text="Regístrate como peregrino" onAction="#openRegisterPilgrimView" styleClass="secondary-button" />
                 </HBox>
-                <Button text="¿Olvidaste tu contraseña?" onAction="#openForgotPasswordView" styleClass="link" />
+               
             </VBox>
         </VBox>
     </children>

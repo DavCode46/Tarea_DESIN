@@ -6,6 +6,9 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -27,7 +30,23 @@
             <TextField fx:id="nameField" promptText="Nombre" styleClass="text-field" />
             <TextField fx:id="emailField" promptText="Email" styleClass="text-field" />
             <PasswordField fx:id="passwordField" promptText="Contraseña" styleClass="text-field" />
+             <HBox spacing="10">
+              
+                <Pane HBox.hgrow="ALWAYS"></Pane>
+                
+                <Region />
+                	<CheckBox fx:id="showPassword" />
+                    <Label text="Mostrar contraseña" /> 
+                 </HBox>
             <PasswordField fx:id="confirmPasswordField" promptText="Repetir contraseña" styleClass="text-field" />
+             <HBox spacing="10">
+              
+                <Pane HBox.hgrow="ALWAYS"></Pane>
+                
+                <Region />
+                	<CheckBox fx:id="showPassword" />
+                    <Label text="Mostrar contraseña" /> 
+                 </HBox>
 
             <!-- ComboBox -->
             <HBox alignment="CENTER_LEFT" spacing="5" styleClass="combo-container">
