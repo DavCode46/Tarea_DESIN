@@ -12,6 +12,7 @@ import com.davidmb.tarea3ADbase.auth.Session;
 import com.davidmb.tarea3ADbase.config.StageManager;
 import com.davidmb.tarea3ADbase.models.User;
 import com.davidmb.tarea3ADbase.services.UserService;
+import com.davidmb.tarea3ADbase.utils.ManagePassword;
 import com.davidmb.tarea3ADbase.view.FxmlView;
 
 import javafx.event.ActionEvent;
@@ -28,6 +29,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
+
  */
 
 @Controller
@@ -123,21 +125,22 @@ public class LoginController implements Initializable {
 	
 	@FXML
 	private void togglePasswordVisibility() {
-	    if (showPasswordCheckBox.isSelected()) {
-	        // Mostrar la contraseña en el TextField
-	        passwordVisibleField.setText(password.getText());
-	        passwordVisibleField.setVisible(true);
-	        passwordVisibleField.setManaged(true);
-	        password.setVisible(false);
-	        password.setManaged(false);
-	    } else {
-	        // Ocultar la contraseña en el PasswordField
-	        password.setText(passwordVisibleField.getText());
-	        password.setVisible(true);
-	        password.setManaged(true);
-	        passwordVisibleField.setVisible(false);
-	        passwordVisibleField.setManaged(false);
-	    }
+//	    if (showPasswordCheckBox.isSelected()) {
+//	        // Mostrar la contraseña en el TextField
+//	        passwordVisibleField.setText(password.getText());
+//	        passwordVisibleField.setVisible(true);
+//	        passwordVisibleField.setManaged(true);
+//	        password.setVisible(false);
+//	        password.setManaged(false);
+//	    } else {
+//	        // Ocultar la contraseña en el PasswordField
+//	        password.setText(passwordVisibleField.getText());
+//	        password.setVisible(true);
+//	        password.setManaged(true);
+//	        passwordVisibleField.setVisible(false);
+//	        passwordVisibleField.setManaged(false);
+//	    }
+		ManagePassword.showPassword(passwordVisibleField, password, showPasswordCheckBox);
 	}
 
 	public String getPassword() {
