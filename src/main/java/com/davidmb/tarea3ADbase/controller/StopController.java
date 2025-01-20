@@ -34,6 +34,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.SelectionMode;
@@ -66,6 +67,12 @@ public class StopController implements Initializable {
 
 	@FXML
 	private RadioButton rbNo;
+	
+	@FXML
+	private DatePicker dpStart;
+	
+	@FXML
+	private DatePicker dpEnd;
 
 	@FXML
 	private ComboBox<String> cbPilgrims;
@@ -129,6 +136,24 @@ public class StopController implements Initializable {
 		if (result.get() == ButtonType.OK) {
 			stageManager.switchScene(FxmlView.LOGIN);
 		}
+	}
+	
+	@FXML
+	private void filterStays() {
+		if(dpStart.getValue() != null && dpEnd.getValue() != null) {
+			ObservableList<StayView> pilgrimStaysByDate = FXCollections.observableArrayList();
+			List<StayView> stayViewList = pilgrimService.findStayViewsByStopBetweenDates(
+					stopService.findByUserId(user.getId()).getId(), dpStart.getValue(), dpEnd.getValue());
+			pilgrimStaysByDate.addAll(stayViewList);
+			pilgrimsTable.setItems(pilgrimStaysByDate);
+		}
+	}
+	
+	@FXML
+	private void clearFilters() {
+		dpStart.setValue(null);
+		dpEnd.setValue(null);
+		loadStayViews();
 	}
 
 	@FXML

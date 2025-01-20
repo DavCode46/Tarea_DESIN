@@ -74,6 +74,10 @@ public class PilgrimService {
 	public List<StayView> findAllStayViewsByStop(Long stopId) {
 		return pilgrimRepository.findAllStayViewsByStop(stopId);
 	}
+	
+	public List<StayView> findStayViewsByStopBetweenDates(Long stopId, LocalDate startDate, LocalDate endDate) {
+		return pilgrimRepository.findStayViewsByStopBetweenDates(stopId, startDate, endDate);
+	}
 
 	public void deleteInBatch(List<Pilgrim> pilgrims) {
 		pilgrimRepository.deleteAll(pilgrims);
