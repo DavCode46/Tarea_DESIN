@@ -142,8 +142,6 @@
 								<DropShadow blurType="ONE_PASS_BOX" color="#00000091" />
 							</effect>
 						</Button>
-
-
 					</children>
 				</HBox>
 				<TableView fx:id="pilgrimsTable" prefHeight="300.0"

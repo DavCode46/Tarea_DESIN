@@ -6,8 +6,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -32,7 +30,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -42,15 +39,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 /**
  * 
@@ -109,9 +103,6 @@ public class AdminController implements Initializable {
 
 	@FXML
 	private TableColumn<Stop, String> colManagerId;
-
-	@FXML
-	private TableColumn<Stop, Boolean> colEdit;
 
 	@FXML
 	private MenuItem deleteStops;
@@ -358,54 +349,9 @@ public class AdminController implements Initializable {
 		colStopRegion.setCellValueFactory(new PropertyValueFactory<>("region"));
 		colManagerEmail.setCellValueFactory(new PropertyValueFactory<>("manager"));
 		colManagerId.setCellValueFactory(new PropertyValueFactory<>("userId"));
-		colEdit.setCellFactory(cellFactory);
 	}
 
-	Callback<TableColumn<Stop, Boolean>, TableCell<Stop, Boolean>> cellFactory = new Callback<TableColumn<Stop, Boolean>, TableCell<Stop, Boolean>>() {
-		@Override
-		public TableCell<Stop, Boolean> call(final TableColumn<Stop, Boolean> param) {
-			final TableCell<Stop, Boolean> cell = new TableCell<Stop, Boolean>() {
-				Image imgEdit = new Image(getClass().getResourceAsStream("/images/edit.png"));
-				final Button btnEdit = new Button();
-
-				@Override
-				public void updateItem(Boolean check, boolean empty) {
-					super.updateItem(check, empty);
-					if (empty) {
-						setGraphic(null);
-						setText(null);
-					} else {
-						btnEdit.setOnAction(e -> {
-							Stop stop = getTableView().getItems().get(getIndex());
-							updateStop(stop);
-						});
-
-						btnEdit.setStyle("-fx-background-color: transparent;");
-						ImageView iv = new ImageView();
-						iv.setImage(imgEdit);
-						iv.setPreserveRatio(true);
-						iv.setSmooth(true);
-						iv.setCache(true);
-						btnEdit.setGraphic(iv);
-
-						setGraphic(btnEdit);
-						setAlignment(Pos.CENTER);
-						setText(null);
-					}
-				}
-
-				private void updateStop(Stop stop) {
-					stopId.setText(Long.toString(stop.getId()));
-					stopName.setText(stop.getName());
-					cbregion.getSelectionModel().select(stop.getRegion());
-					managerName.setText(userService.find(stop.getUserId()).getUsername());
-					managerEmail.setText(userService.find(stop.getUserId()).getEmail());
-					managerPassword.setText(userService.find(stop.getUserId()).getPassword());
-				}
-			};
-			return cell;
-		}
-	};
+	
 
 	
 	private void loadStopDetails() {
