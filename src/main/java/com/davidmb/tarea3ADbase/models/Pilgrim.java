@@ -47,17 +47,11 @@ public class Pilgrim {
     @PrimaryKeyJoinColumn
     private Carnet carnet;
 
-    //@Embeddable --> N:M con atributos extras
     @OneToMany(mappedBy = "pilgrim", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Stay> stays = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(
-        name = "peregrinos_paradas",
-        joinColumns = @JoinColumn(name = "id_peregrino"),
-        inverseJoinColumns = @JoinColumn(name = "id_parada")
-    )
-    private List<Stop> stops = new ArrayList<>();
+    @OneToMany(mappedBy = "pilgrim", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    private List<PilgrimStops> pilgrimStops = new ArrayList<>();
 
     public Pilgrim() {
     }
@@ -117,12 +111,12 @@ public class Pilgrim {
         this.stays = stays;
     }
 
-    public List<Stop> getStops() {
-        return stops;
+    public List<PilgrimStops> getPilgrimStops() {
+        return pilgrimStops;
     }
 
-    public void setStops(List<Stop> stops) {
-        this.stops = stops;
+    public void setPilgrimStops(List<PilgrimStops> pilgrimStops) {
+        this.pilgrimStops = pilgrimStops;
     }
 
     @Override
@@ -152,7 +146,7 @@ public class Pilgrim {
                ", nationality='" + nationality + '\'' +
                ", userId=" + userId +
                ", carnet=" + (carnet != null ? carnet.getId() : "null") +
-               ", stops=" + stops.size() +
+               ", stops=" + pilgrimStops.size() +
                '}';
     }
 

@@ -32,8 +32,8 @@ public class Stop implements Serializable {
 	@Column(name = "id_usuario", nullable = true)
 	private Long userId;
 
-	@ManyToMany(mappedBy = "stops", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-	private List<Pilgrim> pilgrims = new ArrayList<>();
+	@OneToMany(mappedBy = "stop", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+	private List<PilgrimStops> pilgrimStops = new ArrayList<>();
 
 	public Stop() {
 		super();
@@ -86,12 +86,12 @@ public class Stop implements Serializable {
 		this.userId = userId;
 	}
 
-	public List<Pilgrim> getPilgrims() {
-		return pilgrims;
+	public List<PilgrimStops> getPilgrimStops() {
+		return pilgrimStops;
 	}
 
-	public void setPilgrims(List<Pilgrim> pilgrims) {
-		this.pilgrims = pilgrims;
+	public void setPilgrimStops(List<PilgrimStops> pilgrimStops) {
+		this.pilgrimStops = pilgrimStops;
 	}
 
 	public static long getSerialversionuid() {
@@ -116,7 +116,7 @@ public class Stop implements Serializable {
 	@Override
 	public String toString() {
 		return "Stop [id=" + id + ", name=" + name + ", region=" + region + ", manager=" + manager + ", userId="
-				+ userId + ", pilgrims=" + pilgrims.size() + "]";
+				+ userId + ", pilgrims=" + pilgrimStops.size() + "]";
 	}
 
 }

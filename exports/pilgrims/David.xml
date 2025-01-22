@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <carnet>
     <id>1</id>
-    <fechaexp>2025-01-13</fechaexp>
+    <fechaexp>2025-01-22</fechaexp>
     <expedidoen>Siero</expedidoen>
     <peregrino>
         <nombre>David</nombre>
-        <nacionalidad>Indonesia</nacionalidad>
+        <nacionalidad>Emiratos Árabes Unidos</nacionalidad>
     </peregrino>
-    <hoy>2025-01-13</hoy>
+    <hoy>2025-01-22</hoy>
     <distanciatotal>0,0</distanciatotal>
-    <paradas>
-        <parada>
-            <orden>1</orden>
-            <nombre>Siero</nombre>
-            <region>A</region>
-        </parada>
-    </paradas>
+    <paradas/>
     <estancias/>
 </carnet>

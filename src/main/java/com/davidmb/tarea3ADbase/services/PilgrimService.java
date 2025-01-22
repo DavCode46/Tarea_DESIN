@@ -10,14 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.davidmb.tarea3ADbase.dtos.ServiceResponse;
 import com.davidmb.tarea3ADbase.dtos.StayView;
 import com.davidmb.tarea3ADbase.models.Pilgrim;
+import com.davidmb.tarea3ADbase.models.PilgrimStops;
 import com.davidmb.tarea3ADbase.models.Stay;
 import com.davidmb.tarea3ADbase.models.Stop;
 import com.davidmb.tarea3ADbase.models.User;
 import com.davidmb.tarea3ADbase.repositories.PilgrimRepository;
 import com.davidmb.tarea3ADbase.repositories.StayRepository;
-import com.davidmb.tarea3ADbase.repositories.UserRepository;
 
-import jakarta.persistence.EntityManager;
 
 @Service
 public class PilgrimService {
@@ -34,8 +33,6 @@ public class PilgrimService {
 	@Autowired
 	private UserService userService;
 
-	@Autowired
-	private EntityManager entityManager;
 
 	public PilgrimService() {
 
@@ -100,10 +97,11 @@ public class PilgrimService {
 		
 		Stop dbStop = stopService.find(stop.getId());
 
+		PilgrimStops newPilgrimStop = new PilgrimStops(dbPilgrim, dbStop, LocalDate.now()); 
 		// Asociar la parada al peregrino
-		if (!dbPilgrim.getStops().contains(dbStop)) {
-			dbPilgrim.getStops().add(dbStop);
-			dbStop.getPilgrims().add(dbPilgrim);
+		if (!dbPilgrim.getPilgrimStops().contains(newPilgrimStop)) {
+			dbPilgrim.getPilgrimStops().add(newPilgrimStop);
+			dbStop.getPilgrimStops().add(newPilgrimStop);
 			int distance = randomDistance(0, 1000);
 			dbPilgrim.getCarnet().setDistance(dbPilgrim.getCarnet().getDistance() + distance);
 			stampStop = true;

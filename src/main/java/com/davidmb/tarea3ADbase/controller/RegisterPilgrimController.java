@@ -17,6 +17,7 @@ import org.w3c.dom.NodeList;
 import com.davidmb.tarea3ADbase.config.StageManager;
 import com.davidmb.tarea3ADbase.models.Carnet;
 import com.davidmb.tarea3ADbase.models.Pilgrim;
+import com.davidmb.tarea3ADbase.models.PilgrimStops;
 import com.davidmb.tarea3ADbase.models.Stop;
 import com.davidmb.tarea3ADbase.models.User;
 import com.davidmb.tarea3ADbase.services.PilgrimService;
@@ -91,8 +92,10 @@ public class RegisterPilgrimController implements Initializable {
 		        User newUser = userService.save(user);
 
 		        Pilgrim pilgrim = new Pilgrim(name, nationality, carnet, newUser.getId());
+		        
+		        PilgrimStops initialPilgrimStop = new PilgrimStops(pilgrim, currentStop, LocalDate.now());
 		       
-		        pilgrim.getStops().add(currentStop);
+		        pilgrim.getPilgrimStops().add(initialPilgrimStop);
 
 		        pilgrimService.save(pilgrim);
 

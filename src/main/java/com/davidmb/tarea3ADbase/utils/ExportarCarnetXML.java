@@ -17,6 +17,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.davidmb.tarea3ADbase.models.Pilgrim;
+import com.davidmb.tarea3ADbase.models.PilgrimStops;
 import com.davidmb.tarea3ADbase.models.Stay;
 import com.davidmb.tarea3ADbase.models.Stop;
 import com.davidmb.tarea3ADbase.services.StayService;
@@ -54,7 +55,7 @@ public class ExportarCarnetXML {
 	 */
 	public void exportarCarnet(Pilgrim pilgrim) throws Exception {
 
-		List<Stop> stopsList = stopService.findAllByPilgrimId(pilgrim.getId());
+		List<PilgrimStops> stopsList = stopService.findAllByPilgrimId(pilgrim.getId());
 
 		List<Stay> staysList = stayService.findAllByPilgrimId(pilgrim.getId());
 
@@ -115,10 +116,10 @@ public class ExportarCarnetXML {
 			order.setTextContent(String.valueOf(i + 1));
 			stopElem.appendChild(order);
 			Element stopNameElem = doc.createElement("nombre");
-			stopNameElem.setTextContent(stopsList.get(i).getName());
+			stopNameElem.setTextContent(stopsList.get(i).getStop().getName());
 			stopElem.appendChild(stopNameElem);
 			Element region = doc.createElement("region");
-			region.setTextContent(String.valueOf(stopsList.get(i).getRegion()));
+			region.setTextContent(String.valueOf(stopsList.get(i).getStop().getRegion()));
 			stopElem.appendChild(region);
 			paradasElem.appendChild(stopElem);
 		}

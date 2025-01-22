@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.davidmb.tarea3ADbase.models.PilgrimStops;
 import com.davidmb.tarea3ADbase.models.Stop;
+import com.davidmb.tarea3ADbase.repositories.PilgrimStopsRepository;
 import com.davidmb.tarea3ADbase.repositories.StopRepository;
 
 import jakarta.persistence.EntityManager;
@@ -21,6 +23,9 @@ public class StopService {
 
 	@Autowired
 	private StopRepository stopRepository;
+	
+	@Autowired
+	private PilgrimStopsRepository pilgrimStopsRepository;
 	
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -55,8 +60,8 @@ public class StopService {
 		return stopRepository.findAll();
 	}
 
-	public List<Stop> findAllByPilgrimId(Long id) {
-		return stopRepository.findAllByPilgrimId(id);
+	public List<PilgrimStops> findAllByPilgrimId(Long id) {
+		return pilgrimStopsRepository.findAllByPilgrim_Id(id);
 	}
 
 	public Stop findByName(String name) {

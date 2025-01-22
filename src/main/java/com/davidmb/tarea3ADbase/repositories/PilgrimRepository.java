@@ -22,9 +22,9 @@ public interface PilgrimRepository extends JpaRepository<Pilgrim, Long> {
 		       + "s.date, "
 		       + "s.vip) "
 		       + "FROM Pilgrim p "
-		       + "JOIN p.stops sp "
-		       + "LEFT JOIN Stay s ON s.pilgrim.id = p.id AND s.stop.id = sp.id "
-		       + "WHERE sp.id = :stopId")
+		       + "JOIN p.pilgrimStops sp "
+		       + "LEFT JOIN Stay s ON s.pilgrim.id = p.id AND s.stop.id = sp.stop.id "
+		       + "WHERE sp.stop.id = :stopId")
 		List<StayView> findAllStayViewsByStop(@Param("stopId") Long stopId);
 	
 	@Query("SELECT new com.davidmb.tarea3ADbase.dtos.StayView( "
@@ -34,9 +34,9 @@ public interface PilgrimRepository extends JpaRepository<Pilgrim, Long> {
 		       + "s.date, "
 		       + "s.vip) "
 		       + "FROM Pilgrim p "
-		       + "JOIN p.stops sp "
-		       + "LEFT JOIN Stay s ON s.pilgrim.id = p.id AND s.stop.id = sp.id "
-		       + "WHERE sp.id = :stopId AND s.date BETWEEN :startDate AND :endDate")
+		       + "JOIN p.pilgrimStops sp "
+		       + "LEFT JOIN Stay s ON s.pilgrim.id = p.id AND s.stop.id = sp.stop.id "
+		       + "WHERE sp.stop.id = :stopId AND s.date BETWEEN :startDate AND :endDate")
 		List<StayView> findStayViewsByStopBetweenDates(
 				@Param("stopId")Long stopId, 
 				@Param("startDate") LocalDate startDate, 
