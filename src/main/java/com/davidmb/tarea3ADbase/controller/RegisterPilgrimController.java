@@ -11,6 +11,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -73,7 +74,10 @@ public class RegisterPilgrimController implements Initializable {
 	
 	@Autowired
 	private StopService stopService;
+	
 
+
+	
 	@FXML
 	private void registerPilgrim() {
 		if(validateData()) {
@@ -94,6 +98,8 @@ public class RegisterPilgrimController implements Initializable {
 		        Pilgrim pilgrim = new Pilgrim(name, nationality, carnet, newUser.getId());
 		        
 		        PilgrimStops initialPilgrimStop = new PilgrimStops(pilgrim, currentStop, LocalDate.now());
+		        
+		        currentStop.getPilgrimStops().add(initialPilgrimStop);
 		       
 		        pilgrim.getPilgrimStops().add(initialPilgrimStop);
 

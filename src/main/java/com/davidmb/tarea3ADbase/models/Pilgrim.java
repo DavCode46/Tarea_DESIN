@@ -50,7 +50,7 @@ public class Pilgrim {
     @OneToMany(mappedBy = "pilgrim", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Stay> stays = new ArrayList<>();
 
-    @OneToMany(mappedBy = "pilgrim", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "pilgrim", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<PilgrimStops> pilgrimStops = new ArrayList<>();
 
     public Pilgrim() {
