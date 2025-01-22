@@ -11,6 +11,7 @@
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -32,9 +33,9 @@
 					<font>
 						<Font size="14.0" />
 					</font>
-					<HBox.margin>
-						<Insets right="5.0" top="5.0" />
-					</HBox.margin>
+					<VBox.margin>
+						<Insets left="20.0" top="5.0" />
+					</VBox.margin>
 					<effect>
 						<DropShadow blurType="ONE_PASS_BOX" color="#00000091" />
 					</effect>
@@ -81,11 +82,67 @@
 				<HBox spacing="10.0" alignment="CENTER">
 					<children>
 						<Button fx:id="reset" text="Cancelar"
-							styleClass="white-button" onAction="#reset" />
+							styleClass="white-button" onAction="#reset">
+							<HBox.margin>
+								<Insets top="10.0" bottom="20.0" />
+							</HBox.margin>
+						</Button>
 						<Button fx:id="stampCard" text="Sellar Carnet"
-							styleClass="primary-button" onAction="#stampCard" />
+							styleClass="primary-button" onAction="#stampCard">
+							<HBox.margin>
+								<Insets top="10.0" bottom="20.0" />
+							</HBox.margin>
+						</Button>
 					</children>
 				</HBox>
+
+
+				<Separator orientation="HORIZONTAL" prefWidth="200.0" />
+
+
+				<Label text="Filtrar Paradas" styleClass="form-title">
+					<font>
+						<Font size="20.0" />
+					</font>
+					<VBox.margin>
+						<Insets bottom="10.0" left="20.0" top="20.0" />
+					</VBox.margin>
+				</Label>
+				<VBox>
+					<HBox spacing="10.0">
+						<DatePicker fx:id="dpStart" prefWidth="130.0"
+							promptText="Fecha de Inicio">
+							<HBox.margin>
+								<Insets top="15.0" bottom="10.0" />
+							</HBox.margin>
+						</DatePicker>
+
+						<DatePicker fx:id="dpEnd" prefWidth="130.0"
+							promptText="Fecha de Fin">
+							<HBox.margin>
+								<Insets top="15.0" bottom="10.0" />
+							</HBox.margin>
+						</DatePicker>
+					</HBox>
+					<HBox spacing="10.0">
+
+						<Button text="Limpiar Filtros" styleClass="white-button"
+							onAction="#clearFilters" prefWidth="130.0">
+							<HBox.margin>
+								<Insets top="10.0" bottom="20.0" />
+							</HBox.margin>
+						</Button>
+
+						<Button text="Filtrar" styleClass="primary-button"
+							onAction="#filterStays" prefWidth="130.0">
+							<HBox.margin>
+								<Insets top="10.0" bottom="20.0" />
+							</HBox.margin>
+						</Button>
+
+					</HBox>
+				</VBox>
+
 			</children>
 			<padding>
 				<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -104,44 +161,7 @@
 					spacing="10">
 					<children>
 
-						<DatePicker fx:id="dpStart" prefWidth="210.0"
-							promptText="Fecha de Inicio">
-							<HBox.margin>
-								<Insets top="15.0" bottom="10.0" />
-							</HBox.margin>
-						</DatePicker>
 
-						<DatePicker fx:id="dpEnd" prefWidth="210.0"
-							promptText="Fecha de Fin">
-							<HBox.margin>
-								<Insets top="15.0" bottom="10.0" />
-							</HBox.margin>
-						</DatePicker>
-						<Button fx:id="btnLogout" text="Filtrar"
-							styleClass="btnLogout" onAction="#filterStays">
-							<font>
-								<Font size="14.0" />
-							</font>
-							<HBox.margin>
-								<Insets bottom="10.0" top="15.0" />
-							</HBox.margin>
-							<effect>
-								<DropShadow blurType="ONE_PASS_BOX" color="#00000091" />
-							</effect>
-						</Button>
-
-						<Button fx:id="btnLogout" text="Limpiar Filtros"
-							styleClass="btnLogout" onAction="#clearFilters">
-							<font>
-								<Font size="14.0" />
-							</font>
-							<HBox.margin>
-								<Insets bottom="10.0" top="15.0" right="20.0" />
-							</HBox.margin>
-							<effect>
-								<DropShadow blurType="ONE_PASS_BOX" color="#00000091" />
-							</effect>
-						</Button>
 					</children>
 				</HBox>
 				<TableView fx:id="pilgrimsTable" prefHeight="300.0"

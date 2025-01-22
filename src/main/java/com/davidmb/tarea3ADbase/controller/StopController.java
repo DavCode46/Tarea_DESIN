@@ -67,10 +67,10 @@ public class StopController implements Initializable {
 
 	@FXML
 	private RadioButton rbNo;
-	
+
 	@FXML
 	private DatePicker dpStart;
-	
+
 	@FXML
 	private DatePicker dpEnd;
 
@@ -129,26 +129,32 @@ public class StopController implements Initializable {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Logout");
 		alert.setHeaderText("¿Estás seguro que quieres cerrar sesión?");
-		 // Cambiar el ícono de la ventana
-	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/logout.png")));
+		// Cambiar el ícono de la ventana
+		Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+		alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/logout.png")));
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK) {
 			stageManager.switchScene(FxmlView.LOGIN);
 		}
 	}
-	
+
 	@FXML
 	private void filterStays() {
-		if(dpStart.getValue() != null && dpEnd.getValue() != null) {
-			ObservableList<StayView> pilgrimStaysByDate = FXCollections.observableArrayList();
-			List<StayView> stayViewList = pilgrimService.findStayViewsByStopBetweenDates(
-					stopService.findByUserId(user.getId()).getId(), dpStart.getValue(), dpEnd.getValue());
-			pilgrimStaysByDate.addAll(stayViewList);
-			pilgrimsTable.setItems(pilgrimStaysByDate);
+		if (dpStart.getValue() != null && dpEnd.getValue() != null) {
+			if (dpStart.getValue().isBefore(dpEnd.getValue())) {
+				ObservableList<StayView> pilgrimStaysByDate = FXCollections.observableArrayList();
+				List<StayView> stayViewList = pilgrimService.findStayViewsByStopBetweenDates(
+						stopService.findByUserId(user.getId()).getId(), dpStart.getValue(), dpEnd.getValue());
+				pilgrimStaysByDate.addAll(stayViewList);
+				pilgrimsTable.setItems(pilgrimStaysByDate);
+			} else {
+				showErrorAlert(new StringBuilder("La fecha de inicio debe ser anterior a la fecha de fin"), new String("Error al filtrar paradas"));
+			}
+		} else {
+			showErrorAlert(new StringBuilder("Debes seleccionar una fecha de inicio y una fecha de fin para filtrar"), new String("Error al filtrar paradas"));
 		}
 	}
-	
+
 	@FXML
 	private void clearFilters() {
 		dpStart.setValue(null);
@@ -163,25 +169,26 @@ public class StopController implements Initializable {
 
 	@FXML
 	private void stampCard(ActionEvent event) {
-	    if (validateData()) {
-	    	if(!cbStay.isSelected()) {
+		if (validateData()) {
+			if (!cbStay.isSelected()) {
 				rbNo.setSelected(true);
-	    	}
-	        Pilgrim pilgrim = pilgrimService.find(Long.valueOf(cbPilgrims.getValue().split(" ")[1]));
-	        Stop stop = stopService.findByUserId(user.getId());
-	        ServiceResponse<Pilgrim> serviceResponse = pilgrimService.stampCard(pilgrim, stop, rbYes.isSelected(), cbStay.isSelected());
-	       if( (serviceResponse != null)) {
-               if(serviceResponse.isSuccess()) {
+			}
+			Pilgrim pilgrim = pilgrimService.find(Long.valueOf(cbPilgrims.getValue().split(" ")[1]));
+			Stop stop = stopService.findByUserId(user.getId());
+			ServiceResponse<Pilgrim> serviceResponse = pilgrimService.stampCard(pilgrim, stop, rbYes.isSelected(),
+					cbStay.isSelected());
+			if ((serviceResponse != null)) {
+				if (serviceResponse.isSuccess()) {
 					saveAlert(serviceResponse, pilgrim);
 				} else {
 					showServiceResponseError(serviceResponse, pilgrim);
-               }
-               clearFields();
-	       } else {
-               showErrorAlert(new StringBuilder("Error al sellar el carnet del peregrino"));
-	       }
-	        loadStayViews();
-	    }
+				}
+				clearFields();
+			} else {
+				showErrorAlert(new StringBuilder("Error al sellar el carnet del peregrino"), new String("Error al sellar el Carnet"));
+			}
+			loadStayViews();
+		}
 	}
 
 	private void clearFields() {
@@ -190,40 +197,39 @@ public class StopController implements Initializable {
 	}
 
 	private void saveAlert(ServiceResponse<Pilgrim> serviceResponse, Pilgrim pilgrim) {
-	    Alert alert = new Alert(AlertType.INFORMATION);
-	    alert.setTitle(serviceResponse.getMessage());
-	    alert.setHeaderText(serviceResponse.getMessage());
-	    alert.setContentText("La parada del peregrino " + pilgrim.getName() + " con ID: " + pilgrim.getId()
-	            + " ha sido registrada  \n");
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle(serviceResponse.getMessage());
+		alert.setHeaderText(serviceResponse.getMessage());
+		alert.setContentText("La parada del peregrino " + pilgrim.getName() + " con ID: " + pilgrim.getId()
+				+ " ha sido registrada  \n");
 
-	    // Cambiar el ícono de la ventana
-	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
+		// Cambiar el ícono de la ventana
+		Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+		alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
 
-	    alert.showAndWait();
+		alert.showAndWait();
 	}
 
-	
 	private void showServiceResponseError(ServiceResponse<Pilgrim> serviceResponse, Pilgrim pilgrim) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error al sellar el carnet del peregrino");
 		alert.setHeaderText("Ha ocurrido un error al sellar el carnet del peregrino");
 		alert.setContentText("Ha ocurrido un error al sellar el carnet del peregrino " + pilgrim.getName() + " con ID: "
 				+ pilgrim.getId() + "\n" + serviceResponse.getMessage());
-		 // Cambiar el ícono de la ventana
-	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/error.png")));
+		// Cambiar el ícono de la ventana
+		Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+		alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/error.png")));
 		alert.showAndWait();
 	}
 
-	private void showErrorAlert(StringBuilder message) {
+	private void showErrorAlert(StringBuilder message, String header) {
 		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error al sellar el carnet del peregrino");
-		alert.setHeaderText("Error al sellar el carnet del peregrino");
+		alert.setTitle("Error");
+		alert.setHeaderText(header);
 		alert.setContentText(message.toString());
-		 // Cambiar el ícono de la ventana
-	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/error.png")));
+		// Cambiar el ícono de la ventana
+		Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+		alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/error.png")));
 		alert.showAndWait();
 	}
 
@@ -237,7 +243,7 @@ public class StopController implements Initializable {
 		}
 
 		if (message.length() > 0) {
-			showErrorAlert(message);
+			showErrorAlert(message, "Error al sellar el carnet del peregrino");
 		} else {
 			ret = true;
 		}

@@ -65,7 +65,13 @@ public class LoginController implements Initializable {
 
 	@FXML
 	private void login(ActionEvent event) throws IOException {
-		if (userService.authenticate(getUsername(), getPassword())) {
+		String password = "";
+		if(passwordVisibleField.isVisible()) {
+			password = passwordVisibleField.getText();
+		} else {
+			password = this.password.getText();
+		}
+		if (userService.authenticate(getUsername(), password)) {
 
 			User user = userService.findByEmail(getUsername());
 			session.setLoggedInUser(user);
