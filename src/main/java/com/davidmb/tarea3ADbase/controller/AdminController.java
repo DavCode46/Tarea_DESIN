@@ -177,22 +177,6 @@ public class AdminController implements Initializable {
 		}
 	}
 
-	@FXML
-	private void deleteStops(ActionEvent event) {
-		List<Stop> users = stopTable.getSelectionModel().getSelectedItems();
-
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle("Confirmation Dialog");
-		alert.setHeaderText(null);
-		alert.setContentText("Are you sure you want to delete selected?");
-		Optional<ButtonType> action = alert.showAndWait();
-
-		if (action.get() == ButtonType.OK)
-			stopService.deleteInBatch(users);
-
-		loadStopDetails();
-	}
-
 	private void clearFields() {
 		stopId.setText(null);
 		stopName.clear();
