@@ -131,7 +131,7 @@ public class LoginController implements Initializable {
 	
 	@FXML
 	private void togglePasswordVisibility() {
-		ManagePassword.showPassword(passwordVisibleField, password, showPasswordCheckBox);
+		ManagePassword.showPassword(passwordVisibleField, password, showPasswordCheckBox, null, null);
 	}
 
 	public String getPassword() {

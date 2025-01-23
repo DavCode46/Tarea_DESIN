@@ -11,6 +11,7 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -19,6 +20,8 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane prefHeight="600.0" prefWidth="1000.0"
@@ -56,11 +59,20 @@
 					promptText="Nombre del responsable" styleClass="text-field" />
 				<TextField fx:id="managerEmail"
 					promptText="Email del responsable" styleClass="text-field" />
-				<PasswordField fx:id="managerPassword"
-					promptText="Contraseña del manager" styleClass="text-field" />
-				<PasswordField fx:id="confirmManagerPassword"
-					promptText="Confirma contraseña del manager"
-					styleClass="text-field" />
+	
+           <PasswordField fx:id="managerPassword" promptText="Contraseña del manager" styleClass="text-field" />
+            <TextField fx:id="managerPasswordVisibleField" promptText="Contraseña del manager" VBox.vgrow="NEVER" visible="false" managed="false" />
+            <PasswordField fx:id="confirmManagerPassword" promptText="Confirma contraseña del manager" styleClass="text-field" />
+            <TextField fx:id="confirmManagerPasswordVisibleField" promptText="Confirma contraseña del manager" VBox.vgrow="NEVER" visible="false" managed="false" />
+            
+            <HBox spacing="10">
+              
+              <Pane HBox.hgrow="ALWAYS"></Pane>
+                
+              <Region />
+               	<CheckBox fx:id="showPasswordCheckBox" onAction="#togglePasswordVisibility"/>
+                <Label text="Mostrar contraseña" /> 
+             </HBox>
 
 
 

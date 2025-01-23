@@ -28,27 +28,7 @@
 
             <!-- Campos de entrada -->
             <TextField fx:id="nameField" promptText="Nombre" styleClass="text-field" />
-            <TextField fx:id="emailField" promptText="Email" styleClass="text-field" />
-            <PasswordField fx:id="passwordField" promptText="Contraseña" styleClass="text-field" />
-             <HBox spacing="10">
-              
-                <Pane HBox.hgrow="ALWAYS"></Pane>
-                
-                <Region />
-                	<CheckBox fx:id="showPassword" />
-                    <Label text="Mostrar contraseña" /> 
-                 </HBox>
-            <PasswordField fx:id="confirmPasswordField" promptText="Repetir contraseña" styleClass="text-field" />
-             <HBox spacing="10">
-              
-                <Pane HBox.hgrow="ALWAYS"></Pane>
-                
-                <Region />
-                	<CheckBox fx:id="showPassword" />
-                    <Label text="Mostrar contraseña" /> 
-                 </HBox>
-
-            <!-- ComboBox -->
+               <!-- ComboBox -->
             <HBox alignment="CENTER_LEFT" spacing="5" styleClass="combo-container">
                 <ComboBox fx:id="nationalityComboBox" promptText="Seleccionar nacionalidad" styleClass="combo-box" />
                  <ComboBox fx:id="stopComboBox" promptText="Seleccionar su parada actual" styleClass="combo-box" />
@@ -56,6 +36,25 @@
             
             
 
+            <TextField fx:id="emailField" promptText="Email" styleClass="text-field" />
+           <HBox spacing="10.0">
+            <PasswordField fx:id="passwordField" promptText="Contraseña" styleClass="text-field" />
+            <TextField fx:id="passwordVisibleField" promptText="Contraseña" VBox.vgrow="NEVER" visible="false" managed="false" />
+            <PasswordField fx:id="confirmPasswordField" promptText="Confirma contraseña" styleClass="text-field" />
+            <TextField fx:id="confirmPasswordVisibleField" promptText="Confirma contraseña" VBox.vgrow="NEVER" visible="false" managed="false" />
+            </HBox>
+            <HBox spacing="10">
+              
+              <Pane HBox.hgrow="ALWAYS"></Pane>
+                
+              <Region />
+               	<CheckBox fx:id="showPasswordCheckBox" onAction="#togglePasswordVisibility"/>
+                <Label text="Mostrar contraseña" /> 
+             </HBox>
+            
+            
+     
+         
             <!-- Mensaje de error -->
             <Label fx:id="errorLabel" text="" styleClass="error-label" visible="false" wrapText="true" />
 

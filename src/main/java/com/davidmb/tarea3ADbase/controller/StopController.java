@@ -19,6 +19,7 @@ import com.davidmb.tarea3ADbase.models.Pilgrim;
 import com.davidmb.tarea3ADbase.models.Stop;
 import com.davidmb.tarea3ADbase.models.User;
 import com.davidmb.tarea3ADbase.services.PilgrimService;
+import com.davidmb.tarea3ADbase.services.PilgrimStopsService;
 import com.davidmb.tarea3ADbase.services.StopService;
 import com.davidmb.tarea3ADbase.view.FxmlView;
 
@@ -110,6 +111,9 @@ public class StopController implements Initializable {
 
 	@Autowired
 	private StopService stopService;
+	
+	@Autowired
+	private PilgrimStopsService pilgrimStopsService;
 
 	@Autowired
 	private Session session;
@@ -173,6 +177,14 @@ public class StopController implements Initializable {
 			if (!cbStay.isSelected()) {
 				rbNo.setSelected(true);
 			}
+			
+			if (pilgrimStopsService.existsByPilgrimAndStopAndStopDate(
+					Long.valueOf(cbPilgrims.getValue().split(" ")[1]), user.getId(), LocalDate.now())) {
+				showErrorAlert(new StringBuilder("El peregrino ya ha sido sellado en esta parada"),
+						new String("Error al sellar el Carnet"));
+				return;
+			}
+			
 			Pilgrim pilgrim = pilgrimService.find(Long.valueOf(cbPilgrims.getValue().split(" ")[1]));
 			Stop stop = stopService.findByUserId(user.getId());
 			ServiceResponse<Pilgrim> serviceResponse = pilgrimService.stampCard(pilgrim, stop, rbYes.isSelected(),

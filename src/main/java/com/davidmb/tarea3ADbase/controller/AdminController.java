@@ -3,7 +3,6 @@ package com.davidmb.tarea3ADbase.controller;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -22,6 +21,7 @@ import com.davidmb.tarea3ADbase.models.Stop;
 import com.davidmb.tarea3ADbase.models.User;
 import com.davidmb.tarea3ADbase.services.StopService;
 import com.davidmb.tarea3ADbase.services.UserService;
+import com.davidmb.tarea3ADbase.utils.ManagePassword;
 import com.davidmb.tarea3ADbase.view.FxmlView;
 
 import javafx.application.Platform;
@@ -34,6 +34,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -76,9 +77,18 @@ public class AdminController implements Initializable {
 
 	@FXML
 	private PasswordField managerPassword;
+	
+	@FXML
+	private TextField managerPasswordVisibleField;
 
 	@FXML
 	private PasswordField confirmManagerPassword;
+	
+	@FXML
+	private TextField confirmManagerPasswordVisibleField;
+	
+	@FXML
+	private CheckBox showPasswordCheckBox;
 
 	@FXML
 	private Button reset;
@@ -154,11 +164,17 @@ public class AdminController implements Initializable {
 
 		if (validateData()) {
 
+			String password = "";
+			if (managerPasswordVisibleField.isVisible()) {
+				password = managerPasswordVisibleField.getText();
+			} else {
+				password = managerPassword.getText();
+			}
 			Stop stop = new Stop();
 			User user = new User();
 			user.setUsername(getManagerName());
 			user.setEmail(getManagerEmail());
-			user.setPassword(getManagerPassword());
+			user.setPassword(password);
 			user.setRole("Parada");
 			User newUser = userService.save(user);
 
@@ -175,6 +191,11 @@ public class AdminController implements Initializable {
 			clearFields();
 			loadStopDetails();
 		}
+	}
+	
+	@FXML
+	private void togglePasswordVisibility() {
+		ManagePassword.showPassword(managerPasswordVisibleField, managerPassword, showPasswordCheckBox, confirmManagerPasswordVisibleField, confirmManagerPassword);
 	}
 
 	private void clearFields() {

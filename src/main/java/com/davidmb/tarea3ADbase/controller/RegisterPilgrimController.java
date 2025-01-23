@@ -11,7 +11,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -24,12 +23,14 @@ import com.davidmb.tarea3ADbase.models.User;
 import com.davidmb.tarea3ADbase.services.PilgrimService;
 import com.davidmb.tarea3ADbase.services.StopService;
 import com.davidmb.tarea3ADbase.services.UserService;
+import com.davidmb.tarea3ADbase.utils.ManagePassword;
 import com.davidmb.tarea3ADbase.view.FxmlView;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -49,9 +50,18 @@ public class RegisterPilgrimController implements Initializable {
 
 	@FXML
 	private PasswordField passwordField;
+	
+	@FXML
+	private TextField passwordVisibleField;
 
 	@FXML
 	private PasswordField confirmPasswordField;
+	
+	@FXML
+	private TextField confirmPasswordVisibleField;
+	
+	@FXML
+	private CheckBox showPasswordCheckBox;
 
 	@FXML
 	private ComboBox<String> nationalityComboBox;
@@ -82,11 +92,17 @@ public class RegisterPilgrimController implements Initializable {
 	private void registerPilgrim() {
 		if(validateData()) {
 			
+				String password = "";
+				
 		        String name = nameField.getText();
 		        String email = emailField.getText();
-		        String password = passwordField.getText();
 		        String nationality = nationalityComboBox.getValue();
 		        String stop = stopComboBox.getValue();
+				if (passwordVisibleField.isVisible()) {
+					password = passwordVisibleField.getText();
+				} else {
+					password = passwordField.getText();
+				}
 
 		        Stop currentStop = stopService.findByName(stop);
 
@@ -109,6 +125,11 @@ public class RegisterPilgrimController implements Initializable {
 		        clearFields();
 		        stageManager.switchScene(FxmlView.LOGIN);
 		} 
+	}
+	
+	@FXML
+	private void togglePasswordVisibility() {
+		ManagePassword.showPassword(passwordVisibleField, passwordField, showPasswordCheckBox, confirmPasswordVisibleField, confirmPasswordField);
 	}
 
 	@FXML

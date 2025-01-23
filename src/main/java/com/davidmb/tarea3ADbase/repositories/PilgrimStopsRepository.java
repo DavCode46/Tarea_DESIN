@@ -16,4 +16,6 @@ public interface PilgrimStopsRepository extends JpaRepository<PilgrimStops, Long
 	boolean existsByPilgrimAndStopAndStopDate(Pilgrim pilgrim, Stop stop, LocalDate stopDate);
 	
 	 List<PilgrimStops> findAllByPilgrim_Id(Long id);
+	 
+	 boolean existsByPilgrim_IdAndStop_IdAndStopDate(Long pilgrimId, Long stopId, LocalDate stopDate);
 }
