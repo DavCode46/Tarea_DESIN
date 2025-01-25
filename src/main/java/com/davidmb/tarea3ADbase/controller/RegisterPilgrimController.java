@@ -21,6 +21,7 @@ import com.davidmb.tarea3ADbase.models.PilgrimStops;
 import com.davidmb.tarea3ADbase.models.Stop;
 import com.davidmb.tarea3ADbase.models.User;
 import com.davidmb.tarea3ADbase.services.PilgrimService;
+import com.davidmb.tarea3ADbase.services.PilgrimStopsService;
 import com.davidmb.tarea3ADbase.services.StopService;
 import com.davidmb.tarea3ADbase.services.UserService;
 import com.davidmb.tarea3ADbase.utils.ManagePassword;
@@ -85,6 +86,9 @@ public class RegisterPilgrimController implements Initializable {
 	@Autowired
 	private StopService stopService;
 	
+	@Autowired
+	private PilgrimStopsService pilgrimStopsService;
+	
 
 
 	
@@ -115,11 +119,14 @@ public class RegisterPilgrimController implements Initializable {
 		        
 		        PilgrimStops initialPilgrimStop = new PilgrimStops(pilgrim, currentStop, LocalDate.now());
 		        
+		      
+		        
 		        currentStop.getPilgrimStops().add(initialPilgrimStop);
 		       
 		        pilgrim.getPilgrimStops().add(initialPilgrimStop);
 
 		        pilgrimService.save(pilgrim);
+		        pilgrimStopsService.save(initialPilgrimStop);
 
 		        showInfoAlert(user);
 		        clearFields();

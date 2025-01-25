@@ -16,6 +16,7 @@ import com.davidmb.tarea3ADbase.config.StageManager;
 import com.davidmb.tarea3ADbase.dtos.ServiceResponse;
 import com.davidmb.tarea3ADbase.dtos.StayView;
 import com.davidmb.tarea3ADbase.models.Pilgrim;
+import com.davidmb.tarea3ADbase.models.PilgrimStops;
 import com.davidmb.tarea3ADbase.models.Stop;
 import com.davidmb.tarea3ADbase.models.User;
 import com.davidmb.tarea3ADbase.services.PilgrimService;
@@ -111,7 +112,7 @@ public class StopController implements Initializable {
 
 	@Autowired
 	private StopService stopService;
-	
+
 	@Autowired
 	private PilgrimStopsService pilgrimStopsService;
 
@@ -152,10 +153,12 @@ public class StopController implements Initializable {
 				pilgrimStaysByDate.addAll(stayViewList);
 				pilgrimsTable.setItems(pilgrimStaysByDate);
 			} else {
-				showErrorAlert(new StringBuilder("La fecha de inicio debe ser anterior a la fecha de fin"), new String("Error al filtrar paradas"));
+				showErrorAlert(new StringBuilder("La fecha de inicio debe ser anterior a la fecha de fin"),
+						new String("Error al filtrar paradas"));
 			}
 		} else {
-			showErrorAlert(new StringBuilder("Debes seleccionar una fecha de inicio y una fecha de fin para filtrar"), new String("Error al filtrar paradas"));
+			showErrorAlert(new StringBuilder("Debes seleccionar una fecha de inicio y una fecha de fin para filtrar"),
+					new String("Error al filtrar paradas"));
 		}
 	}
 
@@ -177,29 +180,32 @@ public class StopController implements Initializable {
 			if (!cbStay.isSelected()) {
 				rbNo.setSelected(true);
 			}
-			
-			if (pilgrimStopsService.existsByPilgrimAndStopAndStopDate(
-					Long.valueOf(cbPilgrims.getValue().split(" ")[1]), user.getId(), LocalDate.now())) {
-				showErrorAlert(new StringBuilder("El peregrino ya ha sido sellado en esta parada"),
-						new String("Error al sellar el Carnet"));
-				return;
-			}
-			
+
 			Pilgrim pilgrim = pilgrimService.find(Long.valueOf(cbPilgrims.getValue().split(" ")[1]));
 			Stop stop = stopService.findByUserId(user.getId());
-			ServiceResponse<Pilgrim> serviceResponse = pilgrimService.stampCard(pilgrim, stop, rbYes.isSelected(),
-					cbStay.isSelected());
-			if ((serviceResponse != null)) {
-				if (serviceResponse.isSuccess()) {
-					saveAlert(serviceResponse, pilgrim);
+
+			boolean existsPilgrimStop = pilgrimStopsService.existsByPilgrimAndStopAndStopDate(pilgrim, stop,
+					LocalDate.now());
+			if (!existsPilgrimStop) {
+
+				ServiceResponse<Pilgrim> serviceResponse = pilgrimService.stampCard(pilgrim, stop, rbYes.isSelected(),
+						cbStay.isSelected());
+				if ((serviceResponse != null)) {
+					if (serviceResponse.isSuccess()) {
+						saveAlert(serviceResponse, pilgrim);
+					} else {
+						showServiceResponseError(serviceResponse, pilgrim);
+					}
+					clearFields();
 				} else {
-					showServiceResponseError(serviceResponse, pilgrim);
+					showErrorAlert(new StringBuilder("Error al sellar el carnet del peregrino"),
+							new String("Error al sellar el Carnet"));
 				}
-				clearFields();
+				loadStayViews();
 			} else {
-				showErrorAlert(new StringBuilder("Error al sellar el carnet del peregrino"), new String("Error al sellar el Carnet"));
+				showErrorAlert(new StringBuilder("El peregrino ya ha sellado su carnet en esta parada"),
+						new String("Error al sellar el Carnet"));
 			}
-			loadStayViews();
 		}
 	}
 
@@ -337,8 +343,7 @@ public class StopController implements Initializable {
 
 		List<StayView> stayViewList = pilgrimService
 				.findAllStayViewsByStop(stopService.findByUserId(user.getId()).getId());
-		stayViews.addAll(stayViewList);
-
+		stayViews.addAll(stayViewList);	
 		pilgrimsTable.setItems(stayViews);
 	}
 
