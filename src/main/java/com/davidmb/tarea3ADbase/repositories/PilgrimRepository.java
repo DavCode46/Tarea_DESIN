@@ -19,16 +19,18 @@ public interface PilgrimRepository extends JpaRepository<Pilgrim, Long> {
 		        p.name,
 		        p.nationality,
 		        CASE WHEN s.id IS NOT NULL THEN true ELSE false END,
-		        s.date,
+		        COALESCE(s.date, sp.stopDate),
 		        s.vip
 		    )
 		    FROM Pilgrim p
 		    JOIN p.pilgrimStops sp
 		    LEFT JOIN Stay s ON s.pilgrim.id = p.id AND s.stop.id = sp.stop.id
 		    WHERE sp.stop.id = :stopId
-		    GROUP BY p.name, p.nationality, s.id, s.date, s.vip
+		    ORDER BY p.name, COALESCE(s.date, sp.stopDate)
 		    """)
 		List<StayView> findAllStayViewsByStop(@Param("stopId") Long stopId);
+
+
 
 
 		@Query("""
@@ -52,9 +54,16 @@ public interface PilgrimRepository extends JpaRepository<Pilgrim, Long> {
 
 
 	/**
-	 * SELECT p.nombre, p.nacionalidad, s.id, s.fecha, s.vip FROM peregrinos p JOIN
-	 * peregrinos_paradas sp ON sp.id_peregrino = p.id LEFT JOIN estancias s ON
-	 * s.id_peregrino = p.id AND s.id_parada = sp.id_parada WHERE sp.id_parada = 1
+	 
+ SELECT p.nombre, 
+       p.nacionalidad, 
+       CASE WHEN s.id IS NOT NULL THEN true ELSE false END AS tiene_estancia,
+       s.fecha, 
+       s.vip
+FROM peregrinos p
+LEFT JOIN peregrinos_paradas pp ON pp.id_peregrino = p.id
+LEFT JOIN estancias s ON s.id_peregrino = p.id AND s.id_parada = pp.id_parada and s.fecha = pp.fecha_parada
+WHERE pp.id_parada = 1
 	 * 
 	 * @param id
 	 * @return
