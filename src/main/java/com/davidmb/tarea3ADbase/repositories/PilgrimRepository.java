@@ -15,7 +15,24 @@ import com.davidmb.tarea3ADbase.models.Pilgrim;
 public interface PilgrimRepository extends JpaRepository<Pilgrim, Long> {
 
 	@Query("""
-		    SELECT new com.davidmb.tarea3ADbase.dtos.StayView(
+		  
+		   
+		    """)
+		List<StayView> findAllStayViewsByStop(@Param("stopId") Long stopId);
+	
+	/**
+	 *  SELECT p.nombre, 
+       p.nacionalidad, 
+       CASE WHEN s.id IS NOT NULL THEN true ELSE false END AS tiene_estancia,
+       s.fecha, 
+       s.vip
+		FROM peregrinos p
+		LEFT JOIN peregrinos_paradas pp ON pp.id_peregrino = p.id
+		LEFT JOIN estancias s ON s.id_peregrino = p.id AND s.id_parada = pp.id_parada and s.fecha = pp.fecha_parada
+		WHERE pp.id_parada = 1
+		
+		
+		 SELECT new com.davidmb.tarea3ADbase.dtos.StayView(
 		        p.name,
 		        p.nationality,
 		        CASE WHEN s.id IS NOT NULL THEN true ELSE false END,
@@ -23,18 +40,20 @@ public interface PilgrimRepository extends JpaRepository<Pilgrim, Long> {
 		        s.vip
 		    )
 		    FROM Pilgrim p
-		    JOIN p.pilgrimStops sp
-		    LEFT JOIN Stay s ON s.pilgrim.id = p.id AND s.stop.id = sp.stop.id
+		    LEFT JOIN p.pilgrimStops sp ON sp.pilgrim.id = p.id
+		    LEFT JOIN Stay s ON s.pilgrim.id = p.id AND s.stop.id = sp.stop.id AND s.date = sp.stopDate
 		    WHERE sp.stop.id = :stopId
-		    ORDER BY p.name, COALESCE(s.date, sp.stopDate)
-		    """)
-		List<StayView> findAllStayViewsByStop(@Param("stopId") Long stopId);
+	 * @param stopId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
 
 
 
 
 		@Query("""
-		    SELECT DISTINCT new com.davidmb.tarea3ADbase.dtos.StayView(
+		    SELECT new com.davidmb.tarea3ADbase.dtos.StayView(
 		        p.name,
 		        p.nationality,
 		        CASE WHEN s.id IS NOT NULL THEN true ELSE false END,
@@ -42,8 +61,8 @@ public interface PilgrimRepository extends JpaRepository<Pilgrim, Long> {
 		        s.vip
 		    )
 		    FROM Pilgrim p
-		    JOIN p.pilgrimStops sp
-		    LEFT JOIN Stay s ON s.pilgrim.id = p.id AND s.stop.id = sp.stop.id
+		    LEFT JOIN p.pilgrimStops sp ON sp.pilgrim.id = p.id
+		    LEFT JOIN Stay s ON s.pilgrim.id = p.id AND s.stop.id = sp.stop.id AND s.date = sp.stopDate
 		    WHERE sp.stop.id = :stopId AND s.date BETWEEN :startDate AND :endDate
 		    """)
 		List<StayView> findStayViewsByStopBetweenDates(
