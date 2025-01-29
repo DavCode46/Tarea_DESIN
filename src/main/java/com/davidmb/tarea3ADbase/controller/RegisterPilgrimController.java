@@ -68,7 +68,7 @@ public class RegisterPilgrimController implements Initializable {
 	private ComboBox<String> nationalityComboBox;
 	
 	@FXML
-	private ComboBox<String> stopComboBox;
+	private ComboBox<Stop> stopComboBox;
 
 	@FXML
 	private Label errorLabel;
@@ -101,14 +101,14 @@ public class RegisterPilgrimController implements Initializable {
 		        String name = nameField.getText();
 		        String email = emailField.getText();
 		        String nationality = nationalityComboBox.getValue();
-		        String stop = stopComboBox.getValue();
+		        Stop stop = stopComboBox.getValue();
 				if (passwordVisibleField.isVisible()) {
 					password = passwordVisibleField.getText();
 				} else {
 					password = passwordField.getText();
 				}
 
-		        Stop currentStop = stopService.findByName(stop);
+		        Stop currentStop = stopService.find(stop.getId());
 
 		        Carnet carnet = new Carnet(currentStop);
 		      
@@ -178,7 +178,7 @@ public class RegisterPilgrimController implements Initializable {
 	
 	private void loadStops() {
 		stopComboBox.getItems().clear();
-		stopService.findAll().forEach(stop -> stopComboBox.getItems().add(stop.getName()));
+		stopService.findAll().forEach(stop -> stopComboBox.getItems().add(stop));
 	}
 	
 	private void showInfoAlert(User user) {

@@ -17,6 +17,8 @@ public interface StopRepository extends JpaRepository<Stop, Long> {
 	
 	Stop findByUserId(Long id);
 	
+	boolean existsByNameAndRegion(String name, String region);
+	
 //	 @Query("SELECT s FROM Stop s JOIN s.pilgrims p WHERE p.id = :pilgrimId")
 //	   List<Stop> findAllByPilgrimId(@Param("pilgrimId") Long pilgrimId);
 	

@@ -72,6 +72,10 @@ public class StopService {
 		stopRepository.deleteAll(users);
 	}
 	
+	public boolean existsByNameAndRegion(String name, String region) {
+		return stopRepository.existsByNameAndRegion(name, region);
+	}
+	
 	@Transactional
 	public Stop merge(Stop stop) {
 	    return entityManager.merge(stop);

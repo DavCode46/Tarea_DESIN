@@ -15,7 +15,17 @@ import com.davidmb.tarea3ADbase.models.Pilgrim;
 public interface PilgrimRepository extends JpaRepository<Pilgrim, Long> {
 
 	@Query("""
-		  
+		   SELECT new com.davidmb.tarea3ADbase.dtos.StayView(
+		        p.name,
+		        p.nationality,
+		        CASE WHEN s.id IS NOT NULL THEN true ELSE false END,
+		        s.date,
+		        s.vip
+		    )
+		    FROM Pilgrim p
+		    LEFT JOIN p.pilgrimStops sp ON sp.pilgrim.id = p.id
+		    LEFT JOIN Stay s ON s.pilgrim.id = p.id AND s.stop.id = sp.stop.id AND s.date = sp.stopDate
+		    WHERE sp.stop.id = :stopId
 		   
 		    """)
 		List<StayView> findAllStayViewsByStop(@Param("stopId") Long stopId);
@@ -34,9 +44,11 @@ public interface PilgrimRepository extends JpaRepository<Pilgrim, Long> {
 		
 		 SELECT new com.davidmb.tarea3ADbase.dtos.StayView(
 		        p.name,
-		        p.nationality,
+
+
+
 		        CASE WHEN s.id IS NOT NULL THEN true ELSE false END,
-		        COALESCE(s.date, sp.stopDate),
+		        s.date,
 		        s.vip
 		    )
 		    FROM Pilgrim p

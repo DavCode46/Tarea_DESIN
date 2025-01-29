@@ -115,8 +115,7 @@ public class Stop implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Stop [id=" + id + ", name=" + name + ", region=" + region + ", manager=" + manager + ", userId="
-				+ userId + ", pilgrims=" + pilgrimStops.size() + "]";
+		return name + " (" + region + ")";
 	}
 
 }

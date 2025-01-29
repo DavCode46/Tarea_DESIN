@@ -38,7 +38,7 @@ public class Carnet {
     private int nVips = 0;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(name = "paradaInicial", referencedColumnName = "id")
+    @JoinColumn(name = "par adaInicial", referencedColumnName = "id")
     private Stop initialStop;
     
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)

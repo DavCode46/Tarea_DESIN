@@ -77,16 +77,16 @@ public class AdminController implements Initializable {
 
 	@FXML
 	private PasswordField managerPassword;
-	
+
 	@FXML
 	private TextField managerPasswordVisibleField;
 
 	@FXML
 	private PasswordField confirmManagerPassword;
-	
+
 	@FXML
 	private TextField confirmManagerPasswordVisibleField;
-	
+
 	@FXML
 	private CheckBox showPasswordCheckBox;
 
@@ -183,19 +183,25 @@ public class AdminController implements Initializable {
 			stop.setManager(newUser.getUsername());
 			stop.setUserId(newUser.getId());
 
-			Stop newStop = stopService.save(stop);
+			boolean exists = stopService.existsByNameAndRegion(stop.getName(), stop.getRegion());
 
-			saveAlert(newStop);
+			if (!exists) {
+				Stop newStop = stopService.save(stop);
 
+				saveAlert(newStop);
 
-			clearFields();
-			loadStopDetails();
+				clearFields();
+				loadStopDetails();
+			} else {
+				showErrorAlert(new StringBuilder("La parada ya existe."));
+			}
 		}
 	}
-	
+
 	@FXML
 	private void togglePasswordVisibility() {
-		ManagePassword.showPassword(managerPasswordVisibleField, managerPassword, showPasswordCheckBox, confirmManagerPasswordVisibleField, confirmManagerPassword);
+		ManagePassword.showPassword(managerPasswordVisibleField, managerPassword, showPasswordCheckBox,
+				confirmManagerPasswordVisibleField, confirmManagerPassword);
 	}
 
 	private void clearFields() {
@@ -325,7 +331,6 @@ public class AdminController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
-		
 		User user = session.getLoggedInUser();
 
 		if (user != null) {
@@ -356,9 +361,6 @@ public class AdminController implements Initializable {
 		colManagerId.setCellValueFactory(new PropertyValueFactory<>("userId"));
 	}
 
-	
-
-	
 	private void loadStopDetails() {
 		stopList.clear();
 		stopList.addAll(stopService.findAll());
@@ -386,6 +388,5 @@ public class AdminController implements Initializable {
 			e.printStackTrace();
 		}
 	}
-
 
 }
