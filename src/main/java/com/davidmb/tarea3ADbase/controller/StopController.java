@@ -276,7 +276,7 @@ public class StopController implements Initializable {
 
 		user = session.getLoggedInUser();
 
-		stopId.setText("ID: " + user.getId() + " - " + user.getUsername());
+		stopId.setText("Parada: " + user.getUsername());
 
 		loadPilgrims();
 
