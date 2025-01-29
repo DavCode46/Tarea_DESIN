@@ -155,6 +155,8 @@ public class StopController implements Initializable {
 						stopService.findByUserId(user.getId()).getId(), dpStart.getValue(), dpEnd.getValue());
 				pilgrimStaysByDate.addAll(stayViewList);
 				pilgrimsTable.setItems(pilgrimStaysByDate);
+				dpStart.setValue(null);
+				dpEnd.setValue(null);
 			} else {
 				showErrorAlert(new StringBuilder("La fecha de inicio debe ser anterior a la fecha de fin"),
 						new String("Error al filtrar paradas"));
