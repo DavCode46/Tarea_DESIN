@@ -4,65 +4,70 @@ import java.time.LocalDate;
 
 public class StayView {
 
-	  
-	    private String pilgrimName;
-	    private String pilgrimNationality;
-	    private Boolean stay; 
-	    private LocalDate stayDate;
-	    private Boolean isVip; 
+	private String pilgrimName;
+	private String pilgrimNationality;
+	private LocalDate stopDate;
+	private Boolean stay;
+	private LocalDate stayDate;
+	private Boolean isVip;
 
-	    public StayView( String pilgrimName, String pilgrimNationality, Boolean stay, LocalDate stayDate, Boolean isVip) {
-	       
-	        this.pilgrimName = pilgrimName;
-	        this.pilgrimNationality = pilgrimNationality;
-	        this.stay = stay;
-	        this.stayDate = stayDate;
-	        this.isVip = isVip;
-	    }
+	public StayView(String pilgrimName, String pilgrimNationality, LocalDate stopDate, Boolean stay, LocalDate stayDate,
+			Boolean isVip) {
 
-		
+		this.pilgrimName = pilgrimName;
+		this.pilgrimNationality = pilgrimNationality;
+		this.stopDate = stopDate;
+		this.stay = stay;
+		this.stayDate = stayDate;
+		this.isVip = isVip;
+	}
 
+	public String getPilgrimName() {
+		return pilgrimName;
+	}
 
-		public String getPilgrimName() {
-			return pilgrimName;
-		}
+	public void setPilgrimName(String pilgrimName) {
+		this.pilgrimName = pilgrimName;
+	}
 
-		public void setPilgrimName(String pilgrimName) {
-			this.pilgrimName = pilgrimName;
-		}
+	public String getPilgrimNationality() {
+		return pilgrimNationality;
+	}
 
-		public String getPilgrimNationality() {
-			return pilgrimNationality;
-		}
+	public void setPilgrimNationality(String pilgrimNationality) {
+		this.pilgrimNationality = pilgrimNationality;
+	}
 
-		public void setPilgrimNationality(String pilgrimNationality) {
-			this.pilgrimNationality = pilgrimNationality;
-		}
+	public LocalDate getStopDate() {
+		return stopDate;
+	}
 
-		public Boolean getStay() {
-			return stay;
-		}
+	public void setStopDate(LocalDate stopDate) {
+		this.stopDate = stopDate;
+	}
 
-		public void setStay(Boolean stay) {
-			this.stay = stay;
-		}
+	public Boolean getStay() {
+		return stay;
+	}
 
-		public LocalDate getStayDate() {
-			return stayDate;
-		}
+	public void setStay(Boolean stay) {
+		this.stay = stay;
+	}
 
-		public void setStayDate(LocalDate stayDate) {
-			this.stayDate = stayDate;
-		}
+	public LocalDate getStayDate() {
+		return stayDate;
+	}
 
-		public Boolean getIsVip() {
-			return isVip;
-		}
+	public void setStayDate(LocalDate stayDate) {
+		this.stayDate = stayDate;
+	}
 
-		public void setIsVip(Boolean isVip) {
-			this.isVip = isVip;
-		}
+	public Boolean getIsVip() {
+		return isVip;
+	}
 
-	
+	public void setIsVip(Boolean isVip) {
+		this.isVip = isVip;
+	}
 
 }

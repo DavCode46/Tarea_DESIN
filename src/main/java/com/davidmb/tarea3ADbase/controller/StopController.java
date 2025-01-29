@@ -93,6 +93,9 @@ public class StopController implements Initializable {
 
 	@FXML
 	private TableColumn<StayView, String> colPilgrimNationality;
+	
+	@FXML
+	private TableColumn<StayView, String> colStopDate;
 
 	@FXML
 	private TableColumn<StayView, LocalDate> colDoS;
@@ -291,6 +294,7 @@ public class StopController implements Initializable {
 
 		colPilgrimName.setCellValueFactory(new PropertyValueFactory<>("pilgrimName"));
 		colPilgrimNationality.setCellValueFactory(new PropertyValueFactory<>("pilgrimNationality"));
+		colStopDate.setCellValueFactory(new PropertyValueFactory<>("stopDate"));
 
 		colStay.setCellValueFactory(new PropertyValueFactory<>("stay"));
 

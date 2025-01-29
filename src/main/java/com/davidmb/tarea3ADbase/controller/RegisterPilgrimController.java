@@ -116,11 +116,10 @@ public class RegisterPilgrimController implements Initializable {
 		        User newUser = userService.save(user);
 
 		        Pilgrim pilgrim = new Pilgrim(name, nationality, carnet, newUser.getId());
+		     
 		        
 		        PilgrimStops initialPilgrimStop = new PilgrimStops(pilgrim, currentStop, LocalDate.now());
-		        
-		      
-		        
+		        	        
 		        currentStop.getPilgrimStops().add(initialPilgrimStop);
 		       
 		        pilgrim.getPilgrimStops().add(initialPilgrimStop);

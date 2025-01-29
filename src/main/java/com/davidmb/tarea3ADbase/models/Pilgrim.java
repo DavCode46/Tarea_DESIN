@@ -1,10 +1,8 @@
 package com.davidmb.tarea3ADbase.models;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -14,11 +12,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 
 /**
@@ -44,7 +39,7 @@ public class Pilgrim {
     private Long userId;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @PrimaryKeyJoinColumn
+    @JoinColumn(name = "id_carnet", referencedColumnName = "id", nullable = false)
     private Carnet carnet;
 
     @OneToMany(mappedBy = "pilgrim", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

@@ -18,6 +18,7 @@ public interface PilgrimRepository extends JpaRepository<Pilgrim, Long> {
 		   SELECT new com.davidmb.tarea3ADbase.dtos.StayView(
 		        p.name,
 		        p.nationality,
+		        sp.stopDate,
 		        CASE WHEN s.id IS NOT NULL THEN true ELSE false END,
 		        s.date,
 		        s.vip
@@ -68,6 +69,7 @@ public interface PilgrimRepository extends JpaRepository<Pilgrim, Long> {
 		    SELECT new com.davidmb.tarea3ADbase.dtos.StayView(
 		        p.name,
 		        p.nationality,
+		        sp.stopDate,
 		        CASE WHEN s.id IS NOT NULL THEN true ELSE false END,
 		        s.date,
 		        s.vip

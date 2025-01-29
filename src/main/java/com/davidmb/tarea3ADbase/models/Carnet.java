@@ -13,7 +13,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 
 /**
@@ -38,12 +37,12 @@ public class Carnet {
     private int nVips = 0;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(name = "par adaInicial", referencedColumnName = "id")
+    @JoinColumn(name = "paradaInicial", referencedColumnName = "id")
     private Stop initialStop;
     
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @PrimaryKeyJoinColumn
-    private Pilgrim pilgrim;
+//    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JoinColumn(name = "id_peregrino", referencedColumnName = "id")
+//    private Pilgrim pilgrim;
 
     public Carnet() {
         super();
@@ -94,17 +93,17 @@ public class Carnet {
 		this.initialStop = initialStop;
 	}
 
-	public Pilgrim getPilgrim() {
-		return pilgrim;
-	}
-
-	public void setPilgrim(Pilgrim pilgrim) {
-		this.pilgrim = pilgrim;
-	}
+//	public Pilgrim getPilgrim() {
+//		return pilgrim;
+//	}
+//
+//	public void setPilgrim(Pilgrim pilgrim) {
+//		this.pilgrim = pilgrim;
+//	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(distance, doExp, id, initialStop, nVips, pilgrim);
+		return Objects.hash(distance, doExp, id, initialStop, nVips);
 	}
 
 	@Override
@@ -118,14 +117,13 @@ public class Carnet {
 		Carnet other = (Carnet) obj;
 		return Double.doubleToLongBits(distance) == Double.doubleToLongBits(other.distance)
 				&& Objects.equals(doExp, other.doExp) && Objects.equals(id, other.id)
-				&& Objects.equals(initialStop, other.initialStop) && nVips == other.nVips
-				&& Objects.equals(pilgrim, other.pilgrim);
+				&& Objects.equals(initialStop, other.initialStop) && nVips == other.nVips;
 	}
 
 	@Override
 	public String toString() {
 		return "Carnet [id=" + id + ", doExp=" + doExp + ", distance=" + distance + ", nVips=" + nVips
-				+ ", initialStop=" + initialStop + ", pilgrim=" + pilgrim + "]";
+				+ ", initialStop=" + initialStop + ", pilgrim=" + "]";
 	}
 
    
