@@ -24,8 +24,10 @@
 	xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="com.davidmb.tarea3ADbase.controller.StopController">
 
-	<left>
-		<VBox prefHeight="571.0" prefWidth="306.0" spacing="10.0"
+	<top>
+	<HBox prefWidth="500.">
+		<VBox prefHeight="300.0" prefWidth="500" spacing="10.0"
+		alignment="TOP_CENTER"
 			styleClass="background" BorderPane.alignment="CENTER">
 			<children>
 				<Button fx:id="btnLogout" text="Cerrar sesión"
@@ -48,15 +50,7 @@
 						<Insets bottom="10.0" left="20.0" top="30.0" />
 					</VBox.margin>
 				</Label>
-				<HBox prefHeight="30.0" prefWidth="265.0">
-					<children>
-						<Label fx:id="stopId" text="ID Parada -"
-							styleClass="form-title-small" />
-					</children>
-					<VBox.margin>
-						<Insets left="25.0" />
-					</VBox.margin>
-				</HBox>
+				
 				<ComboBox fx:id="cbPilgrims"
 					promptText="Selecciona el peregrino" styleClass="combo-box" />
 				<HBox spacing="80" prefHeight="30.0" prefWidth="265.0">
@@ -95,11 +89,28 @@
 						</Button>
 					</children>
 				</HBox>
+				</children>
+			</VBox>
 
+				<Separator orientation="VERTICAL" prefHeight="100.0" />
 
-				<Separator orientation="HORIZONTAL" prefWidth="200.0" />
-
-
+			<VBox prefHeight="300.0" prefWidth="500.0" spacing="10.0"
+		alignment="TOP_CENTER"
+			styleClass="background" BorderPane.alignment="CENTER">
+			<children>
+			<HBox prefHeight="30.0" prefWidth="265.0">
+					<children>
+						<Label fx:id="stopId" text="ID Parada -"
+							styleClass="form-title-small" >
+							<font>
+								<Font size="18" />
+							</font>
+							</Label>
+					</children>
+					<VBox.margin>
+						<Insets left="25.0" />
+					</VBox.margin>
+				</HBox>
 				<Label text="Filtrar Paradas" styleClass="form-title">
 					<font>
 						<Font size="20.0" />
@@ -110,14 +121,14 @@
 				</Label>
 				<VBox>
 					<HBox spacing="10.0">
-						<DatePicker fx:id="dpStart" prefWidth="130.0"
+						<DatePicker fx:id="dpStart" prefWidth="265.0"
 							promptText="Fecha de Inicio">
 							<HBox.margin>
 								<Insets top="15.0" bottom="10.0" />
 							</HBox.margin>
 						</DatePicker>
 
-						<DatePicker fx:id="dpEnd" prefWidth="130.0"
+						<DatePicker fx:id="dpEnd" prefWidth="265.0"
 							promptText="Fecha de Fin">
 							<HBox.margin>
 								<Insets top="15.0" bottom="10.0" />
@@ -127,14 +138,14 @@
 					<HBox spacing="10.0">
 
 						<Button text="Limpiar Filtros" styleClass="white-button"
-							onAction="#clearFilters" prefWidth="130.0">
+							onAction="#clearFilters" prefWidth="265.0">
 							<HBox.margin>
 								<Insets top="10.0" bottom="20.0" />
 							</HBox.margin>
 						</Button>
 
 						<Button text="Filtrar" styleClass="primary-button"
-							onAction="#filterStays" prefWidth="130.0">
+							onAction="#filterStays" prefWidth="265.0">
 							<HBox.margin>
 								<Insets top="10.0" bottom="20.0" />
 							</HBox.margin>
@@ -144,26 +155,20 @@
 				</VBox>
 
 			</children>
-			<padding>
-				<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-			</padding>
-			<BorderPane.margin>
-				<Insets />
-			</BorderPane.margin>
-		</VBox>
-	</left>
+			</VBox>
+		</HBox>
+<!--			<padding>-->
+<!--				<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />-->
+<!--			</padding>-->
+<!--			<BorderPane.margin>-->
+<!--				<Insets />-->
+<!--			</BorderPane.margin>-->
+		
+	</top>
 	<center>
-		<VBox alignment="TOP_RIGHT" prefHeight="571.0" prefWidth="692.0"
+		<VBox alignment="CENTER_RIGHT" prefHeight="571.0" prefWidth="692.0"
 			BorderPane.alignment="CENTER">
 			<children>
-
-				<HBox alignment="TOP_RIGHT" prefHeight="41.0" prefWidth="640.0"
-					spacing="10">
-					<children>
-
-
-					</children>
-				</HBox>
 				<TableView fx:id="pilgrimsTable" prefHeight="300.0"
 					prefWidth="679.0" tableMenuButtonVisible="true">
 					<HBox.margin>
