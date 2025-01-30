@@ -191,8 +191,8 @@ public class RegisterPilgrimController implements Initializable {
 		} else {
 			alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/info.png")));
 			alert.setTitle("Registro cancelado");
-            alert.setHeaderText("Registro cancelado");
-            alert.setContentText("Registro cancelado");
+			alert.setHeaderText("Registro cancelado");
+			alert.setContentText("Registro cancelado");
 		}
 
 		alert.showAndWait();
@@ -229,7 +229,9 @@ public class RegisterPilgrimController implements Initializable {
 		String name = nameField.getText();
 		String email = emailField.getText();
 		String password = passwordField.getText();
+		String passwordVisible = passwordVisibleField.getText();
 		String confirmPassword = confirmPasswordField.getText();
+		String confirmPasswordVisible = confirmPasswordVisibleField.getText();
 
 		User emailExists = userService.findByEmail(email);
 
@@ -254,20 +256,38 @@ public class RegisterPilgrimController implements Initializable {
 		}
 
 		// Validar Password
-		if (password.isEmpty()) {
-			message.append("La contraseña no puede estar vacía.\n");
-		} else if (password.length() < 8) {
-			message.append("La contraseña debe tener al menos 8 caracteres.\n");
-		} else if (!password.matches(".*\\d.*")) {
-			message.append("La contraseña debe contener al menos un número.\n");
-		} else if (!password.matches(".*[a-z].*")) {
-			message.append("La contraseña debe contener al menos una letra minúscula.\n");
-		} else if (!password.matches(".*[A-Z].*")) {
-			message.append("La contraseña debe contener al menos una letra mayúscula.\n");
-		} else if (!password.matches(".*[!@#$%^&*].*")) {
-			message.append("La contraseña debe contener al menos un carácter especial.\n");
-		} else if (!password.equals(confirmPassword)) {
-			message.append("Las contraseñas no coinciden.\n");
+		if (passwordField.isVisible()) {
+			if (password.isEmpty()) {
+				message.append("La contraseña no puede estar vacía.\n");
+			} else if (password.length() < 8) {
+				message.append("La contraseña debe tener al menos 8 caracteres.\n");
+			} else if (!password.matches(".*\\d.*")) {
+				message.append("La contraseña debe contener al menos un número.\n");
+			} else if (!password.matches(".*[a-z].*")) {
+				message.append("La contraseña debe contener al menos una letra minúscula.\n");
+			} else if (!password.matches(".*[A-Z].*")) {
+				message.append("La contraseña debe contener al menos una letra mayúscula.\n");
+			} else if (!password.matches(".*[!@#$%^&*].*")) {
+				message.append("La contraseña debe contener al menos un carácter especial.\n");
+			} else if (!password.equals(confirmPassword)) {
+				message.append("Las contraseñas no coinciden.\n");
+			}
+		}else {
+			if (passwordVisible.isEmpty()) {
+				message.append("La contraseña no puede estar vacía.\n");
+			} else if (passwordVisible.length() < 8) {
+				message.append("La contraseña debe tener al menos 8 caracteres.\n");
+			} else if (!passwordVisible.matches(".*\\d.*")) {
+				message.append("La contraseña debe contener al menos un número.\n");
+			} else if (!passwordVisible.matches(".*[a-z].*")) {
+				message.append("La contraseña debe contener al menos una letra minúscula.\n");
+			} else if (!passwordVisible.matches(".*[A-Z].*")) {
+				message.append("La contraseña debe contener al menos una letra mayúscula.\n");
+			} else if (!passwordVisible.matches(".*[!@#$%^&*].*")) {
+				message.append("La contraseña debe contener al menos un carácter especial.\n");
+			} else if (!passwordVisible.equals(confirmPasswordVisible)) {
+				message.append("Las contraseñas no coinciden.\n");
+			}
 		}
 
 		// Validar Nacionalidad

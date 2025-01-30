@@ -172,7 +172,7 @@ public class AdminController implements Initializable {
 			user.setEmail(getManagerEmail());
 			user.setPassword(password);
 			user.setRole("Parada");
-			if(showConfirmAlert(user, stop)) {
+			if (showConfirmAlert(user, stop)) {
 				User newUser = userService.save(user);
 				stop.setManager(newUser.getUsername());
 				stop.setUserId(newUser.getId());
@@ -214,22 +214,21 @@ public class AdminController implements Initializable {
 
 		Alert alert = new Alert(AlertType.INFORMATION);
 		Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-		if(stop != null) {
+		if (stop != null) {
 			alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
 			alert.setTitle("Parada registrada con éxito.");
 			alert.setHeaderText("Parada registrada con éxito.");
-		alert.setContentText(
-				"La parada " + stop.getName() + " " + stop.getRegion() + " ha sido creada \nEl responsable es \n"
-						+ getManagerEmail() + " con id " + +userService.find(stop.getUserId()).getId() + ".");
+			alert.setContentText(
+					"La parada " + stop.getName() + " " + stop.getRegion() + " ha sido creada \nEl responsable es \n"
+							+ getManagerEmail() + " con id " + +userService.find(stop.getUserId()).getId() + ".");
 		} else {
 			alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/info.png")));
 			alert.setTitle("Registro cancelado");
-            alert.setHeaderText("Registro cancelado");
-            alert.setContentText("Registro de la parada cancelado, vuelve a introducir los datos");
+			alert.setHeaderText("Registro cancelado");
+			alert.setContentText("Registro de la parada cancelado, vuelve a introducir los datos");
 		}
 		// Cambiar el ícono de la ventana
-		
-		
+
 		alert.showAndWait();
 	}
 
@@ -257,8 +256,6 @@ public class AdminController implements Initializable {
 		return alert.getResult().getButtonData().isDefaultButton();
 	}
 
-	
-
 	private boolean validateData() {
 		boolean ret = false;
 		StringBuilder message = new StringBuilder();
@@ -266,7 +263,9 @@ public class AdminController implements Initializable {
 		String manager = managerName.getText();
 		String email = managerEmail.getText();
 		String password = managerPassword.getText();
+		String visiblePassword = managerPasswordVisibleField.getText();
 		String confirmPassword = confirmManagerPassword.getText();
+		String confirmPasswordVisible = confirmManagerPasswordVisibleField.getText();
 		User emailExists = userService.findByEmail(email);
 
 		// Validar nombre de la parada
@@ -304,20 +303,38 @@ public class AdminController implements Initializable {
 		}
 
 		// Validar Password
-		if (password.isEmpty()) {
-			message.append("La contraseña no puede estar vacía.\n");
-		} else if (password.length() < 8) {
-			message.append("La contraseña debe tener al menos 8 caracteres.\n");
-		} else if (!password.matches(".*\\d.*")) {
-			message.append("La contraseña debe contener al menos un número.\n");
-		} else if (!password.matches(".*[a-z].*")) {
-			message.append("La contraseña debe contener al menos una letra minúscula.\n");
-		} else if (!password.matches(".*[A-Z].*")) {
-			message.append("La contraseña debe contener al menos una letra mayúscula.\n");
-		} else if (!password.matches(".*[!@#$%^&*].*")) {
-			message.append("La contraseña debe contener al menos un carácter especial.\n");
-		} else if (!password.equals(confirmPassword)) {
-			message.append("Las contraseñas no coinciden.\n");
+		if (managerPassword.isVisible()) {
+			if (password.isEmpty()) {
+				message.append("La contraseña no puede estar vacía.\n");
+			} else if (password.length() < 8) {
+				message.append("La contraseña debe tener al menos 8 caracteres.\n");
+			} else if (!password.matches(".*\\d.*")) {
+				message.append("La contraseña debe contener al menos un número.\n");
+			} else if (!password.matches(".*[a-z].*")) {
+				message.append("La contraseña debe contener al menos una letra minúscula.\n");
+			} else if (!password.matches(".*[A-Z].*")) {
+				message.append("La contraseña debe contener al menos una letra mayúscula.\n");
+			} else if (!password.matches(".*[!@#$%^&*].*")) {
+				message.append("La contraseña debe contener al menos un carácter especial.\n");
+			} else if (!password.equals(confirmPassword)) {
+				message.append("Las contraseñas no coinciden.\n");
+			}
+		} else {
+			if (visiblePassword.isEmpty()) {
+				message.append("La contraseña no puede estar vacía.\n");
+			} else if (visiblePassword.length() < 8) {
+				message.append("La contraseña debe tener al menos 8 caracteres.\n");
+			} else if (!visiblePassword.matches(".*\\d.*")) {
+				message.append("La contraseña debe contener al menos un número.\n");
+			} else if (!visiblePassword.matches(".*[a-z].*")) {
+				message.append("La contraseña debe contener al menos una letra minúscula.\n");
+			} else if (!visiblePassword.matches(".*[A-Z].*")) {
+				message.append("La contraseña debe contener al menos una letra mayúscula.\n");
+			} else if (!visiblePassword.matches(".*[!@#$%^&*].*")) {
+				message.append("La contraseña debe contener al menos un carácter especial.\n");
+			} else if (!visiblePassword.equals(confirmPasswordVisible)) {
+				message.append("Las contraseñas no coinciden.\n");
+			}
 		}
 
 		if (message.length() > 0) {
