@@ -6,7 +6,11 @@ import java.util.Objects;
 
 public class PilgrimStopsId implements Serializable {
 
-    private Long pilgrim;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 938248338808649683L;
+	private Long pilgrim;
     private Long stop;
     private LocalDate stopDate;
 

@@ -139,8 +139,8 @@ public class ForgotPasswordController implements Initializable{
 	
 	private void showErrorAlert(StringBuilder message) {
 		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error al registrar parada");
-		alert.setHeaderText("Error al registrar parada");
+		alert.setTitle("Error");
+		alert.setHeaderText("Error al restablecer la contraseña");
 		alert.setContentText(message.toString());
 		 // Cambiar el ícono de la ventana
 	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();

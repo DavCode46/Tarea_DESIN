@@ -25,6 +25,8 @@ import com.davidmb.tarea3ADbase.services.StopService;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 
 /**
  * La clase ExportarCarnetXML se encarga de generar un archivo XML que contiene
@@ -163,6 +165,8 @@ public class ExportarCarnetXML {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Exportar carnet");
 		alert.setHeaderText(null);
+		  Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+		    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
 		alert.setContentText("El carnet de " + pilgrim.getName() + " ha sido exportado correctamente.");
 		alert.showAndWait();
 	}

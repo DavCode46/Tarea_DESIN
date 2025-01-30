@@ -58,9 +58,6 @@ public class AdminController implements Initializable {
 	private Button btnLogout;
 
 	@FXML
-	private Label stopId;
-
-	@FXML
 	private Label loggedInUser;
 
 	@FXML
@@ -163,37 +160,37 @@ public class AdminController implements Initializable {
 	private void saveStop(ActionEvent event) {
 
 		if (validateData()) {
-
 			String password = "";
 			if (managerPasswordVisibleField.isVisible()) {
 				password = managerPasswordVisibleField.getText();
 			} else {
 				password = managerPassword.getText();
 			}
-			Stop stop = new Stop();
+			Stop stop = new Stop(getStopName(), getRegion().substring(0, 3), getManagerName());
 			User user = new User();
 			user.setUsername(getManagerName());
 			user.setEmail(getManagerEmail());
 			user.setPassword(password);
 			user.setRole("Parada");
-			User newUser = userService.save(user);
+			if(showConfirmAlert(user, stop)) {
+				User newUser = userService.save(user);
+				stop.setManager(newUser.getUsername());
+				stop.setUserId(newUser.getId());
 
-			stop.setName(getStopName());
-			stop.setRegion(getRegion().substring(0, 3));
-			stop.setManager(newUser.getUsername());
-			stop.setUserId(newUser.getId());
+				boolean exists = stopService.existsByNameAndRegion(stop.getName(), stop.getRegion());
 
-			boolean exists = stopService.existsByNameAndRegion(stop.getName(), stop.getRegion());
+				if (!exists) {
+					Stop newStop = stopService.save(stop);
 
-			if (!exists) {
-				Stop newStop = stopService.save(stop);
+					saveAlert(newStop);
 
-				saveAlert(newStop);
-
-				clearFields();
-				loadStopDetails();
+					clearFields();
+					loadStopDetails();
+				} else {
+					showErrorAlert(new StringBuilder("La parada ya existe."));
+				}
 			} else {
-				showErrorAlert(new StringBuilder("La parada ya existe."));
+				saveAlert(null);
 			}
 		}
 	}
@@ -205,10 +202,9 @@ public class AdminController implements Initializable {
 	}
 
 	private void clearFields() {
-		stopId.setText(null);
 		stopName.clear();
 		managerName.clear();
-		cbregion.getSelectionModel().clearSelection();
+		cbregion.setValue(null);
 		managerEmail.clear();
 		managerPassword.clear();
 		confirmManagerPassword.clear();
@@ -217,14 +213,23 @@ public class AdminController implements Initializable {
 	private void saveAlert(Stop stop) {
 
 		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("Parada registrada con éxito.");
-		alert.setHeaderText("Parada registrada con éxito.");
-		alert.setContentText(
-				"La parada " + stop.getName() + " " + stop.getRegion() + " ha sido creada y el responsable es \n"
-						+ getManagerEmail() + " con id " + +userService.find(stop.getUserId()).getId() + ".");
-		// Cambiar el ícono de la ventana
 		Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-		alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
+		if(stop != null) {
+			alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
+			alert.setTitle("Parada registrada con éxito.");
+			alert.setHeaderText("Parada registrada con éxito.");
+		alert.setContentText(
+				"La parada " + stop.getName() + " " + stop.getRegion() + " ha sido creada \nEl responsable es \n"
+						+ getManagerEmail() + " con id " + +userService.find(stop.getUserId()).getId() + ".");
+		} else {
+			alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/info.png")));
+			alert.setTitle("Registro cancelado");
+            alert.setHeaderText("Registro cancelado");
+            alert.setContentText("Registro de la parada cancelado, vuelve a introducir los datos");
+		}
+		// Cambiar el ícono de la ventana
+		
+		
 		alert.showAndWait();
 	}
 
@@ -238,6 +243,21 @@ public class AdminController implements Initializable {
 		alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/error.png")));
 		alert.showAndWait();
 	}
+
+	private boolean showConfirmAlert(User user, Stop stop) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Registrar parada");
+		alert.setHeaderText("¿Confirma los datos de la parada?");
+		alert.setContentText("Parada: " + stop.getName() + " " + stop.getRegion() + "\nResponsable: "
+				+ stop.getManager() + "\nEmail: " + user.getEmail());
+		// Cambiar el ícono de la ventana
+		Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+		alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/confirm.png")));
+		alert.showAndWait();
+		return alert.getResult().getButtonData().isDefaultButton();
+	}
+
+	
 
 	private boolean validateData() {
 		boolean ret = false;
@@ -334,7 +354,7 @@ public class AdminController implements Initializable {
 		User user = session.getLoggedInUser();
 
 		if (user != null) {
-			loggedInUser.setText("Usuario: " + user.getUsername() + " - ID: " + user.getId());
+			loggedInUser.setText("Usuario: " + user.getUsername());
 		}
 
 		loadNationalities();

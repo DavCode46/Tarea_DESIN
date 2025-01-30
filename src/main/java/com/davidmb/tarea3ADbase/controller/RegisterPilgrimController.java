@@ -39,7 +39,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-
 @Controller
 public class RegisterPilgrimController implements Initializable {
 
@@ -51,22 +50,22 @@ public class RegisterPilgrimController implements Initializable {
 
 	@FXML
 	private PasswordField passwordField;
-	
+
 	@FXML
 	private TextField passwordVisibleField;
 
 	@FXML
 	private PasswordField confirmPasswordField;
-	
+
 	@FXML
 	private TextField confirmPasswordVisibleField;
-	
+
 	@FXML
 	private CheckBox showPasswordCheckBox;
 
 	@FXML
 	private ComboBox<String> nationalityComboBox;
-	
+
 	@FXML
 	private ComboBox<Stop> stopComboBox;
 
@@ -79,63 +78,64 @@ public class RegisterPilgrimController implements Initializable {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private PilgrimService pilgrimService;
-	
+
 	@Autowired
 	private StopService stopService;
-	
+
 	@Autowired
 	private PilgrimStopsService pilgrimStopsService;
-	
 
-
-	
 	@FXML
 	private void registerPilgrim() {
-		if(validateData()) {
-			
-				String password = "";
-				
-		        String name = nameField.getText();
-		        String email = emailField.getText();
-		        String nationality = nationalityComboBox.getValue();
-		        Stop stop = stopComboBox.getValue();
-				if (passwordVisibleField.isVisible()) {
-					password = passwordVisibleField.getText();
-				} else {
-					password = passwordField.getText();
-				}
+		if (validateData()) {
 
-		        Stop currentStop = stopService.find(stop.getId());
+			String password = "";
 
-		        Carnet carnet = new Carnet(currentStop);
-		      
-		        User user = new User(name, "Peregrino", email, password);
-		        User newUser = userService.save(user);
+			String name = nameField.getText();
+			String email = emailField.getText();
+			String nationality = nationalityComboBox.getValue();
+			Stop stop = stopComboBox.getValue();
+			if (passwordVisibleField.isVisible()) {
+				password = passwordVisibleField.getText();
+			} else {
+				password = passwordField.getText();
+			}
 
-		        Pilgrim pilgrim = new Pilgrim(name, nationality, carnet, newUser.getId());
-		     
-		        
-		        PilgrimStops initialPilgrimStop = new PilgrimStops(pilgrim, currentStop, LocalDate.now());
-		        	        
-		        currentStop.getPilgrimStops().add(initialPilgrimStop);
-		       
-		        pilgrim.getPilgrimStops().add(initialPilgrimStop);
+			Stop currentStop = stopService.find(stop.getId());
 
-		        pilgrimService.save(pilgrim);
-		        pilgrimStopsService.save(initialPilgrimStop);
+			Carnet carnet = new Carnet(currentStop);
 
-		        showInfoAlert(user);
-		        clearFields();
-		        stageManager.switchScene(FxmlView.LOGIN);
-		} 
+			User user = new User(name, "Peregrino", email, password);
+			Pilgrim pilgrim = new Pilgrim(name, nationality, carnet, null);
+			if (confirmAlert(user, pilgrim)) {
+				User newUser = userService.save(user);
+
+				pilgrim.setUserId(newUser.getId());
+				PilgrimStops initialPilgrimStop = new PilgrimStops(pilgrim, currentStop, LocalDate.now());
+
+				currentStop.getPilgrimStops().add(initialPilgrimStop);
+
+				pilgrim.getPilgrimStops().add(initialPilgrimStop);
+
+				pilgrimService.save(pilgrim);
+				pilgrimStopsService.save(initialPilgrimStop);
+
+				showInfoAlert(user);
+				clearFields();
+				stageManager.switchScene(FxmlView.LOGIN);
+			} else {
+				showInfoAlert(null);
+			}
+		}
 	}
-	
+
 	@FXML
 	private void togglePasswordVisibility() {
-		ManagePassword.showPassword(passwordVisibleField, passwordField, showPasswordCheckBox, confirmPasswordVisibleField, confirmPasswordField);
+		ManagePassword.showPassword(passwordVisibleField, passwordField, showPasswordCheckBox,
+				confirmPasswordVisibleField, confirmPasswordField);
 	}
 
 	@FXML
@@ -155,7 +155,7 @@ public class RegisterPilgrimController implements Initializable {
 	 */
 	private void loadNationalities() {
 		try {
-			File file = new File("src/main/resources/paises.xml"); 
+			File file = new File("src/main/resources/paises.xml");
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document document = builder.parse(file);
@@ -174,70 +174,90 @@ public class RegisterPilgrimController implements Initializable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void loadStops() {
 		stopComboBox.getItems().clear();
 		stopService.findAll().forEach(stop -> stopComboBox.getItems().add(stop));
 	}
-	
+
 	private void showInfoAlert(User user) {
 		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("Registro completado");
-		alert.setHeaderText("Registro completado");
-		alert.setContentText("Usuario " + user.getEmail() + " registrado correctamente.");
-		 // Cambiar el ícono de la ventana
-	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
+		Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+		if (user != null) {
+			alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
+			alert.setTitle("Registro completado");
+			alert.setHeaderText("Registro completado");
+			alert.setContentText("Sus datos son: \nUsuario: " + user.getEmail() + " registrado correctamente.");
+		} else {
+			alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/info.png")));
+			alert.setTitle("Registro cancelado");
+            alert.setHeaderText("Registro cancelado");
+            alert.setContentText("Registro cancelado");
+		}
+
 		alert.showAndWait();
 	}
-	
+
+	private boolean confirmAlert(User user, Pilgrim pilgrim) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Confirma tus datos");
+		alert.setHeaderText("Confirma tus datos");
+		alert.setContentText("Sus datos son: \nUsuario: " + user.getEmail() + "\n" + "Peregrino: " + pilgrim.getName()
+				+ "\n" + "Nacionalidad: " + pilgrim.getNationality() + "\n" + "Parada: "
+				+ pilgrim.getCarnet().getInitialStop().getName() + "\n" + "¿Son correctos tus datos?");
+		// Cambiar el ícono de la ventana
+		Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+		alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/confirm.png")));
+		alert.showAndWait();
+		return alert.getResult().getButtonData().isDefaultButton();
+	}
+
 	private void showErrorAlert(StringBuilder message) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error al registrar peregrino");
 		alert.setHeaderText("Error al registrar peregrino");
 		alert.setContentText(message.toString());
-		 // Cambiar el ícono de la ventana
-	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/error.png")));
+		// Cambiar el ícono de la ventana
+		Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+		alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/error.png")));
 		alert.showAndWait();
 	}
-	
+
 	private boolean validateData() {
 		boolean ret = false;
 		StringBuilder message = new StringBuilder();
 		String name = nameField.getText();
-        String email = emailField.getText();
-        String password = passwordField.getText();
-        String confirmPassword = confirmPasswordField.getText();
-        
-        User emailExists = userService.findByEmail(email);
-        
-        // Validar nombre
-        if(name.isEmpty()) {
-        	message.append("El nombre no puede estar vacío.\n");
-        } else if(name.length() > 20) {
-        	message.append("El nombre no puede tener más de 20 caracteres.\n");
+		String email = emailField.getText();
+		String password = passwordField.getText();
+		String confirmPassword = confirmPasswordField.getText();
+
+		User emailExists = userService.findByEmail(email);
+
+		// Validar nombre
+		if (name.isEmpty()) {
+			message.append("El nombre no puede estar vacío.\n");
+		} else if (name.length() > 20) {
+			message.append("El nombre no puede tener más de 20 caracteres.\n");
 		} else if (name.chars().anyMatch(Character::isDigit)) {
 			message.append("El nombre no puede contener números.\n");
 		}
-        
-        // Validar Email
+
+		// Validar Email
 		if (email.isEmpty()) {
 			message.append("El Email no puede estar vacío.\n");
 		} else if (emailExists != null) {
 			message.append("El Email ya está registrado.\n");
-		} 
-		else if (email.length() > 50) {
+		} else if (email.length() > 50) {
 			message.append("El Email no puede tener más de 50 caracteres.\n");
 		} else if (!email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
-            message.append("El Email no tiene un formato válido.\n");
+			message.append("El Email no tiene un formato válido.\n");
 		}
-		
+
 		// Validar Password
 		if (password.isEmpty()) {
 			message.append("La contraseña no puede estar vacía.\n");
-        } else if (password.length() < 8) {
-            message.append("La contraseña debe tener al menos 8 caracteres.\n");
+		} else if (password.length() < 8) {
+			message.append("La contraseña debe tener al menos 8 caracteres.\n");
 		} else if (!password.matches(".*\\d.*")) {
 			message.append("La contraseña debe contener al menos un número.\n");
 		} else if (!password.matches(".*[a-z].*")) {
@@ -249,35 +269,35 @@ public class RegisterPilgrimController implements Initializable {
 		} else if (!password.equals(confirmPassword)) {
 			message.append("Las contraseñas no coinciden.\n");
 		}
-		
+
 		// Validar Nacionalidad
 		if (nationalityComboBox.getValue() == null) {
 			message.append("Debe seleccionar una nacionalidad.\n");
 		}
-		
+
 		// Validar Parada
 		if (stopComboBox.getValue() == null) {
 			message.append("Debe seleccionar una parada.\n");
 		}
-		
-		if(message.length() == 0) {
+
+		if (message.length() == 0) {
 			ret = true;
 		} else {
 			showErrorAlert(message);
 		}
-		
-        return ret;
-        
+
+		return ret;
+
 	}
-	
+
 	private void clearFields() {
 		nameField.clear();
 		emailField.clear();
 		passwordField.clear();
 		confirmPasswordField.clear();
-		nationalityComboBox.getSelectionModel().clearSelection();
-		stopComboBox.getSelectionModel().clearSelection();
+		passwordVisibleField.clear();
+		nationalityComboBox.setValue(null);
+		stopComboBox.setValue(null);
 	}
-	
-	
+
 }
