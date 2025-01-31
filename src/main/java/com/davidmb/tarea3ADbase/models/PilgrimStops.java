@@ -1,5 +1,6 @@
 package com.davidmb.tarea3ADbase.models;
 //
+
 //import java.time.LocalDate;
 //import java.util.Objects;
 //
@@ -108,34 +109,33 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "peregrinos_paradas")
-@IdClass(PilgrimStopsId.class) 
 public class PilgrimStops {
 
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "id_peregrino", nullable = false)
-    private Pilgrim pilgrim;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	Long id;
 
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "id_parada", nullable = false)
-    private Stop stop;
+	@ManyToOne
+	@JoinColumn(name = "id_peregrino", nullable = false)
+	private Pilgrim pilgrim;
 
-    @Id
-    @Column(name = "fecha_parada", nullable = false)
-    private LocalDate stopDate;
+	@ManyToOne
+	@JoinColumn(name = "id_parada", nullable = false)
+	private Stop stop;
 
-    public PilgrimStops() {}
+	@Column(name = "fecha_parada", nullable = false)
+	private LocalDate stopDate;
 
-    public PilgrimStops(Pilgrim pilgrim, Stop stop, LocalDate stopDate) {
-        this.pilgrim = pilgrim;
-        this.stop = stop;
-        this.stopDate = stopDate;
-    }
-    
-    
+	public PilgrimStops() {
+	}
 
-    public Pilgrim getPilgrim() {
+	public PilgrimStops(Pilgrim pilgrim, Stop stop, LocalDate stopDate) {
+		this.pilgrim = pilgrim;
+		this.stop = stop;
+		this.stopDate = stopDate;
+	}
+
+	public Pilgrim getPilgrim() {
 		return pilgrim;
 	}
 
@@ -159,19 +159,19 @@ public class PilgrimStops {
 		this.stopDate = stopDate;
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(pilgrim, stop, stopDate);
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(pilgrim, stop, stopDate);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        PilgrimStops that = (PilgrimStops) obj;
-        return Objects.equals(pilgrim, that.pilgrim) &&
-               Objects.equals(stop, that.stop) &&
-               Objects.equals(stopDate, that.stopDate);
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+		PilgrimStops that = (PilgrimStops) obj;
+		return Objects.equals(pilgrim, that.pilgrim) && Objects.equals(stop, that.stop)
+				&& Objects.equals(stopDate, that.stopDate);
+	}
 }
