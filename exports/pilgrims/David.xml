@@ -1,53 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <carnet>
     <id>1</id>
-    <fechaexp>2025-01-29</fechaexp>
+    <fechaexp>2025-01-31</fechaexp>
     <expedidoen>Siero</expedidoen>
     <peregrino>
         <nombre>David</nombre>
-        <nacionalidad>Emiratos Árabes Unidos</nacionalidad>
+        <nacionalidad>España</nacionalidad>
     </peregrino>
-    <hoy>2025-01-13</hoy>
-    <distanciatotal>980,0</distanciatotal>
+    <hoy>2025-01-31</hoy>
+    <distanciatotal>0,0</distanciatotal>
     <paradas>
         <parada>
             <orden>1</orden>
             <nombre>Siero</nombre>
             <region>Emi</region>
         </parada>
-        <parada>
-            <orden>2</orden>
-            <nombre>Siero</nombre>
-            <region>Emi</region>
-        </parada>
-        <parada>
-            <orden>3</orden>
-            <nombre>Siero</nombre>
-            <region>Emi</region>
-        </parada>
-        <parada>
-            <orden>4</orden>
-            <nombre>Siero</nombre>
-            <region>Emi</region>
-        </parada>
     </paradas>
-    <estancias>
-        <estancia>
-            <id>1</id>
-            <fecha>2025-01-30</fecha>
-            <parada>Siero</parada>
-            <vip>Sí</vip>
-        </estancia>
-        <estancia>
-            <id>2</id>
-            <fecha>2025-01-31</fecha>
-            <parada>Siero</parada>
-        </estancia>
-        <estancia>
-            <id>3</id>
-            <fecha>2025-01-13</fecha>
-            <parada>Siero</parada>
-            <vip>Sí</vip>
-        </estancia>
-    </estancias>
+    <estancias/>
 </carnet>

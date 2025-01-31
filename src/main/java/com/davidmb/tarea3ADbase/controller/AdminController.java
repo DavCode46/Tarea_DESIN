@@ -208,6 +208,8 @@ public class AdminController implements Initializable {
 		managerEmail.clear();
 		managerPassword.clear();
 		confirmManagerPassword.clear();
+		managerPasswordVisibleField.clear();
+		confirmManagerPasswordVisibleField.clear();
 	}
 
 	private void saveAlert(Stop stop) {

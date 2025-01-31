@@ -116,7 +116,7 @@
 						</Button>
 					</HBox>
 
-					<Label text="Filtrar Paradas" styleClass="form-title">
+					<Label text="Filtrar Estancias" styleClass="form-title">
 						<font>
 							<Font size="20.0" />
 						</font>

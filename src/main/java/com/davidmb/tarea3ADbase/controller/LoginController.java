@@ -115,6 +115,7 @@ public class LoginController implements Initializable {
 	private void clearFields() {
 		username.clear();
 		password.clear();
+		passwordVisibleField.clear();
 	}
 
 	@FXML

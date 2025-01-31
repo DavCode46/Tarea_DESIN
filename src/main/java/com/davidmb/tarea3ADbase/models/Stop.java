@@ -45,6 +45,13 @@ public class Stop implements Serializable {
 		this.region = region;
 		this.manager = manager;
 	}
+	public Stop(String name, String region, String manager, Long userId) {
+		super();
+		this.name = name;
+		this.region = region;
+		this.manager = manager;
+		this.userId = userId;
+	}
 
 	public Long getId() {
 		return id;

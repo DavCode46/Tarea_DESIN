@@ -316,6 +316,7 @@ public class RegisterPilgrimController implements Initializable {
 		passwordField.clear();
 		confirmPasswordField.clear();
 		passwordVisibleField.clear();
+		confirmPasswordVisibleField.clear();
 		nationalityComboBox.setValue(null);
 		stopComboBox.setValue(null);
 	}
