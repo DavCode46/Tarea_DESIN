@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map>
-    <entry key="ayudaInicio" href="index.html"/>
-    <entry key="ayudaConfiguracion" href="configuracion.html"/>
+<!DOCTYPE map PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 2.0//EN" "http://java.sun.com/products/javahelp/map_2_0.dtd">
+<map version="2.0">
+    <mapID target="login" url="login.html"/>
+    <mapID target="register" url="register.html"/>
+    <mapID target="forgot_password" url="forgot_password.html"/>
+    <mapID target="admin" url="admin.html"/>
+    <mapID target="responsible" url="responsible.html"/>
+    <mapID target="pilgrim" url="pilgrim.html"/>
 </map>
