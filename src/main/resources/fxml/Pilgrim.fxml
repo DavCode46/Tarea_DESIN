@@ -24,7 +24,7 @@
 		<VBox alignment="CENTER" spacing="20"
 			style="-fx-background-color: #FFFFFF;" prefHeight="600"
 			prefWidth="400">
-			   <Button onAction="#showHelp" styleClass="help-button" style="-fx-background-radius: 50%; -fx-max-width: 40px; -fx-max-height: 40px; -fx-padding: 5px;">
+			   <Button fx:id="helpBtn" onAction="#showHelp" styleClass="help-button" style="-fx-background-radius: 50%; -fx-max-width: 40px; -fx-max-height: 40px; -fx-padding: 5px;">
     <VBox.margin>
         <Insets top="20"/>
         </VBox.margin>
@@ -69,10 +69,10 @@
 
 			<!-- Botón -->
 			<HBox alignment="CENTER" spacing="10">
-				<Button text="_Cerrar Sesión" onAction="#logout"
+				<Button fx:id="logoutBtn" text="_Cerrar Sesión" onAction="#logout"
 					styleClass="primary-button" />
-				<Button text="_Exportar Carnet" styleClass="secondary-button" onAction="#exportCarnet" />
-					<Button text="Exportar _Informe Carnet" styleClass="secondary-button" onAction="#exportCarnetReport" />
+				<Button fx:id="exportCarnetBtn" text="_Exportar Carnet" styleClass="secondary-button" onAction="#exportCarnet" />
+					<Button fx:id="exportReportBtn" text="Exportar _Informe Carnet" styleClass="secondary-button" onAction="#exportCarnetReport" />
 			</HBox>
 		</VBox>
 	</children>

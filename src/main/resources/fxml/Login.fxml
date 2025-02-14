@@ -24,7 +24,7 @@
            >
     <children>
     <HBox>
-      <Button onAction="#showHelp" styleClass="help-button" style="-fx-background-radius: 50%; -fx-max-width: 40px; -fx-max-height: 40px; -fx-padding: 5px;">
+      <Button fx:id="btnHelp" onAction="#showHelp" styleClass="help-button" style="-fx-background-radius: 50%; -fx-max-width: 40px; -fx-max-height: 40px; -fx-padding: 5px;">
     <HBox.margin>
         <Insets top="20" left="20"/>
         </HBox.margin>
@@ -49,7 +49,7 @@
                 <PasswordField fx:id="password" promptText="Contraseña" />
                 <TextField fx:id="passwordVisibleField" promptText="Contraseña" VBox.vgrow="NEVER" visible="false" managed="false" />
                 <HBox spacing="10">
-                 <Button text="¿Olvidaste tu contraseña?" onAction="#openForgotPasswordView" styleClass="link" />
+                 <Button fx:id="btnForgotPassword" text="¿Olvidaste tu contraseña?" onAction="#openForgotPasswordView" styleClass="link" />
                 <Pane HBox.hgrow="ALWAYS"></Pane>
                 
                 <Region />
@@ -61,7 +61,7 @@
             <VBox spacing="10">
                 <HBox spacing="10" alignment="CENTER">
                     <Button fx:id="btnLogin" text="_Iniciar Sesión" onAction="#login" styleClass="primary-button" />
-                    <Button text="_Regístrate como peregrino" onAction="#openRegisterPilgrimView" styleClass="secondary-button" />                 
+                    <Button fx:id="btnRegisterPilgrim" text="_Regístrate como peregrino" onAction="#openRegisterPilgrimView" styleClass="secondary-button" />                 
                 </HBox>
                
             </VBox>

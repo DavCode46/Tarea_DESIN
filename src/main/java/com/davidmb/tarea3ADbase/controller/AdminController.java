@@ -53,6 +53,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
@@ -77,6 +78,12 @@ public class AdminController implements Initializable {
 
 	@FXML
 	private Button btnLogout;
+	
+	@FXML
+	private Button btnHelp;
+	
+	@FXML
+	private Button exportStopsBtn;
 
 	@FXML
 	private Label loggedInUser;
@@ -483,6 +490,20 @@ public class AdminController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		
+		btnLogout.setTooltip(new Tooltip("Cerrar sesión"));
+		btnHelp.setTooltip(new Tooltip("Ayuda"));
+		reset.setTooltip(new Tooltip("Limpiar campos"));
+		saveStop.setTooltip(new Tooltip("Registrar parada"));
+		stopName.setTooltip(new Tooltip("Nombre de la parada"));
+		cbregion.setTooltip(new Tooltip("Región"));
+		managerName.setTooltip(new Tooltip("Nombre del responsable"));
+		managerEmail.setTooltip(new Tooltip("Email del responsable"));
+		managerPassword.setTooltip(new Tooltip("Contraseña"));
+		confirmManagerPassword.setTooltip(new Tooltip("Confirmar contraseña"));
+		showPasswordCheckBox.setTooltip(new Tooltip("Mostrar contraseña"));
+		stopTable.setTooltip(new Tooltip("Paradas"));
+		exportStopsBtn.setTooltip(new Tooltip("Exportar paradas visitadas"));
 
 		User user = session.getLoggedInUser();
 

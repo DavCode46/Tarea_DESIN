@@ -28,8 +28,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
@@ -61,6 +63,18 @@ public class PilgrimController implements Initializable {
 
 	@FXML
 	private Label lblInitialStop;
+	
+	@FXML
+	private Button logoutBtn;
+	
+	@FXML
+	private Button exportCarnetBtn;
+	
+	@FXML
+	private Button exportReportBtn;
+	
+	@FXML
+	private Button helpBtn;
 
 	@FXML
 	private ImageView avatarImageView;
@@ -86,6 +100,10 @@ public class PilgrimController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		helpBtn.setTooltip(new Tooltip("Pulsa F1 para ver la ayuda"));
+		exportCarnetBtn.setTooltip(new Tooltip("Exportar carnet en XML"));
+		exportReportBtn.setTooltip(new Tooltip("Exportar Informe del carnet"));
+		logoutBtn.setTooltip(new Tooltip("Cerrar sesión"));
 		User user = session.getLoggedInUser();
 		System.out.println(user);
 		loadUserProfile(user.getId());

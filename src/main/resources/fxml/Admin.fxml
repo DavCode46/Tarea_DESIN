@@ -37,18 +37,18 @@
 		<VBox prefHeight="571.0" prefWidth="306.0" spacing="10.0"
 			styleClass="background" BorderPane.alignment="CENTER">
 			<children>
-			   <Button onAction="#showHelp" styleClass="help-button" style="-fx-background-radius: 50%; -fx-max-width: 40px; -fx-max-height: 40px; -fx-padding: 5px;">
-    <HBox.margin>
-        <Insets top="20" left="20"/>
-        </HBox.margin>
-    <graphic> 
-        <ImageView fitHeight="30" fitWidth="30" preserveRatio="true"> 
-            <image>
-                <Image url="@../icons/ask.png"/>  
-            </image>
-        </ImageView> 
-    </graphic> 
-</Button>
+			   <Button fx:id="btnHelp" onAction="#showHelp" styleClass="help-button" style="-fx-background-radius: 50%; -fx-max-width: 40px; -fx-max-height: 40px; -fx-padding: 5px;">
+			    <HBox.margin>
+			        <Insets top="20" left="20"/>
+			        </HBox.margin>
+			    <graphic> 
+			        <ImageView fitHeight="30" fitWidth="30" preserveRatio="true"> 
+			            <image>
+			                <Image url="@../icons/ask.png"/>  
+			            </image>
+			        </ImageView> 
+			    </graphic> 
+			</Button>
 				<Label text="Crear parada" styleClass="form-title">
 					<font>
 						<Font size="20.0" />
@@ -98,7 +98,7 @@
 						<Button fx:id="saveStop" text="_Guardar"
 							styleClass="primary-button" onAction="#saveStop" />
 							
-								<Button text="Exportar paradas"
+								<Button fx:id="exportStopsBtn" text="Exportar paradas"
 							styleClass="primary-button" onAction="#exportStopDataReport" />
 					</children>
 				</HBox>

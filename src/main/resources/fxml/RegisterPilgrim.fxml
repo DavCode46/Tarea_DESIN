@@ -24,7 +24,7 @@
            stylesheets="@../styles/Styles.css">
     <children>
     <HBox>
-      <Button onAction="#showHelp" styleClass="help-button" style="-fx-background-radius: 50%; -fx-max-width: 40px; -fx-max-height: 40px; -fx-padding: 5px;">
+      <Button fx:id="helpBtn" onAction="#showHelp" styleClass="help-button" style="-fx-background-radius: 50%; -fx-max-width: 40px; -fx-max-height: 40px; -fx-padding: 5px;">
     <HBox.margin>
         <Insets top="20" left="20"/>
         </HBox.margin>
@@ -76,8 +76,8 @@
 
             <!-- Botones -->
             <HBox spacing="10" alignment="CENTER">
-                <Button text="_Registrarse" onAction="#registerPilgrim" styleClass="primary-button" />
-                <Button text="_Volver" onAction="#backToLogin" styleClass="secondary-button" />
+                <Button fx:id="registerBtn" text="_Registrarse" onAction="#registerPilgrim" styleClass="primary-button" />
+                <Button fx:id="returnBtn" text="_Volver" onAction="#backToLogin" styleClass="secondary-button" />
             </HBox>
         </VBox>
     </children>

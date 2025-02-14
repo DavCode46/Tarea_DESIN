@@ -32,11 +32,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
@@ -48,6 +50,15 @@ public class RegisterPilgrimController implements Initializable {
 
 	@FXML
 	private TextField emailField;
+	
+	@FXML
+	private Button returnBtn;
+	
+	@FXML
+	private Button helpBtn;
+	
+	@FXML
+	private Button registerBtn;
 
 	@FXML
 	private PasswordField passwordField;
@@ -152,6 +163,15 @@ public class RegisterPilgrimController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		registerBtn.setTooltip(new Tooltip("Registrarse"));
+		helpBtn.setTooltip(new Tooltip("Pulsa F1 para ver el menú de ayuda"));
+		returnBtn.setTooltip(new Tooltip("Volver al login"));
+		nameField.setTooltip(new Tooltip("Su nombre"));
+		emailField.setTooltip(new Tooltip("Su email"));
+		passwordField.setTooltip(new Tooltip("Su Contraseña"));
+		confirmPasswordField.setTooltip(new Tooltip("Confirma su contraseña"));
+		stopComboBox.setTooltip(new Tooltip("Selecciona su parada"));
+		nationalityComboBox.setTooltip(new Tooltip("Selecciona su nacionalidad"));
 		loadStops();
 		loadNationalities();
 	}

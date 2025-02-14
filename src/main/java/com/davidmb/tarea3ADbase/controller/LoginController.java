@@ -26,6 +26,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
@@ -39,6 +40,15 @@ public class LoginController implements Initializable {
 
 	@FXML
 	private Button btnLogin;
+	
+	@FXML
+	private Button btnRegisterPilgrim;
+	
+	@FXML
+	private Button btnForgotPassword;
+	
+	@FXML
+	private Button btnHelp;
 
 	@FXML
 	private PasswordField password;
@@ -159,7 +169,13 @@ public class LoginController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
+		btnHelp.setTooltip(new Tooltip("Pulsa F1 para obtener ayuda"));
+		btnLogin.setTooltip(new Tooltip("Iniciar sesión"));
+		btnRegisterPilgrim.setTooltip(new Tooltip("Registrarse como peregrino"));
+		btnForgotPassword.setTooltip(new Tooltip("Recuperar contraseña"));
+		showPasswordCheckBox.setTooltip(new Tooltip("Mostrar contraseña"));
+		username.setTooltip(new Tooltip("Su Usuario"));
+		password.setTooltip(new Tooltip("Su contraseña"));
 	}
 
 }

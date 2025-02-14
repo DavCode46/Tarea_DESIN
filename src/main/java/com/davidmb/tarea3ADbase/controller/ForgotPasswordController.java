@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 
 import com.davidmb.tarea3ADbase.config.StageManager;
-import com.davidmb.tarea3ADbase.models.Stop;
 import com.davidmb.tarea3ADbase.models.User;
 import com.davidmb.tarea3ADbase.services.UserService;
 import com.davidmb.tarea3ADbase.utils.HelpUtil;
@@ -17,9 +16,11 @@ import com.davidmb.tarea3ADbase.view.FxmlView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
@@ -40,6 +41,15 @@ public class ForgotPasswordController implements Initializable{
     
     @FXML
     private Label lblPasswordError;
+    
+    @FXML
+    private Button changePasswordBtn;
+    
+    @FXML
+    private Button backToLoginBtn;
+    
+    @FXML
+    private Button helpBtn;
     
     @FXML
     private Label lblEmailError;
@@ -157,6 +167,11 @@ public class ForgotPasswordController implements Initializable{
     
     @Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
+		helpBtn.setTooltip(new Tooltip("Ayuda"));
+		changePasswordBtn.setTooltip(new Tooltip("Cambiar contraseña"));
+		backToLoginBtn.setTooltip(new Tooltip("Volver al login"));
+		emailField.setTooltip(new Tooltip("Introduce tu email"));
+		passwordField.setTooltip(new Tooltip("Introduce tu nueva contraseña"));
+		passwordField2.setTooltip(new Tooltip("Confirma tu nueva contraseña"));
 	}
 }

@@ -16,7 +16,6 @@ import com.davidmb.tarea3ADbase.config.StageManager;
 import com.davidmb.tarea3ADbase.dtos.ServiceResponse;
 import com.davidmb.tarea3ADbase.dtos.StayView;
 import com.davidmb.tarea3ADbase.models.Pilgrim;
-import com.davidmb.tarea3ADbase.models.PilgrimStops;
 import com.davidmb.tarea3ADbase.models.Stop;
 import com.davidmb.tarea3ADbase.models.User;
 import com.davidmb.tarea3ADbase.services.PilgrimService;
@@ -44,6 +43,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -58,6 +58,15 @@ public class StopController implements Initializable {
 
 	@FXML
 	private Button btnLogout;
+	
+	@FXML
+	private Button helpBtn;
+	
+	@FXML
+	private Button cleanBtn;
+	
+	@FXML
+	private Button filterBtn;
 
 	@FXML
 	private Label stopId;
@@ -281,6 +290,20 @@ public class StopController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		
+		btnLogout.setTooltip(new Tooltip("Cerrar sesión"));
+		helpBtn.setTooltip(new Tooltip("Pulsa F1 para mostrar el menú de ayuda"));
+		cleanBtn.setTooltip(new Tooltip("Limpiar filtros"));
+		filterBtn.setTooltip(new Tooltip("Filtrar estancias"));
+		pilgrimsTable.setTooltip(new Tooltip("Tabla de peregrinos"));
+		cbStay.setTooltip(new Tooltip("Alojarse"));
+		rbYes.setTooltip(new Tooltip("Estancia VIP"));
+		rbNo.setTooltip(new Tooltip("Estancia no VIP"));
+		reset.setTooltip(new Tooltip("Limpiar formulario"));
+		stampCard.setTooltip(new Tooltip("Sellar carnet"));
+		dpStart.setTooltip(new Tooltip("Fecha de comienzo para filtrar estancias"));
+		dpEnd.setTooltip(new Tooltip("Fecha final para filtrar estancias"));
+		
 
 		user = session.getLoggedInUser();
 
