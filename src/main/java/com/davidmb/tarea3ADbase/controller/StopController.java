@@ -22,6 +22,7 @@ import com.davidmb.tarea3ADbase.models.User;
 import com.davidmb.tarea3ADbase.services.PilgrimService;
 import com.davidmb.tarea3ADbase.services.PilgrimStopsService;
 import com.davidmb.tarea3ADbase.services.StopService;
+import com.davidmb.tarea3ADbase.utils.HelpUtil;
 import com.davidmb.tarea3ADbase.view.FxmlView;
 
 import javafx.application.Platform;
@@ -127,6 +128,11 @@ public class StopController implements Initializable {
 	@FXML
 	private void exit(ActionEvent event) {
 		Platform.exit();
+	}
+	
+	@FXML
+	private void showHelp() {
+		HelpUtil.showHelp();
 	}
 
 	/**

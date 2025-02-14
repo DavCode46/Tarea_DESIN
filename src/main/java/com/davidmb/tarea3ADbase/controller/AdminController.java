@@ -2,7 +2,12 @@ package com.davidmb.tarea3ADbase.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -17,10 +22,14 @@ import org.w3c.dom.NodeList;
 
 import com.davidmb.tarea3ADbase.auth.Session;
 import com.davidmb.tarea3ADbase.config.StageManager;
+import com.davidmb.tarea3ADbase.dtos.StayView;
 import com.davidmb.tarea3ADbase.models.Stop;
 import com.davidmb.tarea3ADbase.models.User;
+import com.davidmb.tarea3ADbase.services.PilgrimService;
 import com.davidmb.tarea3ADbase.services.StopService;
 import com.davidmb.tarea3ADbase.services.UserService;
+import com.davidmb.tarea3ADbase.utils.HelpUtil;
+import com.davidmb.tarea3ADbase.utils.LocalHttpServer;
 import com.davidmb.tarea3ADbase.utils.ManagePassword;
 import com.davidmb.tarea3ADbase.view.FxmlView;
 
@@ -30,6 +39,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -45,7 +55,18 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.util.JRLoader;
 
 /**
  * 
@@ -125,6 +146,8 @@ public class AdminController implements Initializable {
 	private StopService stopService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private PilgrimService pilgrimService;
 
 	private ObservableList<Stop> stopList = FXCollections.observableArrayList();
 	private ObservableList<String> regions = FXCollections.observableArrayList();
@@ -132,6 +155,11 @@ public class AdminController implements Initializable {
 	@FXML
 	private void exit(ActionEvent event) {
 		Platform.exit();
+	}
+	
+	@FXML
+	private void showHelp() {
+		HelpUtil.showHelp();
 	}
 
 	/**
@@ -194,6 +222,92 @@ public class AdminController implements Initializable {
 			}
 		}
 	}
+	@FXML
+	private void exportStopDataReport() throws JRException {
+	    String outputPath = "src/main/resources/reports/paradas/paradasVisitadas.pdf";
+
+	    // Generar el informe (tu código actual)
+	    InputStream reportStream = getClass().getResourceAsStream("/templates/report/Report.jasper");
+	    if (reportStream == null) {
+	        throw new JRException("No se pudo encontrar el archivo Report.jasper en resources/templates/report.");
+	    }
+
+	    JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportStream);
+
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("titulo", "Reporte de Paradas Visitadas");
+
+	    URL imageUrl = getClass().getResource("/images/logo.png");
+	    if (imageUrl == null) {
+	        throw new JRException("No se pudo encontrar la imagen logo.png en resources/images.");
+	    }
+
+	    params.put("imagen", imageUrl.toExternalForm());
+
+	    List<Map<String, Object>> dataList = new ArrayList<>();
+	    List<Stop> stops = stopService.findAll();
+
+	    for (Stop stop : stops) {
+	        List<StayView> stopStayViews = pilgrimService.findAllStayViewsByStop(stop.getId());
+
+	        for (StayView stayView : stopStayViews) {
+	            Map<String, Object> row = new HashMap<>();
+	            row.put("nombre_parada", stop.getName());
+	            row.put("region", stop.getRegion());
+	            row.put("responsable", stop.getManager());
+	            row.put("nombre", stayView.getPilgrimName());
+	            row.put("nacionalidad", stayView.getPilgrimNationality());
+	            row.put("fecha_parada", java.sql.Date.valueOf(stayView.getStopDate()));
+	            dataList.add(row);
+	        }
+	    }
+
+	    JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(dataList);
+
+	    JasperPrint print = JasperFillManager.fillReport(jasperReport, params, dataSource);
+
+	    JasperExportManager.exportReportToPdfFile(print, outputPath);
+
+	    // Mostrar el PDF en una ventana modal
+	    showPdfInModal(outputPath);
+	}
+
+	private void showPdfInModal(String pdfPath) {
+	    // Iniciar el servidor HTTP local en un hilo separado
+	    new Thread(() -> {
+	        try {
+	            LocalHttpServer.startServer(pdfPath);
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    }).start();
+
+	    // Crear una nueva ventana modal
+	    Stage modalStage = new Stage();
+	    modalStage.initModality(Modality.APPLICATION_MODAL);
+	    modalStage.setTitle("Reporte de Paradas Visitadas");
+
+	    // Crear un WebView para mostrar el PDF
+	    WebView webView = new WebView();
+	    WebEngine webEngine = webView.getEngine();
+
+	    // La URL del servidor local que sirve el PDF
+	    String serverUrl = "http://localhost:8080/pdf";
+
+	    // Cargar la URL del servidor local en el WebView
+	    webEngine.load(serverUrl);
+
+	    // Crear un contenedor para el WebView
+	    VBox root = new VBox(webView);
+	    Scene scene = new Scene(root, 800, 600);
+
+	    // Configurar la ventana modal
+	    modalStage.setScene(scene);
+	    modalStage.showAndWait();
+	}
+
+
+
 
 	@FXML
 	private void togglePasswordVisibility() {

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toc version="2.0">
+    <tocitem text="Introducción" target="introduccion">
+        <tocitem text="Bienvenida" target="bienvenida"/>
+        <tocitem text="Requisitos del Sistema" target="requisitos"/>
+    </tocitem>
+    <tocitem text="Uso de la Aplicación" target="uso">
+        <tocitem text="Primeros Pasos" target="primeros_pasos"/>
+        <tocitem text="Funcionalidades Avanzadas" target="avanzadas"/>
+    </tocitem>
+    <tocitem text="Solución de Problemas" target="problemas">
+        <tocitem text="Errores Comunes" target="errores_comunes"/>
+        <tocitem text="Preguntas Frecuentes" target="faq"/>
+    </tocitem>
+</toc>

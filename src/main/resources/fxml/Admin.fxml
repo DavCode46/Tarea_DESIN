@@ -23,6 +23,8 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 
 <BorderPane prefHeight="600.0" prefWidth="1000.0"
 	stylesheets="@../styles/Admin.css"
@@ -31,9 +33,22 @@
 	fx:controller="com.davidmb.tarea3ADbase.controller.AdminController">
 
 	<left>
+	
 		<VBox prefHeight="571.0" prefWidth="306.0" spacing="10.0"
 			styleClass="background" BorderPane.alignment="CENTER">
 			<children>
+			   <Button onAction="#showHelp" styleClass="help-button" style="-fx-background-radius: 50%; -fx-max-width: 40px; -fx-max-height: 40px; -fx-padding: 5px;">
+    <HBox.margin>
+        <Insets top="20" left="20"/>
+        </HBox.margin>
+    <graphic> 
+        <ImageView fitHeight="30" fitWidth="30" preserveRatio="true"> 
+            <image>
+                <Image url="@../icons/ask.png"/>  
+            </image>
+        </ImageView> 
+    </graphic> 
+</Button>
 				<Label text="Crear parada" styleClass="form-title">
 					<font>
 						<Font size="20.0" />
@@ -78,10 +93,13 @@
 
 				<HBox spacing="10.0" alignment="CENTER">
 					<children>
-						<Button fx:id="reset" text="Cancelar"
+						<Button fx:id="reset" text="_Cancelar"
 							styleClass="white-button" onAction="#reset" />
-						<Button fx:id="saveStop" text="Guardar"
+						<Button fx:id="saveStop" text="_Guardar"
 							styleClass="primary-button" onAction="#saveStop" />
+							
+								<Button text="Exportar paradas"
+							styleClass="primary-button" onAction="#exportStopDataReport" />
 					</children>
 				</HBox>
 			</children>
@@ -99,7 +117,7 @@
 			<children>
 				<HBox alignment="TOP_RIGHT" prefHeight="41.0" prefWidth="640.0">
 					<children>
-						<Button fx:id="btnLogout" text="Cerrar sesión"
+						<Button fx:id="btnLogout" text="Cerrar _sesión"
 							styleClass="btnLogout" onAction="#logout">
 							<font>
 								<Font size="14.0" />

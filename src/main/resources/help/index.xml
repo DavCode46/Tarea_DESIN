@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<index version="2.0">
+    <indexitem text="Introducción" target="introduccion"/>
+    <indexitem text="Bienvenida" target="bienvenida"/>
+    <indexitem text="Requisitos del Sistema" target="requisitos"/>
+    <indexitem text="Uso de la Aplicación" target="uso"/>
+    <indexitem text="Primeros Pasos" target="primeros_pasos"/>
+    <indexitem text="Funcionalidades Avanzadas" target="avanzadas"/>
+    <indexitem text="Solución de Problemas" target="problemas"/>
+    <indexitem text="Errores Comunes" target="errores_comunes"/>
+    <indexitem text="Preguntas Frecuentes" target="faq"/>
+</index>

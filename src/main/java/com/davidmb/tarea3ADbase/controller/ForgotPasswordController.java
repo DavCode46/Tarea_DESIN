@@ -11,6 +11,7 @@ import com.davidmb.tarea3ADbase.config.StageManager;
 import com.davidmb.tarea3ADbase.models.Stop;
 import com.davidmb.tarea3ADbase.models.User;
 import com.davidmb.tarea3ADbase.services.UserService;
+import com.davidmb.tarea3ADbase.utils.HelpUtil;
 import com.davidmb.tarea3ADbase.view.FxmlView;
 
 import javafx.fxml.FXML;
@@ -71,6 +72,11 @@ public class ForgotPasswordController implements Initializable{
            e.printStackTrace();
         }
     }
+    
+    @FXML
+	private void showHelp() {
+		HelpUtil.showHelp();
+	}
 
 
     @FXML

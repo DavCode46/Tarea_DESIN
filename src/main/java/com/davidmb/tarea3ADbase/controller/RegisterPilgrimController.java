@@ -24,6 +24,7 @@ import com.davidmb.tarea3ADbase.services.PilgrimService;
 import com.davidmb.tarea3ADbase.services.PilgrimStopsService;
 import com.davidmb.tarea3ADbase.services.StopService;
 import com.davidmb.tarea3ADbase.services.UserService;
+import com.davidmb.tarea3ADbase.utils.HelpUtil;
 import com.davidmb.tarea3ADbase.utils.ManagePassword;
 import com.davidmb.tarea3ADbase.view.FxmlView;
 
@@ -130,6 +131,11 @@ public class RegisterPilgrimController implements Initializable {
 				showInfoAlert(null);
 			}
 		}
+	}
+	
+	@FXML
+	private void showHelp() {
+		HelpUtil.showHelp();
 	}
 
 	@FXML

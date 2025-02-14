@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<carnet>
+    <id>5</id>
+    <fechaexp>2025-01-31</fechaexp>
+    <expedidoen>Navia</expedidoen>
+    <peregrino>
+        <nombre>Nuevo</nombre>
+        <nacionalidad>México</nacionalidad>
+    </peregrino>
+    <hoy>2025-01-31</hoy>
+    <distanciatotal>728,0</distanciatotal>
+    <paradas>
+        <parada>
+            <orden>1</orden>
+            <nombre>Navia</nombre>
+            <region>Jam</region>
+        </parada>
+        <parada>
+            <orden>2</orden>
+            <nombre>Nueva</nombre>
+            <region>Irá</region>
+        </parada>
+    </paradas>
+    <estancias>
+        <estancia>
+            <id>5</id>
+            <fecha>2025-01-31</fecha>
+            <parada>Nueva</parada>
+            <vip>Sí</vip>
+        </estancia>
+    </estancias>
+</carnet>

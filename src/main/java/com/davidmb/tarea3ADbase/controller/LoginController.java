@@ -12,6 +12,7 @@ import com.davidmb.tarea3ADbase.auth.Session;
 import com.davidmb.tarea3ADbase.config.StageManager;
 import com.davidmb.tarea3ADbase.models.User;
 import com.davidmb.tarea3ADbase.services.UserService;
+import com.davidmb.tarea3ADbase.utils.HelpUtil;
 import com.davidmb.tarea3ADbase.utils.ManagePassword;
 import com.davidmb.tarea3ADbase.view.FxmlView;
 
@@ -26,6 +27,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 /**
@@ -89,6 +91,18 @@ public class LoginController implements Initializable {
 			showErrorAlert();
 		}
 	}
+	
+	@FXML
+	private void showHelp() {
+		HelpUtil.showHelp();
+	}
+	
+	  public void handleKeyPressed(KeyEvent event) {
+	        if (event.getCode().toString().equals("F1")) {
+	            // Llamar al mismo método showHelp() al presionar F1
+	            showHelp();
+	        }
+	    }
 	
 	private void showErrorAlert() {
         Alert alert = new Alert(AlertType.ERROR);

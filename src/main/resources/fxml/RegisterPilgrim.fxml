@@ -15,12 +15,28 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 
 <StackPane xmlns="http://javafx.com/javafx/8.0.72"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.davidmb.tarea3ADbase.controller.RegisterPilgrimController"
            stylesheets="@../styles/Styles.css">
     <children>
+    <HBox>
+      <Button onAction="#showHelp" styleClass="help-button" style="-fx-background-radius: 50%; -fx-max-width: 40px; -fx-max-height: 40px; -fx-padding: 5px;">
+    <HBox.margin>
+        <Insets top="20" left="20"/>
+        </HBox.margin>
+    <graphic> 
+        <ImageView fitHeight="30" fitWidth="30" preserveRatio="true"> 
+            <image>
+                <Image url="@../icons/ask.png"/>  
+            </image>
+        </ImageView> 
+    </graphic> 
+</Button>
+</HBox>
         <!-- Contenedor principal centrado -->
         <VBox alignment="CENTER" spacing="20" maxWidth="600" maxHeight="600" styleClass="form-container">
             <!-- Título -->
@@ -60,8 +76,8 @@
 
             <!-- Botones -->
             <HBox spacing="10" alignment="CENTER">
-                <Button text="Registrarse" onAction="#registerPilgrim" styleClass="primary-button" />
-                <Button text="Volver" onAction="#backToLogin" styleClass="secondary-button" />
+                <Button text="_Registrarse" onAction="#registerPilgrim" styleClass="primary-button" />
+                <Button text="_Volver" onAction="#backToLogin" styleClass="secondary-button" />
             </HBox>
         </VBox>
     </children>

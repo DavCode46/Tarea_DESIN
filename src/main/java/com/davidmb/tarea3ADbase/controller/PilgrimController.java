@@ -1,7 +1,10 @@
 package com.davidmb.tarea3ADbase.controller;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -17,6 +20,7 @@ import com.davidmb.tarea3ADbase.services.PilgrimService;
 import com.davidmb.tarea3ADbase.services.StayService;
 import com.davidmb.tarea3ADbase.services.StopService;
 import com.davidmb.tarea3ADbase.utils.ExportarCarnetXML;
+import com.davidmb.tarea3ADbase.utils.HelpUtil;
 import com.davidmb.tarea3ADbase.view.FxmlView;
 
 import javafx.event.ActionEvent;
@@ -29,6 +33,13 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import net.sf.jasperreports.engine.JREmptyDataSource;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
 
 @Controller
 public class PilgrimController implements Initializable {
@@ -79,6 +90,11 @@ public class PilgrimController implements Initializable {
 		System.out.println(user);
 		loadUserProfile(user.getId());
 	}
+	
+	@FXML
+	private void showHelp() {
+		HelpUtil.showHelp();
+	}
 
 	/**
 	 * Cargar los datos del usuario y actualizarlos en la vista
@@ -114,6 +130,88 @@ public class PilgrimController implements Initializable {
 			e.printStackTrace();
 		}
 	}
+	
+	@FXML
+	private void exportCarnetReport() {
+	    try {
+	        Pilgrim pilgrim = pilgrimService.findByUserId(session.getLoggedInUser().getId());
+	        String outputPath = "src/main/resources/reports/paradas/" + pilgrim.getName() + "-carnet.pdf";
+
+	        InputStream reportStream = getClass().getResourceAsStream("/templates/report/ReportCarnet.jasper");
+	        if (reportStream == null) {
+	            throw new JRException("No se pudo encontrar el archivo Report.jasper en resources/templates/report.");
+	        }
+
+	        JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportStream);
+
+	        Map<String, Object> params = new HashMap<>();
+	        params.put("titulo", "Carnet" + pilgrim.getName());
+
+	        URL imageUrl = getClass().getResource("/images/carnet.png");
+	        if (imageUrl == null) {
+	            throw new JRException("No se pudo encontrar la imagen carnet.png en resources/images.");
+	        }
+
+	        params.put("imagen", imageUrl.toExternalForm());
+
+	        params.put("nombre", pilgrim.getName());
+	        params.put("nacionalidad", pilgrim.getNationality());
+	        params.put("fecha_expedicion", pilgrim.getCarnet().getDoExp().toString());
+	        params.put("distancia", String.valueOf(pilgrim.getCarnet().getDistance()));
+	        params.put("n_vips", String.valueOf(pilgrim.getCarnet().getnVips()));
+	        params.put("nombre_parada", pilgrim.getCarnet().getInitialStop().getName());
+	        params.put("region", pilgrim.getCarnet().getInitialStop().getRegion());
+
+	        // Log de los parámetros
+	        System.out.println("Parámetros del reporte:");
+	        params.forEach((key, value) -> System.out.println(key + ": " + value));
+
+	        JasperPrint print = JasperFillManager.fillReport(jasperReport, params, new JREmptyDataSource());
+	        JasperExportManager.exportReportToPdfFile(print, outputPath);
+
+	        // Mostrar el PDF en una ventana modal
+	        showPdfInModal(outputPath);
+	    } catch (JRException e) {
+	        e.printStackTrace();
+	        // Manejar la excepción adecuadamente
+	    }
+	}
+
+	private void showPdfInModal(String pdfPath) {
+	    // Iniciar el servidor HTTP local en un hilo separado
+//	    new Thread(() -> {
+//	        try {
+//	            LocalHttpServer.startServer(pdfPath);
+//	        } catch (IOException e) {
+//	            e.printStackTrace();
+//	        }
+//	    }).start();
+//
+//	    // Crear una nueva ventana modal
+//	    Stage modalStage = new Stage();
+//	    modalStage.initModality(Modality.APPLICATION_MODAL);
+//	    modalStage.setTitle("Reporte de Paradas Visitadas");
+//
+//	    // Crear un WebView para mostrar el PDF
+//	    WebView webView = new WebView();
+//	    WebEngine webEngine = webView.getEngine();
+//
+//	    // La URL del servidor local que sirve el PDF
+//	    String serverUrl = "http://localhost:8080/pdf";
+//
+//	    // Cargar la URL del servidor local en el WebView
+//	    webEngine.load(serverUrl);
+//
+//	    // Crear un contenedor para el WebView
+//	    VBox root = new VBox(webView);
+//	    Scene scene = new Scene(root, 800, 600);
+//
+//	    // Configurar la ventana modal
+//	    modalStage.setScene(scene);
+//	    modalStage.showAndWait();
+	}
+
+
 
 	@FXML
 	private void logout(ActionEvent event) throws IOException {
