@@ -30,26 +30,29 @@
 	stylesheets="@../styles/Admin.css"
 	xmlns="http://javafx.com/javafx/8.0.111"
 	xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="com.davidmb.tarea3ADbase.controller.AdminController">
+	fx:controller="com.davidmb.tarea3ADbase.controller.ServiceController">
 
 	<left>
-	
+
 		<VBox prefHeight="571.0" prefWidth="306.0" spacing="10.0"
 			styleClass="background" BorderPane.alignment="CENTER">
 			<children>
-			   <Button fx:id="btnHelp" onAction="#showHelp" styleClass="help-button" style="-fx-background-radius: 50%; -fx-max-width: 40px; -fx-max-height: 40px; -fx-padding: 5px;">
-			    <HBox.margin>
-			        <Insets top="20" left="20"/>
-			        </HBox.margin>
-			    <graphic> 
-			        <ImageView fitHeight="30" fitWidth="30" preserveRatio="true"> 
-			            <image>
-			                <Image url="@../icons/ask.png"/>  
-			            </image>
-			        </ImageView> 
-			    </graphic> 
-			</Button>
-				<Label text="Crear parada" styleClass="form-title">
+				<Button fx:id="btnHelp" onAction="#showHelp"
+					styleClass="help-button"
+					style="-fx-background-radius: 50%; -fx-max-width: 40px; -fx-max-height: 40px; -fx-padding: 5px;">
+					<HBox.margin>
+						<Insets top="20" left="20" />
+					</HBox.margin>
+					<graphic>
+						<ImageView fitHeight="30" fitWidth="30"
+							preserveRatio="true">
+							<image>
+								<Image url="@../icons/ask.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
+				<Label text="Añadir Servicio" styleClass="form-title">
 					<font>
 						<Font size="20.0" />
 					</font>
@@ -59,35 +62,22 @@
 				</Label>
 				<HBox prefHeight="30.0" prefWidth="265.0">
 					<children>
-						<Label fx:id="loggedInUser" text="ID -" styleClass="form-title-small" />
-						<Label fx:id="stopId" styleClass="form-title-small" />
+						<Label fx:id="loggedInUser" text="ID -"
+							styleClass="form-title-small" />
 					</children>
 					<VBox.margin>
 						<Insets left="25.0" />
 					</VBox.margin>
 				</HBox>
-				<TextField fx:id="stopName" promptText="Nombre Parada"
-					styleClass="text-field" />
-				<ComboBox fx:id="cbregion"
-					promptText="Selecciona la región" styleClass="combo-box" />
-				<TextField fx:id="managerName"
-					promptText="Nombre del responsable" styleClass="text-field" />
-				<TextField fx:id="managerEmail"
-					promptText="Email del responsable" styleClass="text-field" />
-	
-           <PasswordField fx:id="managerPassword" promptText="Contraseña del manager" styleClass="text-field" />
-            <TextField fx:id="managerPasswordVisibleField" promptText="Contraseña del manager" VBox.vgrow="NEVER" visible="false" managed="false" />
-            <PasswordField fx:id="confirmManagerPassword" promptText="Confirma contraseña del manager" styleClass="text-field" />
-            <TextField fx:id="confirmManagerPasswordVisibleField" promptText="Confirma contraseña del manager" VBox.vgrow="NEVER" visible="false" managed="false" />
-            
-            <HBox spacing="10">
-              
-              <Pane HBox.hgrow="ALWAYS"></Pane>
-                
-              <Region />
-               	<CheckBox fx:id="showPasswordCheckBox" onAction="#togglePasswordVisibility"/>
-                <Label text="Mostrar contraseña" /> 
-             </HBox>
+				<TextField fx:id="serviceName"
+					promptText="Nombre Servicio" styleClass="text-field" />
+				<!-- <ComboBox fx:id="cbregion" -->
+				<!-- promptText="Selecciona la región" styleClass="combo-box" /> -->
+				<TextField fx:id="servicePrice"
+					promptText="Precio del servicio" styleClass="text-field" />
+
+				
+
 
 
 
@@ -95,11 +85,8 @@
 					<children>
 						<Button fx:id="reset" text="_Cancelar"
 							styleClass="white-button" onAction="#reset" />
-						<Button fx:id="saveStop" text="_Guardar"
-							styleClass="primary-button" onAction="#saveStop" />
-							
-								<Button fx:id="exportStopsBtn" text="Exportar paradas"
-							styleClass="primary-button" onAction="#exportStopDataReport" />
+						<Button fx:id="saveService" text="_Guardar"
+							styleClass="primary-button" onAction="#onSaveService" />
 					</children>
 				</HBox>
 			</children>
@@ -118,8 +105,8 @@
 			<children>
 				<HBox alignment="TOP_RIGHT" prefHeight="41.0" prefWidth="640.0">
 					<children>
-						<Button fx:id="btnLogout" text="Cerrar _sesión"
-							styleClass="btnLogout" onAction="#logout">
+						<Button fx:id="btnReturn" text="Volver"
+							styleClass="btnLogout" onAction="#onReturn">
 							<font>
 								<Font size="14.0" />
 							</font>
@@ -130,19 +117,7 @@
 								<DropShadow blurType="ONE_PASS_BOX" color="#00000091" />
 							</effect>
 						</Button>
-						
-					<Button fx:id="btnAddServices" text="Añadir se_rvicios"
-							styleClass="btnLogout" onAction="#addService">
-							<font>
-								<Font size="14.0" />
-							</font>
-							<HBox.margin>
-								<Insets right="5.0" top="5.0" />
-							</HBox.margin>
-							<effect>
-								<DropShadow blurType="ONE_PASS_BOX" color="#00000091" />
-							</effect>
-						</Button>
+
 					</children>
 				</HBox>
 				<TableView fx:id="stopTable" prefHeight="300.0"
@@ -154,10 +129,25 @@
 							prefWidth="75.0" text="Nombre Parada" />
 						<TableColumn fx:id="colStopRegion" maxWidth="4000.0"
 							prefWidth="75.0" text="Región Parada" />
-						<TableColumn fx:id="colManagerEmail" maxWidth="4000.0"
-							prefWidth="75.0" text="Responsable" />
-						<TableColumn fx:id="colManagerId" maxWidth="4000.0"
-							prefWidth="60.0" text="ID del Responsable" />
+					</columns>
+					<VBox.margin>
+						<Insets left="10.0" right="5.0" />
+					</VBox.margin>
+					<columnResizePolicy>
+						<TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+					</columnResizePolicy>
+				</TableView>
+				<TableView fx:id="servicesTable" prefHeight="300.0"
+					prefWidth="679.0" tableMenuButtonVisible="true">
+					<columns>
+						<TableColumn fx:id="colServiceId" maxWidth="700.0"
+							prefWidth="20.0" text="ID" />
+						<TableColumn fx:id="colServiceName" maxWidth="4000.0"
+							prefWidth="75.0" text="Nombre Servicio" />
+						<TableColumn fx:id="colServicePrice" maxWidth="4000.0"
+							prefWidth="75.0" text="Precio" />
+						<TableColumn fx:id="colServiceStops" maxWidth="4000.0"
+							prefWidth="75.0" text="Paradas que lo ofertan" />
 					</columns>
 					<VBox.margin>
 						<Insets left="10.0" right="5.0" />

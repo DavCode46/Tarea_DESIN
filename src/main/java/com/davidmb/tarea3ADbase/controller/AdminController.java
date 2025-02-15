@@ -83,6 +83,9 @@ public class AdminController implements Initializable {
 	private Button btnHelp;
 	
 	@FXML
+	private Button btnAddServices;
+	
+	@FXML
 	private Button exportStopsBtn;
 
 	@FXML
@@ -190,6 +193,11 @@ public class AdminController implements Initializable {
 	void reset(ActionEvent event) {
 		clearFields();
 	}
+	
+	@FXML
+	public void addService(ActionEvent event) {
+        stageManager.switchScene(FxmlView.SERVICES);
+    }
 
 	@FXML
 	private void saveStop(ActionEvent event) {

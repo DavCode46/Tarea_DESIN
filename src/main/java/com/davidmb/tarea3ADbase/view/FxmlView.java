@@ -58,6 +58,17 @@ public enum FxmlView {
 			return "/fxml/Login.fxml";
 		}
 	},
+	SERVICES {
+		@Override
+		public String getTitle() {
+			return getStringFromResourceBundle("services.title");
+		}
+
+		@Override
+		public String getFxmlFile() {
+			return"/fxml/Services.fxml";
+		}
+	},
 	REGISTER_PILGRIM {
 		@Override
 		public String getTitle() {
