@@ -70,7 +70,7 @@ public class ServiceController implements Initializable{
 	private Button saveService;
 	
 	@FXML
-	private TableView<Stop> stopTable;
+	private TableView<Stop> stopsTable;
 
 	@FXML
 	private TableColumn<Stop, Long> colStopId;
@@ -216,6 +216,7 @@ public class ServiceController implements Initializable{
 		
 
 		servicesTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		stopsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
 		setColumnProperties();
 
@@ -250,8 +251,16 @@ public class ServiceController implements Initializable{
 		stopList.clear();
 		stopList.addAll(stopService.findAll());
 
-		stopTable.setItems(stopList);
+		stopsTable.setItems(stopList);
 	}
+	
+	  @FXML
+	    private void getSelectedStops() {
+	        ObservableList<Stop> selectedStops = stopsTable.getSelectionModel().getSelectedItems();
+	        for (Stop stop : selectedStops) {
+	            System.out.println("Parada seleccionada: " + stop.getName());
+	        }
+	    }
 
 
 }

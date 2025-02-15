@@ -117,12 +117,26 @@
 								<DropShadow blurType="ONE_PASS_BOX" color="#00000091" />
 							</effect>
 						</Button>
+						
+						<Button fx:id="btnSelectedStops" text="Añadir paradas"
+							styleClass="btnLogout" onAction="#getSelectedStops">
+							<font>
+								<Font size="14.0" />
+							</font>
+							<HBox.margin>
+								<Insets right="5.0" top="5.0" />
+							</HBox.margin>
+							<effect>
+								<DropShadow blurType="ONE_PASS_BOX" color="#00000091" />
+							</effect>
+						</Button>
 
 					</children>
 				</HBox>
-				<TableView fx:id="stopTable" prefHeight="300.0"
+				<TableView fx:id="stopsTable" prefHeight="300.0"
 					prefWidth="679.0" tableMenuButtonVisible="true">
 					<columns>
+					
 						<TableColumn fx:id="colStopId" maxWidth="700.0"
 							prefWidth="20.0" text="ID" />
 						<TableColumn fx:id="colStopName" maxWidth="4000.0"
