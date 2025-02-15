@@ -29,7 +29,6 @@ import com.davidmb.tarea3ADbase.services.PilgrimService;
 import com.davidmb.tarea3ADbase.services.StopService;
 import com.davidmb.tarea3ADbase.services.UserService;
 import com.davidmb.tarea3ADbase.utils.HelpUtil;
-import com.davidmb.tarea3ADbase.utils.LocalHttpServer;
 import com.davidmb.tarea3ADbase.utils.ManagePassword;
 import com.davidmb.tarea3ADbase.view.FxmlView;
 
@@ -49,6 +48,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -280,35 +280,39 @@ public class AdminController implements Initializable {
 	}
 
 	private void showPdfInModal(String pdfPath) {
-	    // Iniciar el servidor HTTP local en un hilo separado
-	    new Thread(() -> {
-	        try {
-	            LocalHttpServer.startServer(pdfPath);
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
-	    }).start();
-
 	    // Crear una nueva ventana modal
 	    Stage modalStage = new Stage();
 	    modalStage.initModality(Modality.APPLICATION_MODAL);
 	    modalStage.setTitle("Reporte de Paradas Visitadas");
+	    modalStage.setWidth(800); // Ancho de la ventana
+	    modalStage.setHeight(600); // Alto de la ventana
 
 	    // Crear un WebView para mostrar el PDF
-	    WebView webView = new WebView();
-	    WebEngine webEngine = webView.getEngine();
+	    WebView browser = new WebView();
+	    WebEngine webEngine = browser.getEngine();
 
-	    // La URL del servidor local que sirve el PDF
-	    String serverUrl = "http://localhost:8080/pdf";
+	    // Crear un ScrollPane para envolver el WebView
+	    ScrollPane scrollPane = new ScrollPane();
+	    scrollPane.setContent(browser); // Añadir el WebView al ScrollPane
 
-	    // Cargar la URL del servidor local en el WebView
-	    webEngine.load(serverUrl);
+	    // Convertir la ruta del archivo a una URL de archivo local
+	    File pdfFile = new File(pdfPath);
+	    if (!pdfFile.exists()) {
+	        System.out.println("El archivo PDF no existe: " + pdfPath);
+	        return;
+	    }
 
-	    // Crear un contenedor para el WebView
-	    VBox root = new VBox(webView);
-	    Scene scene = new Scene(root, 800, 600);
+	    String fileUrl = pdfFile.toURI().toString();
+	    System.out.println("Cargando PDF desde: " + fileUrl);
 
-	    // Configurar la ventana modal
+	    // Cargar el PDF en el WebView usando la URL del archivo local
+	    webEngine.load(fileUrl);
+
+	    // Crear un contenedor VBox para el ScrollPane
+	    VBox root = new VBox(scrollPane);
+
+	    // Crear la escena y configurar la ventana modal
+	    Scene scene = new Scene(root);
 	    modalStage.setScene(scene);
 	    modalStage.showAndWait();
 	}
