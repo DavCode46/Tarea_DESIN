@@ -1,6 +1,8 @@
 package com.davidmb.tarea3ADbase.controller;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,8 @@ import com.davidmb.tarea3ADbase.models.User;
 import com.davidmb.tarea3ADbase.services.StopService;
 import com.davidmb.tarea3ADbase.utils.HelpUtil;
 import com.davidmb.tarea3ADbase.view.FxmlView;
+import com.davidmb.tarea3ADbasedb.DB4oConnection;
+import com.db4o.ObjectContainer;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -25,10 +29,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -38,18 +39,14 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 @Controller
-public class ServiceController implements Initializable{
-	
+public class ServiceController implements Initializable {
+
 	@FXML
 	private Button btnHelp;
-	
-	
+
 	@FXML
 	private Button btnReturn;
-	
-	@FXML
-	private ListView<CheckBox> stopsListView;
-	
+
 	@FXML
 	private Label loggedInUser;
 
@@ -57,18 +54,14 @@ public class ServiceController implements Initializable{
 	private TextField serviceName;
 
 	@FXML
-	private ComboBox<String> cbregion;
-
-	@FXML
 	private TextField servicePrice;
-
 
 	@FXML
 	private Button reset;
 
 	@FXML
 	private Button saveService;
-	
+
 	@FXML
 	private TableView<Stop> stopsTable;
 
@@ -106,15 +99,15 @@ public class ServiceController implements Initializable{
 	@Autowired
 	private StopService stopService;
 
-
 	private ObservableList<Service> servicesList = FXCollections.observableArrayList();
 	private ObservableList<Stop> stopList = FXCollections.observableArrayList();
+	ObservableList<Stop> selectedStops = FXCollections.observableArrayList();
 
 	@FXML
 	private void exit(ActionEvent event) {
 		Platform.exit();
 	}
-	
+
 	@FXML
 	private void showHelp() {
 		HelpUtil.showHelp();
@@ -130,21 +123,47 @@ public class ServiceController implements Initializable{
 		clearFields();
 	}
 
-
 	@FXML
 	private void onSaveService(ActionEvent event) {
+	    String name = serviceName.getText().trim();
+	    String priceText = servicePrice.getText().trim();
 
-		
+	    // Validar campos antes de guardar
+	    if (!validateData(name, priceText)) {
+	        return;
+	    }
+
+	    try {
+	        double price = Double.parseDouble(priceText);
+	        List<Long> stops = getSelectedStops();
+	        Service service = new Service(name, price, stops);
+
+	        // Guardar en la base de datos
+	        ObjectContainer db = DB4oConnection.getInstance().getDb();
+	        try {
+	            db.store(service);
+	            db.commit();
+	        } catch (Exception e) {
+	            db.rollback();
+	            e.printStackTrace();
+	        } finally {
+	            db.close();
+	        }
+
+	        saveAlert(service);
+	        loadServicesDetail(); // Recargar los servicios
+
+	        clearFields(); // Limpiar los campos
+
+	    } catch (NumberFormatException e) {
+	        showErrorAlert(new StringBuilder("El precio debe ser un número válido."));
+	    }
 	}
-	
-
-
-
-
-
 
 	private void clearFields() {
-		
+		serviceName.clear();
+		servicePrice.clear();
+		stopsTable.getSelectionModel().clearSelection();
 	}
 
 	private void saveAlert(Service service) {
@@ -155,8 +174,7 @@ public class ServiceController implements Initializable{
 			alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
 			alert.setTitle("Servicio registrado con éxito.");
 			alert.setHeaderText("Servicio registrado con éxito.");
-			alert.setContentText(
-					"El servicio " + service.getServiceName() + " ha sido registrado con éxito.");
+			alert.setContentText("El servicio " + service.getServiceName() + " ha sido registrado con éxito.");
 		} else {
 			alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/info.png")));
 			alert.setTitle("Registro cancelado");
@@ -191,20 +209,38 @@ public class ServiceController implements Initializable{
 		return alert.getResult().getButtonData().isDefaultButton();
 	}
 
-	private boolean validateData() {
-		boolean ret = false;
-		StringBuilder message = new StringBuilder();
-		
+	// Método de validación de los datos
+	private boolean validateData(String name, String priceText) {
+	    StringBuilder message = new StringBuilder();
 
-		
-		return ret;
+	    // Validar nombre del servicio
+	    if (name.isEmpty()) {
+	        message.append("El nombre del servicio no puede estar vacío.\n");
+	    }
+
+	    // Validar precio del servicio
+	    if (priceText.isEmpty()) {
+	        message.append("El precio no puede estar vacío.\n");
+	    } else {
+	        try {
+	            Double.parseDouble(priceText);
+	        } catch (NumberFormatException e) {
+	            message.append("El precio debe ser un número válido.\n");
+	        }
+	    }
+
+	    // Si hay mensajes de error, mostrar alerta
+	    if (message.length() > 0) {
+	        showErrorAlert(message);
+	        return false;
+	    }
+
+	    return true;
 	}
-
-	
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
+
 		loadStopDetails();
 
 		User user = session.getLoggedInUser();
@@ -212,8 +248,6 @@ public class ServiceController implements Initializable{
 		if (user != null) {
 			loggedInUser.setText("Usuario: " + user.getUsername());
 		}
-
-		
 
 		servicesTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		stopsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -233,34 +267,38 @@ public class ServiceController implements Initializable{
 		colServiceName.setCellValueFactory(new PropertyValueFactory<>("serviceName"));
 		colServicePrice.setCellValueFactory(new PropertyValueFactory<>("price"));
 		colServiceStops.setCellValueFactory(new PropertyValueFactory<>("stopsIds"));
-		
-		
+
 		colStopId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		colStopName.setCellValueFactory(new PropertyValueFactory<>("name"));
 		colStopRegion.setCellValueFactory(new PropertyValueFactory<>("region"));
 	}
 
 	private void loadServicesDetail() {
+	    ObjectContainer db = DB4oConnection.getInstance().getDb();
 		servicesList.clear();
-		// servicesList.addAll();
+		servicesList.addAll(db.query(Service.class));
 
 		servicesTable.setItems(servicesList);
+		db.close();
 	}
-	
+
 	private void loadStopDetails() {
 		stopList.clear();
 		stopList.addAll(stopService.findAll());
 
 		stopsTable.setItems(stopList);
 	}
-	
-	  @FXML
-	    private void getSelectedStops() {
-	        ObservableList<Stop> selectedStops = stopsTable.getSelectionModel().getSelectedItems();
-	        for (Stop stop : selectedStops) {
-	            System.out.println("Parada seleccionada: " + stop.getName());
-	        }
-	    }
 
+	@FXML
+	private List<Long> getSelectedStops() {
+		selectedStops = stopsTable.getSelectionModel().getSelectedItems();
+		List<Long> stops = new ArrayList<>();
+		for (Stop stop : selectedStops) {
+			if (!stops.contains(stop.getId())) {
+				stops.add(stop.getId());
+			}
+		}
+		return stops;
+	}
 
 }
