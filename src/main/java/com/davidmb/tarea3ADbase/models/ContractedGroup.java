@@ -15,10 +15,9 @@ public class ContractedGroup {
 	public ContractedGroup() {
 	}
 	
-	public ContractedGroup(double totalPrice, char payMode, String extra, Long stayId, List<Long> serviceIds) {
+	public ContractedGroup(double totalPrice, char payMode, Long stayId, List<Long> serviceIds) {
 		this.totalPrice = totalPrice;
 		this.payMode = payMode;
-		this.extra = extra;
 		this.stayId = stayId;
 		this.serviceIds = serviceIds;
 	}

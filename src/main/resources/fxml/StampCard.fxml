@@ -30,25 +30,28 @@
 
 	<left>
 		<VBox prefWidth="500.0" alignment="CENTER" spacing="20.0">
-		   <Button fx:id="helpBtn" onAction="#showHelp" styleClass="help-button" style="-fx-background-radius: 50%; -fx-max-width: 40px; -fx-max-height: 40px; -fx-padding: 5px;">
-    <VBox.margin>
-        <Insets top="-50" left="20"/>
-        </VBox.margin>
-	<graphic> 
-        <ImageView fitHeight="30" fitWidth="30" preserveRatio="true"> 
-            <image>
-                <Image url="@../icons/ask.png"/>  
-            </image>
-        </ImageView> 
-    </graphic> 
-</Button>
+			<Button fx:id="helpBtn" onAction="#showHelp"
+				styleClass="help-button"
+				style="-fx-background-radius: 50%; -fx-max-width: 40px; -fx-max-height: 40px; -fx-padding: 5px;">
+				<VBox.margin>
+					<Insets top="-50" left="20" />
+				</VBox.margin>
+				<graphic>
+					<ImageView fitHeight="30" fitWidth="30"
+						preserveRatio="true">
+						<image>
+							<Image url="@../icons/ask.png" />
+						</image>
+					</ImageView>
+				</graphic>
+			</Button>
 			<!-- VBox sellar carnet -->
 			<VBox prefHeight="300.0" prefWidth="500.0" spacing="20.0"
 				alignment="CENTER" styleClass="background"
 				BorderPane.alignment="CENTER">
 				<children>
 					<HBox>
-					
+
 						<Button fx:id="btnReturn" text="Volver"
 							styleClass="btnLogout" onAction="#onReturn">
 							<font>
@@ -61,7 +64,7 @@
 								<DropShadow blurType="ONE_PASS_BOX" color="#00000091" />
 							</effect>
 						</Button>
-					
+
 						<Label fx:id="stopId" text="Parada -"
 							styleClass="form-title-small">
 							<font>
@@ -131,23 +134,23 @@
 				alignment="CENTER" styleClass="background"
 				BorderPane.alignment="CENTER">
 				<children>
-					
 
-				<Label text="Servicios Seleccionados" styleClass="form-title">
-					<font>
-						<Font size="20.0" />
-					</font>
-					<VBox.margin>
-						<Insets bottom="10.0" left="20.0" top="30.0" />
-					</VBox.margin>
-				</Label>
-				<ListView fx:id="selectedServicesList" prefHeight="300.0"
-					prefWidth="679.0">
-					<VBox.margin>
-						<Insets left="10.0" right="5.0" />
-					</VBox.margin>
-					
-				</ListView>
+
+					<Label text="Servicios Seleccionados" styleClass="form-title">
+						<font>
+							<Font size="20.0" />
+						</font>
+						<VBox.margin>
+							<Insets bottom="10.0" left="20.0" top="30.0" />
+						</VBox.margin>
+					</Label>
+					<ListView fx:id="selectedServicesList" prefHeight="300.0"
+						prefWidth="679.0">
+						<VBox.margin>
+							<Insets left="10.0" right="5.0" />
+						</VBox.margin>
+
+					</ListView>
 				</children>
 			</VBox>
 
@@ -155,17 +158,18 @@
 	</left>
 
 	<center>
-		<VBox alignment="CENTER_RIGHT" prefHeight="571.0"
+		<VBox alignment="CENTER" prefHeight="571.0"
 			prefWidth="692.0" maxWidth="1100.0" BorderPane.alignment="CENTER">
 			<children>
-			<TableView fx:id="pilgrimsTable" prefHeight="300.0"
+				<Label text="Peregrinos" styleClass="form-title" />
+				<TableView fx:id="pilgrimsTable" prefHeight="300.0"
 					prefWidth="679.0" maxWidth="1100.0" tableMenuButtonVisible="true">
 					<HBox.margin>
 						<Insets right="20.0" />
 					</HBox.margin>
 					<columns>
 						<TableColumn fx:id="colPilgrimName" maxWidth="4000.0"
-							prefWidth="75.0" text="Nombre Peregrino" />
+							prefWidth="75.0" text="Nombre" />
 						<TableColumn fx:id="colPilgrimNationality"
 							maxWidth="4000.0" prefWidth="75.0" text="Nacionalidad" />
 
@@ -174,7 +178,7 @@
 
 						<TableColumn fx:id="colStay" maxWidth="4000.0"
 							prefWidth="75.0" text="Estancia" />
-						
+
 						<TableColumn fx:id="colVip" maxWidth="4000.0"
 							prefWidth="60.0" text="VIP" />
 					</columns>
@@ -185,6 +189,7 @@
 						<TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
 					</columnResizePolicy>
 				</TableView>
+				<Label text="Servicios" styleClass="form-title" />
 				<TableView fx:id="servicesTable" prefHeight="300.0"
 					prefWidth="679.0" tableMenuButtonVisible="true">
 					<columns>

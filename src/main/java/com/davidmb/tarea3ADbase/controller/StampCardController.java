@@ -152,7 +152,7 @@ public class StampCardController implements Initializable{
 	
 	@FXML
 	public void onReturn() {
-		stageManager.switchScene(FxmlView.ADMIN);
+		stageManager.switchScene(FxmlView.STOP);
 	}
 
 
