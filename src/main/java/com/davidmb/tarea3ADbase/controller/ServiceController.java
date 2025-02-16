@@ -14,11 +14,12 @@ import com.davidmb.tarea3ADbase.config.StageManager;
 import com.davidmb.tarea3ADbase.models.Service;
 import com.davidmb.tarea3ADbase.models.Stop;
 import com.davidmb.tarea3ADbase.models.User;
+import com.davidmb.tarea3ADbase.services.ServicesService;
 import com.davidmb.tarea3ADbase.services.StopService;
+import com.davidmb.tarea3ADbase.ui.StopCell;
 import com.davidmb.tarea3ADbase.utils.HelpUtil;
 import com.davidmb.tarea3ADbase.view.FxmlView;
 import com.davidmb.tarea3ADbasedb.DB4oConnection;
-import com.db4o.ObjectContainer;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -26,26 +27,25 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 @Controller
 public class ServiceController implements Initializable {
-
-	@FXML
-	private Button btnHelp;
-
-	@FXML
-	private Button btnReturn;
 
 	@FXML
 	private Label loggedInUser;
@@ -61,6 +61,12 @@ public class ServiceController implements Initializable {
 
 	@FXML
 	private Button saveService;
+
+	@FXML
+	private Button btnHelp;
+
+	@FXML
+	private Button btnReturn;
 
 	@FXML
 	private TableView<Stop> stopsTable;
@@ -89,6 +95,12 @@ public class ServiceController implements Initializable {
 	@FXML
 	private TableColumn<Service, String> colServiceStops;
 
+	@FXML
+	private TableColumn<Service, Boolean> colActions;
+
+	@FXML
+	private ListView<Stop> selectedStopsList;
+
 	@Lazy
 	@Autowired
 	private StageManager stageManager;
@@ -99,9 +111,13 @@ public class ServiceController implements Initializable {
 	@Autowired
 	private StopService stopService;
 
+	@Autowired
+	private ServicesService servicesService;
+
 	private ObservableList<Service> servicesList = FXCollections.observableArrayList();
 	private ObservableList<Stop> stopList = FXCollections.observableArrayList();
 	ObservableList<Stop> selectedStops = FXCollections.observableArrayList();
+	private Service serviceBeingEdited = null;
 
 	@FXML
 	private void exit(ActionEvent event) {
@@ -125,45 +141,56 @@ public class ServiceController implements Initializable {
 
 	@FXML
 	private void onSaveService(ActionEvent event) {
-	    String name = serviceName.getText().trim();
-	    String priceText = servicePrice.getText().trim();
+		String name = serviceName.getText().trim();
+		String priceText = servicePrice.getText().trim();
 
-	    // Validar campos antes de guardar
-	    if (!validateData(name, priceText)) {
-	        return;
-	    }
+		if (!validateData(name, priceText)) {
+			return;
+		}
 
-	    try {
-	        double price = Double.parseDouble(priceText);
-	        List<Long> stops = getSelectedStops();
-	        Service service = new Service(name, price, stops);
+		double price = Double.parseDouble(priceText);
+		List<Long> stops = getSelectedStops();
 
-	        // Guardar en la base de datos
-	        ObjectContainer db = DB4oConnection.getInstance().getDb();
-	        try {
-	            db.store(service);
-	            db.commit();
-	        } catch (Exception e) {
-	            db.rollback();
-	            e.printStackTrace();
-	        } finally {
-	            db.close();
-	        }
+		if (serviceBeingEdited != null) {
+			serviceBeingEdited.setServiceName(name);
+			serviceBeingEdited.setPrice(price);
+			serviceBeingEdited.setStopIds(stops);
+			if (showConfirmAlert(serviceBeingEdited)) {
+				servicesService.update(serviceBeingEdited);
+				saveAlert(serviceBeingEdited);
+				serviceBeingEdited = null;
+				saveService.setText("Guardar");
+				clearFields();
+			} else {
+				saveAlert(null);
+			}
+		} else {
+			if (!servicesService.findByName(name)) {
+				Service service = new Service(name, price, stops);
+				Long id = servicesService.getMaxId() + 1;
+				service.setId(id);
+				if (showConfirmAlert(service)) {
+					servicesService.save(service);
+					saveAlert(service);
+					clearFields();
+				} else {
+					saveAlert(null);
+				}
+			} else {
+				StringBuilder message = new StringBuilder();
+				message.append("El servicio ").append(name).append(" ya está registrado.");
+				showErrorAlert(message);
+			}
 
-	        saveAlert(service);
-	        loadServicesDetail(); // Recargar los servicios
-
-	        clearFields(); // Limpiar los campos
-
-	    } catch (NumberFormatException e) {
-	        showErrorAlert(new StringBuilder("El precio debe ser un número válido."));
-	    }
+		}
+		loadServicesDetail();
 	}
 
 	private void clearFields() {
 		serviceName.clear();
 		servicePrice.clear();
 		stopsTable.getSelectionModel().clearSelection();
+		selectedStopsList.getItems().clear();
 	}
 
 	private void saveAlert(Service service) {
@@ -209,33 +236,30 @@ public class ServiceController implements Initializable {
 		return alert.getResult().getButtonData().isDefaultButton();
 	}
 
-	// Método de validación de los datos
 	private boolean validateData(String name, String priceText) {
-	    StringBuilder message = new StringBuilder();
+		StringBuilder message = new StringBuilder();
 
-	    // Validar nombre del servicio
-	    if (name.isEmpty()) {
-	        message.append("El nombre del servicio no puede estar vacío.\n");
-	    }
+		if (name.isEmpty()) {
+			message.append("El nombre del servicio no puede estar vacío.\n");
+		}
 
-	    // Validar precio del servicio
-	    if (priceText.isEmpty()) {
-	        message.append("El precio no puede estar vacío.\n");
-	    } else {
-	        try {
-	            Double.parseDouble(priceText);
-	        } catch (NumberFormatException e) {
-	            message.append("El precio debe ser un número válido.\n");
-	        }
-	    }
+		if (priceText.isEmpty()) {
+			message.append("El precio no puede estar vacío.\n");
+		} else {
+			try {
+				Double.parseDouble(priceText);
+			} catch (NumberFormatException e) {
+				message.append("El precio debe ser un número válido.\n");
+			}
+		}
 
-	    // Si hay mensajes de error, mostrar alerta
-	    if (message.length() > 0) {
-	        showErrorAlert(message);
-	        return false;
-	    }
+		// Si hay mensajes de error, mostrar alerta
+		if (message.length() > 0) {
+			showErrorAlert(message);
+			return false;
+		}
 
-	    return true;
+		return true;
 	}
 
 	@Override
@@ -251,6 +275,12 @@ public class ServiceController implements Initializable {
 
 		servicesTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		stopsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		stopsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+			if (newSelection != null) {
+				getSelectedStops();
+			}
+		});
+		selectedStopsList.setCellFactory(param -> new StopCell());
 
 		setColumnProperties();
 
@@ -267,19 +297,70 @@ public class ServiceController implements Initializable {
 		colServiceName.setCellValueFactory(new PropertyValueFactory<>("serviceName"));
 		colServicePrice.setCellValueFactory(new PropertyValueFactory<>("price"));
 		colServiceStops.setCellValueFactory(new PropertyValueFactory<>("stopsIds"));
+		colActions.setCellFactory(cellFactory);
 
 		colStopId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		colStopName.setCellValueFactory(new PropertyValueFactory<>("name"));
 		colStopRegion.setCellValueFactory(new PropertyValueFactory<>("region"));
 	}
 
-	private void loadServicesDetail() {
-	    ObjectContainer db = DB4oConnection.getInstance().getDb();
-		servicesList.clear();
-		servicesList.addAll(db.query(Service.class));
+	Callback<TableColumn<Service, Boolean>, TableCell<Service, Boolean>> cellFactory = new Callback<TableColumn<Service, Boolean>, TableCell<Service, Boolean>>() {
+		@Override
+		public TableCell<Service, Boolean> call(final TableColumn<Service, Boolean> param) {
+			final TableCell<Service, Boolean> cell = new TableCell<Service, Boolean>() {
+				Image imgEdit = new Image(getClass().getResourceAsStream("/icons/edit.png"));
+				final Button btnEdit = new Button();
 
+				@Override
+				public void updateItem(Boolean check, boolean empty) {
+					super.updateItem(check, empty);
+					if (empty) {
+						setGraphic(null);
+						setText(null);
+					} else {
+						btnEdit.setOnAction(e -> {
+							Service service = getTableView().getItems().get(getIndex());
+							updateService(service);
+						});
+
+						btnEdit.setStyle("-fx-background-color: transparent;");
+						ImageView iv = new ImageView();
+						iv.setFitWidth(20);
+						iv.setFitHeight(20);
+						iv.setImage(imgEdit);
+						iv.setPreserveRatio(true);
+						iv.setSmooth(true);
+						iv.setCache(true);
+						btnEdit.setGraphic(iv);
+
+						setGraphic(btnEdit);
+						setAlignment(Pos.CENTER);
+						setText(null);
+					}
+				}
+
+				private void updateService(Service service) {
+					serviceBeingEdited = service;
+					saveService.setText("Actualizar");
+					serviceName.setText(service.getServiceName());
+					servicePrice.setText(String.valueOf(service.getPrice()));
+					selectedStopsList.getItems().clear();
+					List<Stop> stops = new ArrayList<>();
+					for (Long id : service.getStopIds()) {
+						Stop stop = stopService.find(id);
+						stops.add(stop);
+					}
+					selectedStopsList.getItems().addAll(stops);
+				}
+			};
+			return cell;
+		}
+	};
+
+	private void loadServicesDetail() {
+		servicesList.clear();
+		servicesList.addAll(servicesService.findAll());
 		servicesTable.setItems(servicesList);
-		db.close();
 	}
 
 	private void loadStopDetails() {
@@ -287,9 +368,10 @@ public class ServiceController implements Initializable {
 		stopList.addAll(stopService.findAll());
 
 		stopsTable.setItems(stopList);
+
+		DB4oConnection.getInstance().closeConnection();
 	}
 
-	@FXML
 	private List<Long> getSelectedStops() {
 		selectedStops = stopsTable.getSelectionModel().getSelectedItems();
 		List<Long> stops = new ArrayList<>();
@@ -298,6 +380,7 @@ public class ServiceController implements Initializable {
 				stops.add(stop.getId());
 			}
 		}
+		selectedStopsList.setItems(selectedStops);
 		return stops;
 	}
 

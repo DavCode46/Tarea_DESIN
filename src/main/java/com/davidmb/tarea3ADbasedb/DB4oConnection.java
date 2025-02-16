@@ -10,15 +10,15 @@ import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
 
 @Component
-public class DB4oConnection {
+public class DB4oConnection  {
     private static DB4oConnection INSTANCE = null;
     private static ObjectContainer db;
     private static String DB_PATH;
 
-    // Constructor privado
+   
     private DB4oConnection() {}
 
-    // Obtener instancia de conexión, creando si es necesario
+
     public static synchronized DB4oConnection getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new DB4oConnection();
@@ -28,7 +28,7 @@ public class DB4oConnection {
         return INSTANCE;
     }
 
-    // Cargar configuración desde db4o.properties
+    
     private void loadConfig() {
         Properties properties = new Properties();
         try (InputStream input = getClass().getClassLoader().getResourceAsStream("db4o.properties")) {
@@ -47,27 +47,33 @@ public class DB4oConnection {
         }
     }
 
-    // Establecer la conexión a la base de datos
+  
     private void performConnection() {
         try {
-            db = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), DB_PATH);
-            System.out.println("Conexión establecida con DB4O en: " + DB_PATH);
+            if (db == null || db.ext().isClosed()) {
+                db = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), DB_PATH);
+                System.out.println("Conexión establecida con DB4O en: " + DB_PATH);
+            }
         } catch (Exception e) {
             System.err.println("Error al abrir la conexión con la base de datos: " + e.getMessage());
             throw new RuntimeException("Fallo al conectar con la base de datos", e);
         }
     }
 
-    // Obtener la instancia de la base de datos
+   
     public ObjectContainer getDb() {
+        if (db == null || db.ext().isClosed()) {
+            performConnection();
+        }
         return db;
     }
 
-    // Cerrar la conexión
+  
     public void closeConnection() {
-        if (db != null) {
+        if (db != null && !db.ext().isClosed()) {
             db.close();
             System.out.println("Conexión DB4O cerrada.");
         }
     }
+
 }

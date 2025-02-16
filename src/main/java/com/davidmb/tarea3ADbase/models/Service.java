@@ -47,6 +47,14 @@ public class Service {
 	public List<Long> getStopIds() {
 		return stopIds;
 	}
+	
+	public String getStopsIds() {
+	    if (stopIds == null || stopIds.isEmpty()) {
+	        return "";
+	    }
+	    return String.join("-", stopIds.stream().map(String::valueOf).toArray(String[]::new));
+	}
+
 
 	public void setStopIds(List<Long> stopIds) {
 		this.stopIds = stopIds;
@@ -59,6 +67,8 @@ public class Service {
 	public void setContractedGroups(List<Long> contractedGroups) {
 		this.contractedGroups = contractedGroups;
 	}
+	
+
 
 	@Override
 	public int hashCode() {
