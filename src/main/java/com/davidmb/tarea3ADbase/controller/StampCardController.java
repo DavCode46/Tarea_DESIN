@@ -1,10 +1,9 @@
 package com.davidmb.tarea3ADbase.controller;
 
-import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +15,14 @@ import com.davidmb.tarea3ADbase.config.StageManager;
 import com.davidmb.tarea3ADbase.dtos.ServiceResponse;
 import com.davidmb.tarea3ADbase.dtos.StayView;
 import com.davidmb.tarea3ADbase.models.Pilgrim;
+import com.davidmb.tarea3ADbase.models.Service;
 import com.davidmb.tarea3ADbase.models.Stop;
 import com.davidmb.tarea3ADbase.models.User;
 import com.davidmb.tarea3ADbase.services.PilgrimService;
 import com.davidmb.tarea3ADbase.services.PilgrimStopsService;
+import com.davidmb.tarea3ADbase.services.ServicesService;
 import com.davidmb.tarea3ADbase.services.StopService;
+import com.davidmb.tarea3ADbase.ui.ServiceCell;
 import com.davidmb.tarea3ADbase.utils.HelpUtil;
 import com.davidmb.tarea3ADbase.view.FxmlView;
 
@@ -33,11 +35,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
@@ -49,24 +50,16 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
-/**
- * 
- */
-
 @Controller
-public class StopController implements Initializable {
-
+public class StampCardController implements Initializable{
+	
+	
 	@FXML
-	private Button btnLogout;
+	private Button btnReturn;
 	
 	@FXML
 	private Button helpBtn;
 	
-	@FXML
-	private Button cleanBtn;
-	
-	@FXML
-	private Button filterBtn;
 
 	@FXML
 	private Label stopId;
@@ -79,12 +72,6 @@ public class StopController implements Initializable {
 
 	@FXML
 	private RadioButton rbNo;
-
-	@FXML
-	private DatePicker dpStart;
-
-	@FXML
-	private DatePicker dpEnd;
 
 	@FXML
 	private ComboBox<String> cbPilgrims;
@@ -108,13 +95,26 @@ public class StopController implements Initializable {
 	private TableColumn<StayView, String> colStopDate;
 
 	@FXML
-	private TableColumn<StayView, LocalDate> colDoS;
-
-	@FXML
 	private TableColumn<StayView, Boolean> colStay;
 
 	@FXML
 	private TableColumn<StayView, Boolean> colVip;
+	
+	@FXML
+	private TableView<Service> servicesTable;
+
+	@FXML
+	private TableColumn<Service, Long> colServiceId;
+
+	@FXML
+	private TableColumn<Service, String> colServiceName;
+
+	@FXML
+	private TableColumn<Service, String> colServicePrice;
+	
+	@FXML
+	private ListView<Service> selectedServicesList;
+
 
 	@Lazy
 	@Autowired
@@ -128,11 +128,17 @@ public class StopController implements Initializable {
 
 	@Autowired
 	private PilgrimStopsService pilgrimStopsService;
+	
+	@Autowired
+	private ServicesService servicesService;
 
 	@Autowired
 	private Session session;
 
 	private User user;
+	
+	private ObservableList<Service> servicesList = FXCollections.observableArrayList();
+	ObservableList<Service> selectedServices = FXCollections.observableArrayList();
 
 	@FXML
 	private void exit(ActionEvent event) {
@@ -145,54 +151,10 @@ public class StopController implements Initializable {
 	}
 	
 	@FXML
-	private void onStampCard() {
-		stageManager.switchScene(FxmlView.STAMPCARD);
+	public void onReturn() {
+		stageManager.switchScene(FxmlView.ADMIN);
 	}
 
-	/**
-	 * Logout and go to the login page
-	 */
-	@FXML
-	private void logout(ActionEvent event) throws IOException {
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle("Logout");
-		alert.setHeaderText("¿Estás seguro que quieres cerrar sesión?");
-		// Cambiar el ícono de la ventana
-		Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-		alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/logout.png")));
-		Optional<ButtonType> result = alert.showAndWait();
-		if (result.get() == ButtonType.OK) {
-			stageManager.switchScene(FxmlView.LOGIN);
-		}
-	}
-
-	@FXML
-	private void filterStays() {
-		if (dpStart.getValue() != null && dpEnd.getValue() != null) {
-			if (dpStart.getValue().isBefore(dpEnd.getValue())) {
-				ObservableList<StayView> pilgrimStaysByDate = FXCollections.observableArrayList();
-				List<StayView> stayViewList = pilgrimService.findStayViewsByStopBetweenDates(
-						stopService.findByUserId(user.getId()).getId(), dpStart.getValue(), dpEnd.getValue());
-				pilgrimStaysByDate.addAll(stayViewList);
-				pilgrimsTable.setItems(pilgrimStaysByDate);
-				dpStart.setValue(null);
-				dpEnd.setValue(null);
-			} else {
-				showErrorAlert(new StringBuilder("La fecha de inicio debe ser anterior a la fecha de fin"),
-						new String("Error al filtrar paradas"));
-			}
-		} else {
-			showErrorAlert(new StringBuilder("Debes seleccionar una fecha de inicio y una fecha de fin para filtrar"),
-					new String("Error al filtrar paradas"));
-		}
-	}
-
-	@FXML
-	private void clearFilters() {
-		dpStart.setValue(null);
-		dpEnd.setValue(null);
-		loadStayViews();
-	}
 
 	@FXML
 	void reset(ActionEvent event) {
@@ -237,6 +199,7 @@ public class StopController implements Initializable {
 	private void clearFields() {
 		stopId.setText(null);
 		cbPilgrims.getSelectionModel().clearSelection();
+		selectedServicesList.getItems().clear();
 	}
 
 	private void saveAlert(ServiceResponse<Pilgrim> serviceResponse, Pilgrim pilgrim) {
@@ -296,18 +259,13 @@ public class StopController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
-		btnLogout.setTooltip(new Tooltip("Cerrar sesión"));
 		helpBtn.setTooltip(new Tooltip("Pulsa F1 para mostrar el menú de ayuda"));
-		cleanBtn.setTooltip(new Tooltip("Limpiar filtros"));
-		filterBtn.setTooltip(new Tooltip("Filtrar estancias"));
 		pilgrimsTable.setTooltip(new Tooltip("Tabla de peregrinos"));
 		cbStay.setTooltip(new Tooltip("Alojarse"));
 		rbYes.setTooltip(new Tooltip("Estancia VIP"));
 		rbNo.setTooltip(new Tooltip("Estancia no VIP"));
 		reset.setTooltip(new Tooltip("Limpiar formulario"));
 		stampCard.setTooltip(new Tooltip("Sellar carnet"));
-		dpStart.setTooltip(new Tooltip("Fecha de comienzo para filtrar estancias"));
-		dpEnd.setTooltip(new Tooltip("Fecha final para filtrar estancias"));
 		
 
 		user = session.getLoggedInUser();
@@ -316,17 +274,29 @@ public class StopController implements Initializable {
 
 		loadPilgrims();
 
-		pilgrimsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		servicesTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		servicesTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+			if (newSelection != null) {
+				getSelectedServices();
+			}
+		});
+		selectedServicesList.setCellFactory(param -> new ServiceCell());
 
 		setColumnProperties();
 
 		loadStayViews();
+		loadServicesDetail();
 	}
 
 	/*
 	 * Set All userTable column properties
 	 */
 	private void setColumnProperties() {
+		
+		colServiceId.setCellValueFactory(new PropertyValueFactory<>("id"));
+		colServiceName.setCellValueFactory(new PropertyValueFactory<>("serviceName"));
+		colServicePrice.setCellValueFactory(new PropertyValueFactory<>("price"));
+		
 
 		colPilgrimName.setCellValueFactory(new PropertyValueFactory<>("pilgrimName"));
 		colPilgrimNationality.setCellValueFactory(new PropertyValueFactory<>("pilgrimNationality"));
@@ -351,8 +321,6 @@ public class StopController implements Initializable {
 				}
 			}
 		});
-
-		colDoS.setCellValueFactory(new PropertyValueFactory<>("stayDate"));
 
 		colVip.setCellValueFactory(new PropertyValueFactory<>("isVip"));
 		colVip.setCellFactory(column -> new TableCell<StayView, Boolean>() {
@@ -386,15 +354,32 @@ public class StopController implements Initializable {
 		stayViews.addAll(stayViewList);	
 		pilgrimsTable.setItems(stayViews);
 	}
+	
+	private void loadServicesDetail() {
+		servicesList.clear();
+		servicesList.addAll(servicesService.findAll());
+		servicesTable.setItems(servicesList);
+	}
 
 	private void loadPilgrims() {
 		cbPilgrims.getItems().clear();
 		pilgrimService.findAll()
 				.forEach(pilgrim -> cbPilgrims.getItems().addAll("ID: " + pilgrim.getId() + " - " + pilgrim.getName()));
 	}
+	
+	private List<Long> getSelectedServices() {
+		selectedServices = servicesTable.getSelectionModel().getSelectedItems();
+		List<Long> services = new ArrayList<>();
+		for (Service service : selectedServices) {
+			if (!services.contains(service.getId())) {
+				services.add(service.getId());
+			}
+		}
+		selectedServicesList.setItems(selectedServices);
+		return services;
+	}
 
 	/*
 	 * Validations
 	 */
-
 }

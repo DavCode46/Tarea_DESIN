@@ -69,6 +69,17 @@ public enum FxmlView {
 			return"/fxml/Services.fxml";
 		}
 	},
+	STAMPCARD {
+		@Override
+		public String getTitle() {
+			return getStringFromResourceBundle("stampCard.title");
+		}
+
+		@Override
+		public String getFxmlFile() {
+			return"/fxml/StampCard.fxml";
+		}
+	},
 	REGISTER_PILGRIM {
 		@Override
 		public String getTitle() {
