@@ -16,4 +16,6 @@ public interface StayRepository extends JpaRepository<Stay, Long> {
 	
 	boolean existsByPilgrim_IdAndStop_IdAndDate(Long pilgrimId, Long stopId, LocalDate date);
 	
+	Stay findByPilgrim_IdAndStop_IdAndDate(Long pilgrimId, Long stopId, LocalDate date);
+	
 }

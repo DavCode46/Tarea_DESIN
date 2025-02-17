@@ -30,21 +30,7 @@
 
 	<left>
 		<VBox prefWidth="500.0" alignment="CENTER" spacing="20.0">
-			<Button fx:id="helpBtn" onAction="#showHelp"
-				styleClass="help-button"
-				style="-fx-background-radius: 50%; -fx-max-width: 40px; -fx-max-height: 40px; -fx-padding: 5px;">
-				<VBox.margin>
-					<Insets top="-50" left="20" />
-				</VBox.margin>
-				<graphic>
-					<ImageView fitHeight="30" fitWidth="30"
-						preserveRatio="true">
-						<image>
-							<Image url="@../icons/ask.png" />
-						</image>
-					</ImageView>
-				</graphic>
-			</Button>
+
 			<!-- VBox sellar carnet -->
 			<VBox prefHeight="300.0" prefWidth="500.0" spacing="20.0"
 				alignment="CENTER" styleClass="background"
@@ -132,7 +118,7 @@
 
 			<VBox prefHeight="300.0" prefWidth="500.0" spacing="20.0"
 				alignment="CENTER" styleClass="background"
-				BorderPane.alignment="CENTER" visible="${cbStay.selected}">
+				BorderPane.alignment="CENTER" visible="${cbStay.selected}" fx:id="vboxSelectedList">
 				<children>
 
 
@@ -151,29 +137,61 @@
 						</VBox.margin>
 
 					</ListView>
-					<Label text="Método de pago" styleClass="form-title">
-						<font>
-							<Font size="20.0" />
-						</font>
-					</Label>
 					<HBox alignment="CENTER" spacing="10.0">
-						<RadioButton fx:id="rbCard" text="Tarjeta">
-							<toggleGroup>
-								<ToggleGroup fx:id="payModeGroup" />
-							</toggleGroup>
-						</RadioButton>
-						<RadioButton fx:id="rbCash" text="Efectivo"
-							toggleGroup="$payModeGroup" />
-						<RadioButton fx:id="rbBizum" text="Bizum"
-							toggleGroup="$payModeGroup" />
-						<Separator orientation="VERTICAL" prefHeight="100.0" />
-						<Label text="Importe:" styleClass="form-title-price" />
-							
-				
-						<Label fx:id="totalPrice" text="0.0 €"
-                            styleClass="form-price" />
-                     
+						<Label text="Método de pago" styleClass="form-title">
+							<font>
+								<Font size="20.0" />
+							</font>
+						</Label>
+
+
 					</HBox>
+					<VBox spacing="10.0" alignment="CENTER">
+
+						<HBox alignment="CENTER" spacing="10.0">
+
+							<RadioButton fx:id="rbCard" text="Tarjeta">
+								<toggleGroup>
+									<ToggleGroup fx:id="payModeGroup" />
+								</toggleGroup>
+							</RadioButton>
+							<RadioButton fx:id="rbCash" text="Efectivo"
+								toggleGroup="$payModeGroup" />
+							<RadioButton fx:id="rbBizum" text="Bizum"
+								toggleGroup="$payModeGroup" />
+							<Separator orientation="VERTICAL" prefHeight="100.0" />
+							<Label text="Importe:" styleClass="form-title-price" />
+
+
+							<Label fx:id="totalPrice" text="0.0 €"
+								styleClass="form-price" />
+
+						</HBox>
+
+
+						<HBox alignment="CENTER" spacing="10.0">
+
+							<TextField fx:id="extraTextField" promptText="Extras" />
+							<Separator orientation="VERTICAL" prefHeight="100.0" />
+							<Button fx:id="btnSend" text="Enviar"
+								styleClass="btnLogout">
+								<font>
+									<Font size="14.0" />
+								</font>
+								<HBox.margin>
+									<Insets left="30.0" />
+								</HBox.margin>
+								<effect>
+									<DropShadow blurType="ONE_PASS_BOX"
+										color="#00000091" />
+								</effect>
+							</Button>
+
+
+
+						</HBox>
+					</VBox>
+
 				</children>
 			</VBox>
 
@@ -184,6 +202,23 @@
 		<VBox alignment="CENTER" prefHeight="571.0" prefWidth="692.0"
 			maxWidth="1100.0" BorderPane.alignment="CENTER">
 			<children>
+				<HBox alignment="CENTER_RIGHT" spacing="10.0">
+					<Button fx:id="helpBtn" onAction="#showHelp"
+						styleClass="help-button"
+						style="-fx-background-radius: 50%; -fx-max-width: 40px; -fx-max-height: 40px; -fx-padding: 5px;">
+						<HBox.margin>
+							<Insets right="20.0" />
+						</HBox.margin>
+						<graphic>
+							<ImageView fitHeight="30" fitWidth="30"
+								preserveRatio="true">
+								<image>
+									<Image url="@../icons/ask.png" />
+								</image>
+							</ImageView>
+						</graphic>
+					</Button>
+				</HBox>
 				<Label text="Peregrinos" styleClass="form-title" />
 				<TableView fx:id="pilgrimsTable" prefHeight="300.0"
 					prefWidth="679.0" maxWidth="1100.0" tableMenuButtonVisible="true">

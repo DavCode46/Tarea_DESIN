@@ -14,13 +14,18 @@ import com.davidmb.tarea3ADbase.auth.Session;
 import com.davidmb.tarea3ADbase.config.StageManager;
 import com.davidmb.tarea3ADbase.dtos.ServiceResponse;
 import com.davidmb.tarea3ADbase.dtos.StayView;
+import com.davidmb.tarea3ADbase.models.ContractedGroup;
+import com.davidmb.tarea3ADbase.models.PaymodeEnum;
 import com.davidmb.tarea3ADbase.models.Pilgrim;
 import com.davidmb.tarea3ADbase.models.Service;
+import com.davidmb.tarea3ADbase.models.Stay;
 import com.davidmb.tarea3ADbase.models.Stop;
 import com.davidmb.tarea3ADbase.models.User;
+import com.davidmb.tarea3ADbase.services.ContractedGroupService;
 import com.davidmb.tarea3ADbase.services.PilgrimService;
 import com.davidmb.tarea3ADbase.services.PilgrimStopsService;
 import com.davidmb.tarea3ADbase.services.ServicesService;
+import com.davidmb.tarea3ADbase.services.StayService;
 import com.davidmb.tarea3ADbase.services.StopService;
 import com.davidmb.tarea3ADbase.ui.ServiceCell;
 import com.davidmb.tarea3ADbase.utils.HelpUtil;
@@ -44,15 +49,22 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 @Controller
 public class StampCardController implements Initializable{
 	
+	@FXML
+	private VBox vboxSelectedList;
+	
+	@FXML
+	private TextField extraTextField;
 	
 	@FXML
 	private Button btnReturn;
@@ -143,13 +155,19 @@ public class StampCardController implements Initializable{
 	
 	@Autowired
 	private ServicesService servicesService;
+	
+	@Autowired
+    private StayService stayService;
+	
+	@Autowired
+	private ContractedGroupService contractedGroupService;
 
 	@Autowired
 	private Session session;
 
 	private User user;
 	
-	private ObservableList<Service> servicesList = FXCollections.observableArrayList();
+	ObservableList<Service> servicesList = FXCollections.observableArrayList();
 	ObservableList<Service> selectedServices = FXCollections.observableArrayList();
 
 	@FXML
@@ -172,46 +190,163 @@ public class StampCardController implements Initializable{
 	void reset(ActionEvent event) {
 		clearFields();
 	}
-
+	
 	@FXML
 	private void stampCard(ActionEvent event) {
-		if (validateData()) {
-			if (!cbStay.isSelected()) {
-				rbNo.setSelected(true);
-			}
+	    if (!validateData()) {
+	        return;
+	    }
 
-			Pilgrim pilgrim = pilgrimService.find(Long.valueOf(cbPilgrims.getValue().split(" ")[1]));
-			Stop stop = stopService.findByUserId(user.getId());
+	    if (!cbStay.isSelected()) {
+	        rbNo.setSelected(true);
+	    }
 
-			boolean existsPilgrimStop = pilgrimStopsService.existsByPilgrimAndStopAndStopDate(pilgrim, stop,
-					LocalDate.now());
-			if (!existsPilgrimStop) {
+	    Pilgrim pilgrim = pilgrimService.find(Long.valueOf(cbPilgrims.getValue().split(" ")[1]));
+	    Stop stop = stopService.findByUserId(user.getId());
 
-				ServiceResponse<Pilgrim> serviceResponse = pilgrimService.stampCard(pilgrim, stop, rbYes.isSelected(),
-						cbStay.isSelected());
-				if ((serviceResponse != null)) {
-					if (serviceResponse.isSuccess()) {
-						saveAlert(serviceResponse, pilgrim);
-					} else {
-						showServiceResponseError(serviceResponse, pilgrim);
-					}
-					clearFields();
-				} else {
-					showErrorAlert(new StringBuilder("Error al sellar el carnet del peregrino"),
-							new String("Error al sellar el Carnet"));
-				}
-				loadStayViews();
-			} else {
-				showErrorAlert(new StringBuilder("El peregrino ya ha sellado su carnet en esta parada"),
-						new String("Error al sellar el Carnet"));
-			}
-		}
+	    if (pilgrimHasAlreadyStamped(pilgrim, stop)) {
+	        showErrorAlert(new StringBuilder("El peregrino ya ha sellado su carnet en esta parada"),
+	                new String("Error al sellar el Carnet"));
+	        return;
+	    }
+
+	    ServiceResponse<Pilgrim> serviceResponse = pilgrimService.stampCard(pilgrim, stop, rbYes.isSelected(), cbStay.isSelected());
+	    
+	    if (vboxSelectedList.isVisible() && !validateContractedGroupData()) {
+	        return;
+	    }
+
+	    if (vboxSelectedList.isVisible()) {
+	        createAndSaveContractedGroup(pilgrim, stop);
+	    }
+
+	    handleServiceResponse(serviceResponse, pilgrim);
+	    loadStayViews();
 	}
+
+	private boolean pilgrimHasAlreadyStamped(Pilgrim pilgrim, Stop stop) {
+	    return pilgrimStopsService.existsByPilgrimAndStopAndStopDate(pilgrim, stop, LocalDate.now());
+	}
+
+	private void createAndSaveContractedGroup(Pilgrim pilgrim, Stop stop) {
+	    Stay stay = stayService.findByPilgrimIdAndStopIdAndDate(pilgrim.getId(), stop.getId(), LocalDate.now());
+	    if (stay == null) {
+	        return;
+	    }
+
+	    ContractedGroup contractedGroup = new ContractedGroup();
+	    contractedGroup.setId(contractedGroupService.getNextId());
+	    contractedGroup.setServiceIds(getSelectedServices());
+	    contractedGroup.setStayId(stay.getId());
+	    contractedGroup.setTotalPrice(Double.parseDouble(totalPrice.getText().replace(" €", "")));
+	    contractedGroup.setPayMode(getSelectedPayMode());
+	    contractedGroup.setExtra(extraTextField.getText());
+
+	    if (contractedGroupService.save(contractedGroup)) {
+	        showContractedGroupAlert(contractedGroup);
+	    } else {
+	        showErrorAlert(new StringBuilder("Error al registrar el contrato de grupo"),
+	                new String("Error al registrar el contrato de grupo"));
+	    }
+	}
+
+	private char getSelectedPayMode() {
+	    if (rbCard.isSelected()) {
+	        return PaymodeEnum.TARJETA.getPayMode();
+	    } else if (rbCash.isSelected()) {
+	        return PaymodeEnum.EFECTIVO.getPayMode();
+	    }
+	    return PaymodeEnum.BIZUM.getPayMode();    
+	}
+
+	private void handleServiceResponse(ServiceResponse<Pilgrim> serviceResponse, Pilgrim pilgrim) {
+	    if (serviceResponse == null) {
+	        showErrorAlert(new StringBuilder("Error al sellar el carnet del peregrino"),
+	                new String("Error al sellar el Carnet"));
+	        return;
+	    }
+
+	    if (serviceResponse.isSuccess()) {
+	        saveAlert(serviceResponse, pilgrim);
+	    } else {
+	        showServiceResponseError(serviceResponse, pilgrim);
+	    }
+	    clearFields();
+	}
+
+
+//	@FXML
+//	private void stampCard(ActionEvent event) {
+//		ContractedGroup contractedGroup = null;
+//		if (validateData()) {
+//			if (!cbStay.isSelected()) {
+//				rbNo.setSelected(true);
+//			}
+//
+//			Pilgrim pilgrim = pilgrimService.find(Long.valueOf(cbPilgrims.getValue().split(" ")[1]));
+//			Stop stop = stopService.findByUserId(user.getId());
+//
+//			boolean existsPilgrimStop = pilgrimStopsService.existsByPilgrimAndStopAndStopDate(pilgrim, stop,
+//					LocalDate.now());
+//			if (!existsPilgrimStop) {
+//
+//				ServiceResponse<Pilgrim> serviceResponse = pilgrimService.stampCard(pilgrim, stop, rbYes.isSelected(),
+//						cbStay.isSelected());
+//				
+//				if(vboxSelectedList.isVisible()) {
+//					if (!validateContractedGroupData()) {
+//						return;
+//					}
+//					Stay stay = stayService.findByPilgrimIdAndStopIdAndDate(pilgrim.getId(), stop.getId(), LocalDate.now());
+//					if(stay != null) {
+//						contractedGroup = new ContractedGroup();
+//						contractedGroup.setId(contractedGroupService.getNextId());
+//						contractedGroup.setServiceIds(getSelectedServices());
+//						contractedGroup.setStayId(stay.getId());
+//						contractedGroup.setTotalPrice(Double.parseDouble(totalPrice.getText().replace(" €", "")));
+//						if (rbCard.isSelected()) {	
+//							contractedGroup.setPayMode(PaymodeEnum.TARJETA.getPayMode());
+//						} else if (rbCash.isSelected()) {
+//							contractedGroup.setPayMode(PaymodeEnum.EFECTIVO.getPayMode());
+//						} else if (rbBizum.isSelected()) {
+//							contractedGroup.setPayMode(PaymodeEnum.BIZUM.getPayMode());
+//						}
+//						contractedGroup.setExtra(extraTextField.getText());
+//						if(contractedGroupService.save(contractedGroup)) {
+//							showContractedGroupAlert(contractedGroup);
+//						} else {
+//							showErrorAlert(new StringBuilder("Error al registrar el contrato de grupo"),
+//									new String("Error al registrar el contrato de grupo"));
+//						}
+//					}
+//					
+//				}
+//				if ((serviceResponse != null)) {
+//					if (serviceResponse.isSuccess()) {
+//						saveAlert(serviceResponse, pilgrim);
+//					} else {
+//						showServiceResponseError(serviceResponse, pilgrim);
+//					}
+//					clearFields();
+//				} else {
+//					showErrorAlert(new StringBuilder("Error al sellar el carnet del peregrino"),
+//							new String("Error al sellar el Carnet"));
+//				}
+//				loadStayViews();
+//			} else {
+//				showErrorAlert(new StringBuilder("El peregrino ya ha sellado su carnet en esta parada"),
+//						new String("Error al sellar el Carnet"));
+//			}
+//		}
+//	}
 
 	private void clearFields() {
 		stopId.setText(null);
+		cbStay.setSelected(false);
+		rbYes.setSelected(false);
+		rbNo.setSelected(false);
 		cbPilgrims.getSelectionModel().clearSelection();
-		selectedServicesList.getItems().clear();
+		servicesTable.getSelectionModel().clearSelection();
 	}
 
 	private void saveAlert(ServiceResponse<Pilgrim> serviceResponse, Pilgrim pilgrim) {
@@ -226,6 +361,21 @@ public class StampCardController implements Initializable{
 		alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
 
 		alert.showAndWait();
+	}
+	
+	private void showContractedGroupAlert(ContractedGroup c) {
+		Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Contrato de grupo");
+        alert.setHeaderText("Contrato de grupo");
+        alert.setContentText("El contrato de grupo ha sido registrado correctamente. \n"
+                + "ID: " + c.getId() + "\n"
+                + "Precio total: " + c.getTotalPrice() + " €\n"
+                + "Modo de pago: " + c.getPayMode() + "\n"
+                + "Observaciones: " + c.getExtra());
+        // Cambiar el ícono de la ventana
+        Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+        alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
+        alert.showAndWait();
 	}
 
 	private void showServiceResponseError(ServiceResponse<Pilgrim> serviceResponse, Pilgrim pilgrim) {
@@ -262,6 +412,29 @@ public class StampCardController implements Initializable{
 
 		if (message.length() > 0) {
 			showErrorAlert(message, "Error al sellar el carnet del peregrino");
+		} else {
+			ret = true;
+		}
+		return ret;
+	}
+	
+	private boolean validateContractedGroupData() {
+		boolean ret = false;
+		StringBuilder message = new StringBuilder();
+
+		// Validar servicios
+		if (selectedServices.isEmpty()) {
+			message.append("Debes seleccionar al menos un servicio.\n");
+		}
+		if (!rbCard.isSelected() && !rbCash.isSelected() && !rbBizum.isSelected()) {
+			message.append("Debes seleccionar un modo de pago.\n");
+		}
+		if (extraTextField.getText().length() > 50) {
+			message.append("El campo observaciones no puede superar los 50 caracteres.\n");
+		}
+
+		if (message.length() > 0) {
+			showErrorAlert(message, "Error al registrar el contrato de grupo");
 		} else {
 			ret = true;
 		}

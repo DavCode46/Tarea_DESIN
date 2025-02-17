@@ -1,5 +1,6 @@
 package com.davidmb.tarea3ADbase.services;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,10 @@ public class StayService {
 	public Stay find(Long id) {
 		return stayRepository.findById(id).get();
 	}
+	
+	public Stay findByPilgrimIdAndStopIdAndDate(Long pilgrimId, Long stopId, LocalDate date) {
+        return stayRepository.findByPilgrim_IdAndStop_IdAndDate(pilgrimId, stopId, date);
+    }
 
 	public List<Stay> findAllByPilgrimId(Long id) {
 		return stayRepository.findAllByPilgrim_Id(id);
