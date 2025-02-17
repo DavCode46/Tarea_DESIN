@@ -28,6 +28,10 @@ public class ServicesService {
 		return servicesRepository.findAll();
 	}
 	
+	public Service findById(Long id) {
+		return servicesRepository.findById(id);
+	}
+	
 	public boolean findByName(String name) {
 		return servicesRepository.findByName(name);
 	}

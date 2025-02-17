@@ -63,6 +63,9 @@ public class StampCardController implements Initializable{
 
 	@FXML
 	private Label stopId;
+	
+	@FXML
+	private Label totalPrice;
 
 	@FXML
 	private CheckBox cbStay;
@@ -72,6 +75,15 @@ public class StampCardController implements Initializable{
 
 	@FXML
 	private RadioButton rbNo;
+	
+	@FXML
+	private RadioButton rbCard;
+	
+	@FXML
+	private RadioButton rbCash;
+	
+	@FXML
+	private RadioButton rbBizum;
 
 	@FXML
 	private ComboBox<String> cbPilgrims;
@@ -368,14 +380,17 @@ public class StampCardController implements Initializable{
 	}
 	
 	private List<Long> getSelectedServices() {
+		double total = 0;
 		selectedServices = servicesTable.getSelectionModel().getSelectedItems();
 		List<Long> services = new ArrayList<>();
 		for (Service service : selectedServices) {
 			if (!services.contains(service.getId())) {
 				services.add(service.getId());
+				total += service.getPrice();
 			}
 		}
 		selectedServicesList.setItems(selectedServices);
+		totalPrice.setText(total + " €");
 		return services;
 	}
 

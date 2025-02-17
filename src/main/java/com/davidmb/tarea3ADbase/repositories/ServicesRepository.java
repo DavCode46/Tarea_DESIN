@@ -72,6 +72,21 @@ public class ServicesRepository {
 		}
 	}
 	
+	public Service findById(Long id) {
+		ObjectContainer db = DB4oConnection.getInstance().getDb();
+		Service service = null;
+		try {
+			Query query = db.query();
+			query.constrain(Service.class);
+			query.descend("id").constrain(id);
+			List<Service> result = query.execute();		
+			service = result.get(0);
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		return service;
+	}
+	
 	public Long getMaxId() {
 		ObjectContainer db = DB4oConnection.getInstance().getDb();
 		
