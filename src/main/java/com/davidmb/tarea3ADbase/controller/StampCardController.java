@@ -219,6 +219,7 @@ public class StampCardController implements Initializable {
 				return;
 			}
 		}
+		// Sellar carnet
 		ServiceResponse<Pilgrim> serviceResponse = pilgrimService.stampCard(pilgrim, stop, rbYes.isSelected(),
 				cbStay.isSelected());
 
