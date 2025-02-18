@@ -58,24 +58,23 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 @Controller
-public class StampCardController implements Initializable{
-	
+public class StampCardController implements Initializable {
+
 	@FXML
 	private VBox vboxSelectedList;
-	
+
 	@FXML
 	private TextField extraTextField;
-	
+
 	@FXML
 	private Button btnReturn;
-	
+
 	@FXML
 	private Button helpBtn;
-	
 
 	@FXML
 	private Label stopId;
-	
+
 	@FXML
 	private Label totalPrice;
 
@@ -87,13 +86,13 @@ public class StampCardController implements Initializable{
 
 	@FXML
 	private RadioButton rbNo;
-	
+
 	@FXML
 	private RadioButton rbCard;
-	
+
 	@FXML
 	private RadioButton rbCash;
-	
+
 	@FXML
 	private RadioButton rbBizum;
 
@@ -114,7 +113,7 @@ public class StampCardController implements Initializable{
 
 	@FXML
 	private TableColumn<StayView, String> colPilgrimNationality;
-	
+
 	@FXML
 	private TableColumn<StayView, String> colStopDate;
 
@@ -123,7 +122,7 @@ public class StampCardController implements Initializable{
 
 	@FXML
 	private TableColumn<StayView, Boolean> colVip;
-	
+
 	@FXML
 	private TableView<Service> servicesTable;
 
@@ -135,10 +134,9 @@ public class StampCardController implements Initializable{
 
 	@FXML
 	private TableColumn<Service, String> colServicePrice;
-	
+
 	@FXML
 	private ListView<Service> selectedServicesList;
-
 
 	@Lazy
 	@Autowired
@@ -152,13 +150,13 @@ public class StampCardController implements Initializable{
 
 	@Autowired
 	private PilgrimStopsService pilgrimStopsService;
-	
+
 	@Autowired
 	private ServicesService servicesService;
-	
+
 	@Autowired
-    private StayService stayService;
-	
+	private StayService stayService;
+
 	@Autowired
 	private ContractedGroupService contractedGroupService;
 
@@ -166,7 +164,7 @@ public class StampCardController implements Initializable{
 	private Session session;
 
 	private User user;
-	
+
 	ObservableList<Service> servicesList = FXCollections.observableArrayList();
 	ObservableList<Service> selectedServices = FXCollections.observableArrayList();
 
@@ -174,171 +172,110 @@ public class StampCardController implements Initializable{
 	private void exit(ActionEvent event) {
 		Platform.exit();
 	}
-	
+
 	@FXML
 	private void showHelp() {
 		HelpUtil.showHelp();
 	}
-	
+
 	@FXML
 	public void onReturn() {
 		stageManager.switchScene(FxmlView.STOP);
 	}
 
-
 	@FXML
 	void reset(ActionEvent event) {
 		clearFields();
 	}
-	
+
 	@FXML
 	private void stampCard(ActionEvent event) {
-	    if (!validateData()) {
-	        return;
-	    }
+		if (!validateData()) {
+			return;
+		}
 
-	    if (!cbStay.isSelected()) {
-	        rbNo.setSelected(true);
-	    }
+		if (!cbStay.isSelected()) {
+			rbNo.setSelected(true);
+		}
 
-	    Pilgrim pilgrim = pilgrimService.find(Long.valueOf(cbPilgrims.getValue().split(" ")[1]));
-	    Stop stop = stopService.findByUserId(user.getId());
+		Pilgrim pilgrim = pilgrimService.find(Long.valueOf(cbPilgrims.getValue().split(" ")[1]));
+		Stop stop = stopService.findByUserId(user.getId());
 
-	    if (pilgrimHasAlreadyStamped(pilgrim, stop)) {
-	        showErrorAlert(new StringBuilder("El peregrino ya ha sellado su carnet en esta parada"),
-	                new String("Error al sellar el Carnet"));
-	        return;
-	    }
+		if (pilgrimHasAlreadyStamped(pilgrim, stop)) {
+			showErrorAlert(new StringBuilder("El peregrino ya ha sellado su carnet en esta parada"),
+					new String("Error al sellar el Carnet"));
+			return;
+		}
 
-	    ServiceResponse<Pilgrim> serviceResponse = pilgrimService.stampCard(pilgrim, stop, rbYes.isSelected(), cbStay.isSelected());
-	    
-	    if (vboxSelectedList.isVisible() && !validateContractedGroupData()) {
-	        return;
-	    }
+		if (!getSelectedServices().isEmpty() && vboxSelectedList.isVisible()) {
+			if (validateContractedGroupData()) {
+				ServiceResponse<Pilgrim> serviceResponse = pilgrimService.stampCard(pilgrim, stop, rbYes.isSelected(),
+						cbStay.isSelected());
+				createAndSaveContractedGroup(pilgrim, stop);
+				handleServiceResponse(serviceResponse, pilgrim);
+				loadStayViews();
+				return;
+			} else {
+				return;
+			}
+		}
+		ServiceResponse<Pilgrim> serviceResponse = pilgrimService.stampCard(pilgrim, stop, rbYes.isSelected(),
+				cbStay.isSelected());
 
-	    if (vboxSelectedList.isVisible()) {
-	        createAndSaveContractedGroup(pilgrim, stop);
-	    }
-
-	    handleServiceResponse(serviceResponse, pilgrim);
-	    loadStayViews();
+		handleServiceResponse(serviceResponse, pilgrim);
+		loadStayViews();
 	}
 
 	private boolean pilgrimHasAlreadyStamped(Pilgrim pilgrim, Stop stop) {
-	    return pilgrimStopsService.existsByPilgrimAndStopAndStopDate(pilgrim, stop, LocalDate.now());
+		return pilgrimStopsService.existsByPilgrimAndStopAndStopDate(pilgrim, stop, LocalDate.now());
 	}
 
 	private void createAndSaveContractedGroup(Pilgrim pilgrim, Stop stop) {
-	    Stay stay = stayService.findByPilgrimIdAndStopIdAndDate(pilgrim.getId(), stop.getId(), LocalDate.now());
-	    if (stay == null) {
-	        return;
-	    }
 
-	    ContractedGroup contractedGroup = new ContractedGroup();
-	    contractedGroup.setId(contractedGroupService.getNextId());
-	    contractedGroup.setServiceIds(getSelectedServices());
-	    contractedGroup.setStayId(stay.getId());
-	    contractedGroup.setTotalPrice(Double.parseDouble(totalPrice.getText().replace(" €", "")));
-	    contractedGroup.setPayMode(getSelectedPayMode());
-	    contractedGroup.setExtra(extraTextField.getText());
+		Stay stay = stayService.findByPilgrimIdAndStopIdAndDate(pilgrim.getId(), stop.getId(), LocalDate.now());
+		if (stay == null) {
+			return;
+		}
 
-	    if (contractedGroupService.save(contractedGroup)) {
-	        showContractedGroupAlert(contractedGroup);
-	    } else {
-	        showErrorAlert(new StringBuilder("Error al registrar el contrato de grupo"),
-	                new String("Error al registrar el contrato de grupo"));
-	    }
+		ContractedGroup contractedGroup = new ContractedGroup();
+		contractedGroup.setId(contractedGroupService.getNextId());
+		contractedGroup.setServiceIds(getSelectedServices());
+		contractedGroup.setStayId(stay.getId());
+		contractedGroup.setTotalPrice(Double.parseDouble(totalPrice.getText().replace(" €", "")));
+		contractedGroup.setPayMode(getSelectedPayMode());
+		contractedGroup.setExtra(extraTextField.getText());
+
+		if (contractedGroupService.save(contractedGroup)) {
+			showContractedGroupAlert(contractedGroup);
+		} else {
+			showErrorAlert(new StringBuilder("Error al registrar el contrato de grupo"),
+					new String("Error al registrar el contrato de grupo"));
+		}
 	}
 
 	private char getSelectedPayMode() {
-	    if (rbCard.isSelected()) {
-	        return PaymodeEnum.TARJETA.getPayMode();
-	    } else if (rbCash.isSelected()) {
-	        return PaymodeEnum.EFECTIVO.getPayMode();
-	    }
-	    return PaymodeEnum.BIZUM.getPayMode();    
+		if (rbCard.isSelected()) {
+			return PaymodeEnum.TARJETA.getPayMode();
+		} else if (rbCash.isSelected()) {
+			return PaymodeEnum.EFECTIVO.getPayMode();
+		}
+		return PaymodeEnum.BIZUM.getPayMode();
 	}
 
 	private void handleServiceResponse(ServiceResponse<Pilgrim> serviceResponse, Pilgrim pilgrim) {
-	    if (serviceResponse == null) {
-	        showErrorAlert(new StringBuilder("Error al sellar el carnet del peregrino"),
-	                new String("Error al sellar el Carnet"));
-	        return;
-	    }
+		if (serviceResponse == null) {
+			showErrorAlert(new StringBuilder("Error al sellar el carnet del peregrino"),
+					new String("Error al sellar el Carnet"));
+			return;
+		}
 
-	    if (serviceResponse.isSuccess()) {
-	        saveAlert(serviceResponse, pilgrim);
-	    } else {
-	        showServiceResponseError(serviceResponse, pilgrim);
-	    }
-	    clearFields();
+		if (serviceResponse.isSuccess()) {
+			saveAlert(serviceResponse, pilgrim);
+		} else {
+			showServiceResponseError(serviceResponse, pilgrim);
+		}
+		clearFields();
 	}
-
-
-//	@FXML
-//	private void stampCard(ActionEvent event) {
-//		ContractedGroup contractedGroup = null;
-//		if (validateData()) {
-//			if (!cbStay.isSelected()) {
-//				rbNo.setSelected(true);
-//			}
-//
-//			Pilgrim pilgrim = pilgrimService.find(Long.valueOf(cbPilgrims.getValue().split(" ")[1]));
-//			Stop stop = stopService.findByUserId(user.getId());
-//
-//			boolean existsPilgrimStop = pilgrimStopsService.existsByPilgrimAndStopAndStopDate(pilgrim, stop,
-//					LocalDate.now());
-//			if (!existsPilgrimStop) {
-//
-//				ServiceResponse<Pilgrim> serviceResponse = pilgrimService.stampCard(pilgrim, stop, rbYes.isSelected(),
-//						cbStay.isSelected());
-//				
-//				if(vboxSelectedList.isVisible()) {
-//					if (!validateContractedGroupData()) {
-//						return;
-//					}
-//					Stay stay = stayService.findByPilgrimIdAndStopIdAndDate(pilgrim.getId(), stop.getId(), LocalDate.now());
-//					if(stay != null) {
-//						contractedGroup = new ContractedGroup();
-//						contractedGroup.setId(contractedGroupService.getNextId());
-//						contractedGroup.setServiceIds(getSelectedServices());
-//						contractedGroup.setStayId(stay.getId());
-//						contractedGroup.setTotalPrice(Double.parseDouble(totalPrice.getText().replace(" €", "")));
-//						if (rbCard.isSelected()) {	
-//							contractedGroup.setPayMode(PaymodeEnum.TARJETA.getPayMode());
-//						} else if (rbCash.isSelected()) {
-//							contractedGroup.setPayMode(PaymodeEnum.EFECTIVO.getPayMode());
-//						} else if (rbBizum.isSelected()) {
-//							contractedGroup.setPayMode(PaymodeEnum.BIZUM.getPayMode());
-//						}
-//						contractedGroup.setExtra(extraTextField.getText());
-//						if(contractedGroupService.save(contractedGroup)) {
-//							showContractedGroupAlert(contractedGroup);
-//						} else {
-//							showErrorAlert(new StringBuilder("Error al registrar el contrato de grupo"),
-//									new String("Error al registrar el contrato de grupo"));
-//						}
-//					}
-//					
-//				}
-//				if ((serviceResponse != null)) {
-//					if (serviceResponse.isSuccess()) {
-//						saveAlert(serviceResponse, pilgrim);
-//					} else {
-//						showServiceResponseError(serviceResponse, pilgrim);
-//					}
-//					clearFields();
-//				} else {
-//					showErrorAlert(new StringBuilder("Error al sellar el carnet del peregrino"),
-//							new String("Error al sellar el Carnet"));
-//				}
-//				loadStayViews();
-//			} else {
-//				showErrorAlert(new StringBuilder("El peregrino ya ha sellado su carnet en esta parada"),
-//						new String("Error al sellar el Carnet"));
-//			}
-//		}
-//	}
 
 	private void clearFields() {
 		stopId.setText(null);
@@ -362,20 +299,19 @@ public class StampCardController implements Initializable{
 
 		alert.showAndWait();
 	}
-	
+
 	private void showContractedGroupAlert(ContractedGroup c) {
+
 		Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("Contrato de grupo");
-        alert.setHeaderText("Contrato de grupo");
-        alert.setContentText("El contrato de grupo ha sido registrado correctamente. \n"
-                + "ID: " + c.getId() + "\n"
-                + "Precio total: " + c.getTotalPrice() + " €\n"
-                + "Modo de pago: " + c.getPayMode() + "\n"
-                + "Observaciones: " + c.getExtra());
-        // Cambiar el ícono de la ventana
-        Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-        alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
-        alert.showAndWait();
+		alert.setTitle("Contrato de grupo");
+		alert.setHeaderText("Contrato de grupo");
+		alert.setContentText("El contrato de grupo ha sido registrado correctamente. \n" + "ID: " + c.getId() + "\n"
+				+ "Precio total: " + c.getTotalPrice() + " €\n" + "Modo de pago: " + c.getPayMode() + "\n"
+				+ "Observaciones: " + c.getExtra());
+		// Cambiar el ícono de la ventana
+		Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+		alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
+		alert.showAndWait();
 	}
 
 	private void showServiceResponseError(ServiceResponse<Pilgrim> serviceResponse, Pilgrim pilgrim) {
@@ -417,7 +353,7 @@ public class StampCardController implements Initializable{
 		}
 		return ret;
 	}
-	
+
 	private boolean validateContractedGroupData() {
 		boolean ret = false;
 		StringBuilder message = new StringBuilder();
@@ -443,7 +379,7 @@ public class StampCardController implements Initializable{
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
+
 		helpBtn.setTooltip(new Tooltip("Pulsa F1 para mostrar el menú de ayuda"));
 		pilgrimsTable.setTooltip(new Tooltip("Tabla de peregrinos"));
 		cbStay.setTooltip(new Tooltip("Alojarse"));
@@ -451,7 +387,6 @@ public class StampCardController implements Initializable{
 		rbNo.setTooltip(new Tooltip("Estancia no VIP"));
 		reset.setTooltip(new Tooltip("Limpiar formulario"));
 		stampCard.setTooltip(new Tooltip("Sellar carnet"));
-		
 
 		user = session.getLoggedInUser();
 
@@ -477,11 +412,10 @@ public class StampCardController implements Initializable{
 	 * Set All userTable column properties
 	 */
 	private void setColumnProperties() {
-		
+
 		colServiceId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		colServiceName.setCellValueFactory(new PropertyValueFactory<>("serviceName"));
 		colServicePrice.setCellValueFactory(new PropertyValueFactory<>("price"));
-		
 
 		colPilgrimName.setCellValueFactory(new PropertyValueFactory<>("pilgrimName"));
 		colPilgrimNationality.setCellValueFactory(new PropertyValueFactory<>("pilgrimNationality"));
@@ -536,10 +470,10 @@ public class StampCardController implements Initializable{
 
 		List<StayView> stayViewList = pilgrimService
 				.findAllStayViewsByStop(stopService.findByUserId(user.getId()).getId());
-		stayViews.addAll(stayViewList);	
+		stayViews.addAll(stayViewList);
 		pilgrimsTable.setItems(stayViews);
 	}
-	
+
 	private void loadServicesDetail() {
 		servicesList.clear();
 		servicesList.addAll(servicesService.findAll());
@@ -551,7 +485,7 @@ public class StampCardController implements Initializable{
 		pilgrimService.findAll()
 				.forEach(pilgrim -> cbPilgrims.getItems().addAll("ID: " + pilgrim.getId() + " - " + pilgrim.getName()));
 	}
-	
+
 	private List<Long> getSelectedServices() {
 		double total = 0;
 		selectedServices = servicesTable.getSelectionModel().getSelectedItems();

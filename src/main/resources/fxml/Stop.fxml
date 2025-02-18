@@ -29,12 +29,11 @@
 	<top>
 		<HBox prefWidth="500.0" alignment="CENTER" spacing="20.0">
 
-			<!-- VBox sellar carnet -->
 			<VBox prefHeight="300.0" prefWidth="500.0" spacing="20.0"
 				alignment="CENTER" styleClass="background"
 				BorderPane.alignment="CENTER">
 				<children>
-					<HBox>
+				<HBox>
 						<Button fx:id="helpBtn" onAction="#showHelp"
 							styleClass="help-button"
 							style="-fx-background-radius: 50%; -fx-max-width: 40px; -fx-max-height: 40px; -fx-padding: 5px;">
@@ -60,65 +59,6 @@
 							</HBox.margin>
 						</Label>
 					</HBox>
-
-					<Label text="Sellar Carnet" styleClass="form-title">
-						<font>
-							<Font size="20.0" />
-						</font>
-					</Label>
-					<ComboBox fx:id="cbPilgrims"
-						promptText="Selecciona el peregrino" styleClass="combo-box" />
-					<HBox spacing="20.0" alignment="CENTER" prefHeight="30.0"
-						prefWidth="265.0">
-						<children>
-							<!-- Subcontenedor para "Alojarse" -->
-							<HBox spacing="10.0" alignment="CENTER_LEFT">
-								<Label text="Alojarse" styleClass="form-title-small" />
-								<CheckBox fx:id="cbStay" />
-								<HBox.margin>
-									<Insets right="100.0" />
-								</HBox.margin>
-							</HBox>
-							<!-- Subcontenedor para "VIP" -->
-							<HBox spacing="10.0" alignment="CENTER">
-								<Label text="VIP:" styleClass="form-title-small" />
-								<RadioButton fx:id="rbYes" text="Sí"
-									disable="${!cbStay.selected}">
-									<toggleGroup>
-										<ToggleGroup fx:id="vipGroup" />
-									</toggleGroup>
-								</RadioButton>
-								<RadioButton fx:id="rbNo" text="No"
-									disable="${!cbStay.selected}" toggleGroup="$vipGroup" />
-							</HBox>
-						</children>
-					</HBox>
-					<HBox spacing="10.0" alignment="CENTER">
-						<children>
-							<Button fx:id="reset" text="_Cancelar"
-								styleClass="white-button" onAction="#reset">
-								<HBox.margin>
-									<Insets top="10.0" bottom="20.0" />
-								</HBox.margin>
-							</Button>
-							<Button fx:id="stampCard" text="_Sellar Carnet"
-								styleClass="primary-button" onAction="#stampCard">
-								<HBox.margin>
-									<Insets top="10.0" bottom="20.0" />
-								</HBox.margin>
-							</Button>
-						</children>
-					</HBox>
-				</children>
-			</VBox>
-
-			<!-- Separador -->
-			<Separator orientation="VERTICAL" prefHeight="100.0" />
-
-			<VBox prefHeight="300.0" prefWidth="500.0" spacing="20.0"
-				alignment="CENTER" styleClass="background"
-				BorderPane.alignment="CENTER">
-				<children>
 					<HBox alignment="CENTER">
 						<Button fx:id="btnLogout" text="Sellar Carnet"
 							styleClass="btnLogout" onAction="#onStampCard">
@@ -177,7 +117,6 @@
 
 		</HBox>
 	</top>
-
 
 	<center>
 		<VBox alignment="CENTER_RIGHT" prefHeight="571.0"
