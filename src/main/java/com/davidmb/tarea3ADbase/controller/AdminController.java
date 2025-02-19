@@ -30,6 +30,7 @@ import com.davidmb.tarea3ADbase.services.StopService;
 import com.davidmb.tarea3ADbase.services.UserService;
 import com.davidmb.tarea3ADbase.utils.HelpUtil;
 import com.davidmb.tarea3ADbase.utils.ManagePassword;
+import com.davidmb.tarea3ADbase.utils.ShowPDFInModal;
 import com.davidmb.tarea3ADbase.view.FxmlView;
 
 import javafx.application.Platform;
@@ -38,7 +39,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -48,7 +48,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -56,10 +55,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
-import javafx.scene.layout.VBox;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -78,13 +73,13 @@ public class AdminController implements Initializable {
 
 	@FXML
 	private Button btnLogout;
-	
+
 	@FXML
 	private Button btnHelp;
-	
+
 	@FXML
 	private Button btnAddServices;
-	
+
 	@FXML
 	private Button exportStopsBtn;
 
@@ -166,7 +161,7 @@ public class AdminController implements Initializable {
 	private void exit(ActionEvent event) {
 		Platform.exit();
 	}
-	
+
 	@FXML
 	private void showHelp() {
 		HelpUtil.showHelp();
@@ -193,11 +188,11 @@ public class AdminController implements Initializable {
 	void reset(ActionEvent event) {
 		clearFields();
 	}
-	
+
 	@FXML
 	public void addService(ActionEvent event) {
-        stageManager.switchScene(FxmlView.SERVICES);
-    }
+		stageManager.switchScene(FxmlView.SERVICES);
+	}
 
 	@FXML
 	private void saveStop(ActionEvent event) {
@@ -237,96 +232,57 @@ public class AdminController implements Initializable {
 			}
 		}
 	}
+
 	@FXML
 	private void exportStopDataReport() throws JRException {
-	    String outputPath = "src/main/resources/reports/paradas/paradasVisitadas.pdf";
+		String outputPath = "src/main/resources/reports/paradas/paradasVisitadas.pdf";
 
-	    // Generar el informe (tu código actual)
-	    InputStream reportStream = getClass().getResourceAsStream("/templates/report/Report.jasper");
-	    if (reportStream == null) {
-	        throw new JRException("No se pudo encontrar el archivo Report.jasper en resources/templates/report.");
-	    }
+		// Generar el informe (tu código actual)
+		InputStream reportStream = getClass().getResourceAsStream("/templates/report/Report.jasper");
+		if (reportStream == null) {
+			throw new JRException("No se pudo encontrar el archivo Report.jasper en resources/templates/report.");
+		}
 
-	    JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportStream);
+		JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportStream);
 
-	    Map<String, Object> params = new HashMap<>();
-	    params.put("titulo", "Reporte de Paradas Visitadas");
+		Map<String, Object> params = new HashMap<>();
+		params.put("titulo", "Reporte de Paradas Visitadas");
 
-	    URL imageUrl = getClass().getResource("/images/logo.png");
-	    if (imageUrl == null) {
-	        throw new JRException("No se pudo encontrar la imagen logo.png en resources/images.");
-	    }
+		URL imageUrl = getClass().getResource("/images/logo.png");
+		if (imageUrl == null) {
+			throw new JRException("No se pudo encontrar la imagen logo.png en resources/images.");
+		}
 
-	    params.put("imagen", imageUrl.toExternalForm());
+		params.put("imagen", imageUrl.toExternalForm());
 
-	    List<Map<String, Object>> dataList = new ArrayList<>();
-	    List<Stop> stops = stopService.findAll();
+		List<Map<String, Object>> dataList = new ArrayList<>();
+		List<Stop> stops = stopService.findAll();
 
-	    for (Stop stop : stops) {
-	        List<StayView> stopStayViews = pilgrimService.findAllStayViewsByStop(stop.getId());
+		for (Stop stop : stops) {
+			List<StayView> stopStayViews = pilgrimService.findAllStayViewsByStop(stop.getId());
 
-	        for (StayView stayView : stopStayViews) {
-	            Map<String, Object> row = new HashMap<>();
-	            row.put("nombre_parada", stop.getName());
-	            row.put("region", stop.getRegion());
-	            row.put("responsable", stop.getManager());
-	            row.put("nombre", stayView.getPilgrimName());
-	            row.put("nacionalidad", stayView.getPilgrimNationality());
-	            row.put("fecha_parada", java.sql.Date.valueOf(stayView.getStopDate()));
-	            dataList.add(row);
-	        }
-	    }
+			for (StayView stayView : stopStayViews) {
+				Map<String, Object> row = new HashMap<>();
+				row.put("nombre_parada", stop.getName());
+				row.put("region", stop.getRegion());
+				row.put("responsable", stop.getManager());
+				row.put("nombre", stayView.getPilgrimName());
+				row.put("nacionalidad", stayView.getPilgrimNationality());
+				row.put("fecha_parada", java.sql.Date.valueOf(stayView.getStopDate()));
+				dataList.add(row);
+			}
+		}
 
-	    JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(dataList);
+		JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(dataList);
 
-	    JasperPrint print = JasperFillManager.fillReport(jasperReport, params, dataSource);
+		JasperPrint print = JasperFillManager.fillReport(jasperReport, params, dataSource);
 
-	    JasperExportManager.exportReportToPdfFile(print, outputPath);
+		JasperExportManager.exportReportToPdfFile(print, outputPath);
 
-	    // Mostrar el PDF en una ventana modal
-	    showPdfInModal(outputPath);
+		// Mostrar el PDF en una ventana modal usando Apache PDFBox
+		ShowPDFInModal showPDFInModal = new ShowPDFInModal();
+		showPDFInModal.showPdfInModal(outputPath);
 	}
-
-	private void showPdfInModal(String pdfPath) {
-	    // Crear una nueva ventana modal
-	    Stage modalStage = new Stage();
-	    modalStage.initModality(Modality.APPLICATION_MODAL);
-	    modalStage.setTitle("Reporte de Paradas Visitadas");
-	    modalStage.setWidth(800); // Ancho de la ventana
-	    modalStage.setHeight(600); // Alto de la ventana
-
-	    // Crear un WebView para mostrar el PDF
-	    WebView browser = new WebView();
-	    WebEngine webEngine = browser.getEngine();
-
-	    // Crear un ScrollPane para envolver el WebView
-	    ScrollPane scrollPane = new ScrollPane();
-	    scrollPane.setContent(browser); // Añadir el WebView al ScrollPane
-
-	    // Convertir la ruta del archivo a una URL de archivo local
-	    File pdfFile = new File(pdfPath);
-	    if (!pdfFile.exists()) {
-	        System.out.println("El archivo PDF no existe: " + pdfPath);
-	        return;
-	    }
-
-	    String fileUrl = pdfFile.toURI().toString();
-	    System.out.println("Cargando PDF desde: " + fileUrl);
-
-	    // Cargar el PDF en el WebView usando la URL del archivo local
-	    webEngine.load(fileUrl);
-
-	    // Crear un contenedor VBox para el ScrollPane
-	    VBox root = new VBox(scrollPane);
-
-	    // Crear la escena y configurar la ventana modal
-	    Scene scene = new Scene(root);
-	    modalStage.setScene(scene);
-	    modalStage.showAndWait();
-	}
-
-
-
 
 	@FXML
 	private void togglePasswordVisibility() {
@@ -502,7 +458,7 @@ public class AdminController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
+
 		btnLogout.setTooltip(new Tooltip("Cerrar sesión"));
 		btnHelp.setTooltip(new Tooltip("Ayuda"));
 		reset.setTooltip(new Tooltip("Limpiar campos"));

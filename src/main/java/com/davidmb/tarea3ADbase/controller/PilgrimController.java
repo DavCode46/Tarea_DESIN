@@ -21,6 +21,7 @@ import com.davidmb.tarea3ADbase.services.StayService;
 import com.davidmb.tarea3ADbase.services.StopService;
 import com.davidmb.tarea3ADbase.utils.ExportarCarnetXML;
 import com.davidmb.tarea3ADbase.utils.HelpUtil;
+import com.davidmb.tarea3ADbase.utils.ShowPDFInModal;
 import com.davidmb.tarea3ADbase.view.FxmlView;
 
 import javafx.event.ActionEvent;
@@ -188,48 +189,13 @@ public class PilgrimController implements Initializable {
 	        JasperExportManager.exportReportToPdfFile(print, outputPath);
 
 	        // Mostrar el PDF en una ventana modal
-	        showPdfInModal(outputPath);
+	        ShowPDFInModal showPDFInModal = new ShowPDFInModal();
+	       showPDFInModal.showPdfInModal(outputPath);
 	    } catch (JRException e) {
 	        e.printStackTrace();
 	        // Manejar la excepción adecuadamente
 	    }
 	}
-
-	private void showPdfInModal(String pdfPath) {
-	    // Iniciar el servidor HTTP local en un hilo separado
-//	    new Thread(() -> {
-//	        try {
-//	            LocalHttpServer.startServer(pdfPath);
-//	        } catch (IOException e) {
-//	            e.printStackTrace();
-//	        }
-//	    }).start();
-//
-//	    // Crear una nueva ventana modal
-//	    Stage modalStage = new Stage();
-//	    modalStage.initModality(Modality.APPLICATION_MODAL);
-//	    modalStage.setTitle("Reporte de Paradas Visitadas");
-//
-//	    // Crear un WebView para mostrar el PDF
-//	    WebView webView = new WebView();
-//	    WebEngine webEngine = webView.getEngine();
-//
-//	    // La URL del servidor local que sirve el PDF
-//	    String serverUrl = "http://localhost:8080/pdf";
-//
-//	    // Cargar la URL del servidor local en el WebView
-//	    webEngine.load(serverUrl);
-//
-//	    // Crear un contenedor para el WebView
-//	    VBox root = new VBox(webView);
-//	    Scene scene = new Scene(root, 800, 600);
-//
-//	    // Configurar la ventana modal
-//	    modalStage.setScene(scene);
-//	    modalStage.showAndWait();
-	}
-
-
 
 	@FXML
 	private void logout(ActionEvent event) throws IOException {

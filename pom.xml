@@ -22,7 +22,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>23</java.version>
-		 <db4o-systemPath>D:\DAM\ADT\Proyectos\menendezBlancoDavid_tarea3AD\menendezBlancoDavid_tarea3AD/lib/db4o-8.0.224.15975-core-java5.jar</db4o-systemPath>
+		<db4o-systemPath>
+			D:\DAM\ADT\Proyectos\menendezBlancoDavid_tarea3AD\menendezBlancoDavid_tarea3AD/lib/db4o-8.0.224.15975-core-java5.jar</db4o-systemPath>
 	</properties>
 	<dependencies>
 
@@ -31,6 +32,19 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox -->
+		<dependency>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+			<version>3.0.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-swing</artifactId>
+			<version>23</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>com.db4o</groupId>
