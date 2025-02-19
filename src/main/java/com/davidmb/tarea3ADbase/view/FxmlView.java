@@ -80,6 +80,17 @@ public enum FxmlView {
 			return"/fxml/StampCard.fxml";
 		}
 	},
+	SENDHOME {
+		@Override
+        public String getTitle() {
+            return getStringFromResourceBundle("sendhome.title");
+        }
+
+        @Override
+        public String getFxmlFile() {
+            return"/fxml/SendHome.fxml";
+        }
+	},
 	REGISTER_PILGRIM {
 		@Override
 		public String getTitle() {

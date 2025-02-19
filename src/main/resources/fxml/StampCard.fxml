@@ -148,7 +148,8 @@
 							
 							<Button fx:id="btnSend" text="Enviar"
 							styleClass="primary-button"
-								 prefWidth="150" maxWidth="150">
+								 prefWidth="150" maxWidth="150"
+								 onAction="#sendHome">
 								<HBox.margin>
 								 
 								 <Insets bottom="10.0" />
