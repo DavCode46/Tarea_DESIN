@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 
 import com.davidmb.tarea3ADbase.auth.Session;
 import com.davidmb.tarea3ADbase.config.StageManager;
+import com.davidmb.tarea3ADbase.db.DB4oConnection;
 import com.davidmb.tarea3ADbase.models.Service;
 import com.davidmb.tarea3ADbase.models.Stop;
 import com.davidmb.tarea3ADbase.models.User;
@@ -19,7 +20,6 @@ import com.davidmb.tarea3ADbase.services.StopService;
 import com.davidmb.tarea3ADbase.ui.StopCell;
 import com.davidmb.tarea3ADbase.utils.HelpUtil;
 import com.davidmb.tarea3ADbase.view.FxmlView;
-import com.davidmb.tarea3ADbasedb.DB4oConnection;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;

@@ -1,32 +1,42 @@
 package com.davidmb.tarea3ADbase.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class SendHome extends Service{
+public class SendHome extends Service implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 	double weight;
 	int[] volume = new int[3];
 	boolean urgent = false;
+	Long stopId;;
+
 	@Embedded
 	Address address;
-	
+
 	public SendHome() {
 	}
-	
-	public SendHome( double price, int weight, int[] volume, boolean urgent, Address address) {
+
+	public SendHome(double price, int weight, int[] volume, boolean urgent, Address address, Long stopId) {
 		super("Envío a casa", price, new ArrayList<>());
 		this.weight = weight;
 		this.volume = volume;
 		this.urgent = urgent;
 		this.address = address;
+		this.stopId = stopId;
 	}
 
 	public Long getId() {
@@ -69,12 +79,32 @@ public class SendHome extends Service{
 		this.address = address;
 	}
 
+	public Long getStopId() {
+		return stopId;
+	}
+
+	public void setStopId(Long stopId) {
+		this.stopId = stopId;
+	}
+
+	public String getAddressStreet() {
+		return address.getStreet();
+	}
+
+	public String getAddressLocality() {
+		return address.getLocality();
+	}
+
+	public String getVolumeFormatted() {
+		return volume[0] + "x" + volume[1] + "x" + volume[2];
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + Arrays.hashCode(volume);
-		result = prime * result + Objects.hash(address, id, urgent, weight);
+		result = prime * result + Objects.hash(address, id, stopId, urgent, weight);
 		return result;
 	}
 
@@ -87,14 +117,15 @@ public class SendHome extends Service{
 		if (getClass() != obj.getClass())
 			return false;
 		SendHome other = (SendHome) obj;
-		return Objects.equals(address, other.address) && Objects.equals(id, other.id) && urgent == other.urgent
-				&& Arrays.equals(volume, other.volume)
+		return Objects.equals(address, other.address) && Objects.equals(id, other.id)
+				&& Objects.equals(stopId, other.stopId) && urgent == other.urgent && Arrays.equals(volume, other.volume)
 				&& Double.doubleToLongBits(weight) == Double.doubleToLongBits(other.weight);
 	}
 
 	@Override
 	public String toString() {
 		return "SendHome [id=" + id + ", weight=" + weight + ", volume=" + Arrays.toString(volume) + ", urgent="
-				+ urgent + ", address=" + address + "]";
-	}	
+				+ urgent + ", stopId=" + stopId + ", address=" + address + "]";
+	}
+
 }

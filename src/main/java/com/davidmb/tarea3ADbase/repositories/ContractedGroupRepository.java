@@ -2,8 +2,8 @@ package com.davidmb.tarea3ADbase.repositories;
 
 import org.springframework.stereotype.Repository;
 
+import com.davidmb.tarea3ADbase.db.DB4oConnection;
 import com.davidmb.tarea3ADbase.models.ContractedGroup;
-import com.davidmb.tarea3ADbasedb.DB4oConnection;
 import com.db4o.ObjectContainer;
 
 @Repository

@@ -2,31 +2,23 @@ package com.davidmb.tarea3ADbase.models;
 
 import java.util.Objects;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.Embeddable;
 
-@Entity
+
+@Embeddable
 public class Address {
-	@Id
-	Long id;
+	
 	String street;
 	String locality;
-	
+
 	public Address() {
 	}
-	
+
 	public Address(String street, String locality) {
 		this.street = street;
 		this.locality = locality;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getStreet() {
 		return street;
@@ -46,7 +38,7 @@ public class Address {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, locality, street);
+		return Objects.hash(locality, street);
 	}
 
 	@Override
@@ -58,12 +50,13 @@ public class Address {
 		if (getClass() != obj.getClass())
 			return false;
 		Address other = (Address) obj;
-		return Objects.equals(id, other.id) && Objects.equals(locality, other.locality)
-				&& Objects.equals(street, other.street);
+		return Objects.equals(locality, other.locality) && Objects.equals(street, other.street);
 	}
 
 	@Override
 	public String toString() {
-		return "Address [id=" + id + ", street=" + street + ", locality=" + locality + "]";
+		return "Address [street=" + street + ", locality=" + locality + "]";
 	}
+
+
 }

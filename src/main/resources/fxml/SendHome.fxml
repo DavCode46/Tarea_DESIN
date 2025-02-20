@@ -36,17 +36,33 @@
 
 	<left>
 		<VBox prefHeight="571.0" prefWidth="306.0" spacing="10.0"
-        styleClass="background" alignment="CENTER">
-        
-        <Label text="Enviar a casa" styleClass="form-title" />
-        <TextField fx:id="txtWeight" promptText="Peso" />
-        <TextField fx:id="txtHeight" promptText="Altura" />
-        <TextField fx:id="txtWidth" promptText="Anchura" />
-        <TextField fx:id="txtDepth" promptText="Profundidad" />
-        <TextField fx:id="txtAddress" promptText="Dirección" />
-        <CheckBox fx:id="chkUrgent" text="Urgente" />
-        <Button fx:id="btnSend" text="Enviar" onAction="#sendHome" />
-       </VBox>
+			styleClass="background" alignment="CENTER_LEFT">
+
+			<Label text="Enviar a casa" styleClass="form-title" />
+<!-- 			<TextField fx:id="txtPilgrimName" styleClass="text-field" -->
+<!-- 				promptText="Nombre Peregrino"  editable="false"/> -->
+<!-- 			<TextField fx:id="txtServices" styleClass="text-field" -->
+<!-- 				promptText="Servicios"  editable="false"/> -->
+			<TextField fx:id="txtWeight" styleClass="text-field"
+				promptText="Peso" />
+			<TextField fx:id="txtHeight" styleClass="text-field"
+				promptText="Alto" />
+			<TextField fx:id="txtWidth" styleClass="text-field"
+				promptText="Ancho" />
+			<TextField fx:id="txtDepth" styleClass="text-field"
+				promptText="Largo" />
+			<TextField fx:id="txtAddress" styleClass="text-field"
+				promptText="Dirección" />
+			<TextField fx:id="txtLocation" styleClass="text-field"
+				promptText="Localidad" />
+			<CheckBox fx:id="chkUrgent" text="Urgente" />
+			<HBox spacing="10.0">
+				<Button fx:id="btnReset" styleClass="white-button"
+					text="Cancelar" onAction="#reset" />
+				<Button fx:id="btnSend" styleClass="primary-button"
+					text="Enviar" onAction="#sendHome" />
+			</HBox>
+		</VBox>
 	</left>
 
 	<center>
@@ -59,10 +75,10 @@
 						<Insets right="20.0" />
 					</HBox.margin>
 					<columns>
-						<TableColumn fx:id="colPilgrimName" maxWidth="4000.0"
-							prefWidth="75.0" text="Nombre Peregrino" />
-						<TableColumn fx:id="colAddress"
-							maxWidth="4000.0" prefWidth="75.0" text="Dirección" />
+<!-- 						<TableColumn fx:id="colPilgrimName" maxWidth="4000.0" -->
+<!-- 							prefWidth="75.0" text="Nombre Peregrino" /> -->
+						<TableColumn fx:id="colAddress" maxWidth="4000.0"
+							prefWidth="75.0" text="Dirección" />
 
 						<TableColumn fx:id="colLocation" maxWidth="4000.0"
 							prefWidth="75.0" text="Localidad" />
@@ -71,7 +87,10 @@
 							prefWidth="75.0" text="Peso" />
 						<TableColumn fx:id="colVolum" maxWidth="4000.0"
 							prefWidth="75.0" text="Ancho - Alto - Profundidad" />
-						
+							
+							<TableColumn fx:id="colUrgent" maxWidth="4000.0"
+							prefWidth="75.0" text="Urgente" />
+
 					</columns>
 					<VBox.margin>
 						<Insets left="10.0" right="5.0" />

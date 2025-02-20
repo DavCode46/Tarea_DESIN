@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.davidmb.tarea3ADbase.db.DB4oConnection;
 import com.davidmb.tarea3ADbase.models.Service;
-import com.davidmb.tarea3ADbasedb.DB4oConnection;
 import com.db4o.ObjectContainer;
 import com.db4o.query.Query;
 

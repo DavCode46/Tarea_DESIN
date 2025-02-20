@@ -165,6 +165,9 @@ public class StampCardController implements Initializable {
 	private ContractedGroupService contractedGroupService;
 
 	@Autowired
+	private SendHomeController sendHomeController;
+
+	@Autowired
 	private Session session;
 
 	private User user;
@@ -281,21 +284,24 @@ public class StampCardController implements Initializable {
 		}
 		clearFields();
 	}
-	
+
 	@FXML
 	private void sendHome() {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SendHome.fxml"));
-			Parent root = loader.load();
-			Scene scene = new Scene(root);
-			Stage stage = new Stage();
-			stage.initModality(Modality.APPLICATION_MODAL);
-			stage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/send.png")));
-			stage.setScene(scene);
-			stage.show();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+
+//		if (cbPilgrims.getValue() != null) {
+//			sendHomeController.setPilgrimName(cbPilgrims.getValue().split(" ")[3]);
+//		}
+//
+//		if (!selectedServicesList.getItems().isEmpty()) {
+//			List<String> services = new ArrayList<>();
+//			for (Service service : selectedServicesList.getItems()) {
+//				services.add(service.getServiceName());
+//			}
+//			String servicesString = String.join(" - ", services);
+//			sendHomeController.setServices(servicesString);
+//		}
+		stageManager.switchScene(FxmlView.SENDHOME);
+		
 	}
 
 	private void clearFields() {

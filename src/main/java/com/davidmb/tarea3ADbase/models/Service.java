@@ -4,10 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.MappedSuperclass;
+
+
 public class Service {
 	Long id;
 	String serviceName;
 	double price;
+	
+	
 	List<Long> stopIds = new ArrayList<>();
 	List<Long> contractedGroups = new ArrayList<>();
 	
