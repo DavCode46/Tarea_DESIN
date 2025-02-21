@@ -30,8 +30,7 @@ public class SendHome extends Service implements Serializable {
 	public SendHome() {
 	}
 
-	public SendHome(double price, int weight, int[] volume, boolean urgent, Address address, Long stopId) {
-		super("Envío a casa", price, new ArrayList<>());
+	public SendHome(double weight, int[] volume, boolean urgent, Address address, Long stopId) {
 		this.weight = weight;
 		this.volume = volume;
 		this.urgent = urgent;

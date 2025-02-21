@@ -36,10 +36,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -58,7 +55,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 @Controller
@@ -165,14 +161,12 @@ public class StampCardController implements Initializable {
 	private ContractedGroupService contractedGroupService;
 
 	@Autowired
-	private SendHomeController sendHomeController;
-
-	@Autowired
 	private Session session;
 
 	private User user;
 	
 	private boolean sendHomeDisponibility;
+	private boolean isCardStamped = false;
 
 	ObservableList<Service> servicesList = FXCollections.observableArrayList();
 	ObservableList<Service> selectedServices = FXCollections.observableArrayList();
@@ -198,7 +192,7 @@ public class StampCardController implements Initializable {
 	}
 
 	@FXML
-	private void stampCard(ActionEvent event) {
+	private void stampCard() {
 		if (!validateData()) {
 			return;
 		}
@@ -223,6 +217,7 @@ public class StampCardController implements Initializable {
 				createAndSaveContractedGroup(pilgrim, stop);
 				handleServiceResponse(serviceResponse, pilgrim);
 				loadStayViews();
+				isCardStamped = true;
 				return;
 			} else {
 				return;
@@ -234,6 +229,7 @@ public class StampCardController implements Initializable {
 
 		handleServiceResponse(serviceResponse, pilgrim);
 		loadStayViews();
+		isCardStamped = true;
 	}
 
 	private boolean pilgrimHasAlreadyStamped(Pilgrim pilgrim, Stop stop) {
@@ -288,9 +284,26 @@ public class StampCardController implements Initializable {
 	}
 
 	@FXML
-	private void sendHome() {
-		stageManager.switchScene(FxmlView.SENDHOME);
-		
+	private void sendHome() {    
+	    List<Long> selectedServices = getSelectedServices();
+	    
+	    
+	    if (selectedServices.isEmpty() || selectedServices.size() < 2 || !selectedServices.contains(servicesService.findByName("Envío a casa").getId())){
+	        showErrorAlert(new StringBuilder("Debes seleccionar al menos un servicio adicional además del envío a casa."),
+	                new String("Error al enviar a casa"));
+	        return;
+	    }
+
+	
+	    stampCard();
+	    
+	  
+	    if (isCardStamped) {
+	        stageManager.switchScene(FxmlView.SENDHOME);
+	    } else {
+	        showErrorAlert(new StringBuilder("Debes sellar el carnet del peregrino antes de hacer un envío a casa."),
+	                new String("Error al enviar a casa"));
+	    }
 	}
 
 	private void clearFields() {

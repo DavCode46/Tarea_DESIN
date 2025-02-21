@@ -165,7 +165,7 @@ public class ServiceController implements Initializable {
 				saveAlert(null);
 			}
 		} else {
-			if (!servicesService.findByName(name)) {
+			if (servicesService.findByName(name) == null) {
 				Service service = new Service(name, price, stops);
 				Long id = servicesService.getMaxId() + 1;
 				service.setId(id);

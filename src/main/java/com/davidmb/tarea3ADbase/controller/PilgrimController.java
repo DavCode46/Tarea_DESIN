@@ -211,19 +211,7 @@ public class PilgrimController implements Initializable {
 		}
 	}
 
-	/**
-	 * Alerta de info
-	 */
-	private void showInfoAlert(String title, String message) {
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle(title);
-		alert.setHeaderText(null);
-		alert.setContentText(message);
-		 // Cambiar el ícono de la ventana
-	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
-		alert.showAndWait();
-	}
+
 
 	/**
 	 * Alerta de error

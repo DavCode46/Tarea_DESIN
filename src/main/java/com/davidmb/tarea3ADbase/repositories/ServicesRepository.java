@@ -59,18 +59,32 @@ public class ServicesRepository {
 		return query.execute();
 	}
 
-	public boolean findByName(String name) {
-		ObjectContainer db = DB4oConnection.getInstance().getDb();
-		try {
-			Query query = db.query();
-			query.constrain(Service.class);
-			query.descend("serviceName").constrain(name);
-			List<Service> result = query.execute();
-			return !result.isEmpty();
-		} finally {
-			db.close();
-		}
+//	public boolean existsByName(String name) {
+//		ObjectContainer db = DB4oConnection.getInstance().getDb();
+//		try {
+//			Query query = db.query();
+//			query.constrain(Service.class);
+//			query.descend("serviceName").constrain(name);
+//			List<Service> result = query.execute();
+//			return !result.isEmpty();
+//		} finally {
+//			db.close();
+//		}
+//	}
+	
+	public Service findByName(String name) {
+	    ObjectContainer db = DB4oConnection.getInstance().getDb();
+	    try {
+	        Query query = db.query();
+	        query.constrain(Service.class);
+	        query.descend("serviceName").constrain(name);
+	        List<Service> result = query.execute();
+	        return result.isEmpty() ? null : result.get(0); 
+	    } finally {
+	        db.close();
+	    }
 	}
+
 	
 	public boolean checkDisponibility(String serviceName, Long stopId) {
 	    ObjectContainer db = DB4oConnection.getInstance().getDb();
@@ -90,18 +104,19 @@ public class ServicesRepository {
 
 
 	public Service findById(Long id) {
-		ObjectContainer db = DB4oConnection.getInstance().getDb();
-		Service service = null;
-		try {
-			Query query = db.query();
-			query.constrain(Service.class);
-			query.descend("id").constrain(id);
-			List<Service> result = query.execute();
-			service = result.get(0);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return service;
+	    ObjectContainer db = DB4oConnection.getInstance().getDb();
+	    try {
+	        Query query = db.query();
+	        query.constrain(Service.class);
+	        query.descend("id").constrain(id);
+	        List<Service> result = query.execute();
+	        return result.isEmpty() ? null : result.get(0); 
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	        return null;
+	    } finally {
+	        db.close();
+	    }
 	}
 
 	public List<Service> findByStopId(Long stopId) {

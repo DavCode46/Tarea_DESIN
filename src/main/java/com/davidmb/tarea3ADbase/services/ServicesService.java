@@ -32,7 +32,8 @@ public class ServicesService {
 		return servicesRepository.findById(id);
 	}
 	
-	public boolean findByName(String name) {
+	
+	public Service findByName(String name) {
 		return servicesRepository.findByName(name);
 	}
 	
