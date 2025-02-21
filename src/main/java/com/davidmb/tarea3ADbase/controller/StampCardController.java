@@ -171,6 +171,8 @@ public class StampCardController implements Initializable {
 	private Session session;
 
 	private User user;
+	
+	private boolean sendHomeDisponibility;
 
 	ObservableList<Service> servicesList = FXCollections.observableArrayList();
 	ObservableList<Service> selectedServices = FXCollections.observableArrayList();
@@ -287,19 +289,6 @@ public class StampCardController implements Initializable {
 
 	@FXML
 	private void sendHome() {
-
-//		if (cbPilgrims.getValue() != null) {
-//			sendHomeController.setPilgrimName(cbPilgrims.getValue().split(" ")[3]);
-//		}
-//
-//		if (!selectedServicesList.getItems().isEmpty()) {
-//			List<String> services = new ArrayList<>();
-//			for (Service service : selectedServicesList.getItems()) {
-//				services.add(service.getServiceName());
-//			}
-//			String servicesString = String.join(" - ", services);
-//			sendHomeController.setServices(servicesString);
-//		}
 		stageManager.switchScene(FxmlView.SENDHOME);
 		
 	}
@@ -403,9 +392,25 @@ public class StampCardController implements Initializable {
 		}
 		return ret;
 	}
+	
+	private void updateVisibility() {
+		vboxSelectedList.setVisible(cbStay.isSelected() && sendHomeDisponibility);
+		vboxSelectedList.setManaged(cbStay.isSelected() && sendHomeDisponibility);
+	}
+	
+	private void loadSendHomeDisponibility() {
+		sendHomeDisponibility = servicesService.checkDisponibility("Envío a casa", stopService.findByUserId(user.getId()).getId());
+		updateVisibility();
+	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		user = session.getLoggedInUser();
+		loadSendHomeDisponibility();
+		
+		cbStay.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            updateVisibility();
+        });
 
 		helpBtn.setTooltip(new Tooltip("Pulsa F1 para mostrar el menú de ayuda"));
 		pilgrimsTable.setTooltip(new Tooltip("Tabla de peregrinos"));
@@ -415,7 +420,7 @@ public class StampCardController implements Initializable {
 		reset.setTooltip(new Tooltip("Limpiar formulario"));
 		stampCard.setTooltip(new Tooltip("Sellar carnet"));
 
-		user = session.getLoggedInUser();
+		
 
 		stopId.setText("Parada: " + user.getUsername());
 
@@ -503,7 +508,7 @@ public class StampCardController implements Initializable {
 
 	private void loadServicesDetail() {
 		servicesList.clear();
-		servicesList.addAll(servicesService.findAll());
+		servicesList.addAll(servicesService.findByStopId(stopService.findByUserId(user.getId()).getId()));
 		servicesTable.setItems(servicesList);
 	}
 

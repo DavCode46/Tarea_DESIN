@@ -35,6 +35,14 @@ public class ServicesService {
 	public boolean findByName(String name) {
 		return servicesRepository.findByName(name);
 	}
+	
+	public List<Service> findByStopId(Long id) {
+		return servicesRepository.findByStopId(id);
+	}
+	
+	public boolean checkDisponibility(String name, Long stopId) {
+		return servicesRepository.checkDisponibility(name, stopId);
+	}
 
 	public Long getMaxId() {
 		return servicesRepository.getMaxId();

@@ -12,53 +12,53 @@ import com.db4o.query.Query;
 @Repository
 public class ServicesRepository {
 	public void save(Service service) {
-	    DB4oConnection connection = DB4oConnection.getInstance();
-	    ObjectContainer db = connection.getDb();
-	    
-	    try {
-	        db.store(service);
-	        db.commit();  
-	    } catch (Exception e) {
-	        db.rollback();  
-	        e.printStackTrace();
-	    } finally {
-	        db.close(); 
-	    }
+		DB4oConnection connection = DB4oConnection.getInstance();
+		ObjectContainer db = connection.getDb();
+
+		try {
+			db.store(service);
+			db.commit();
+		} catch (Exception e) {
+			db.rollback();
+			e.printStackTrace();
+		} finally {
+			db.close();
+		}
 	}
-	
+
 	public void update(Service service) {
 		DB4oConnection connection = DB4oConnection.getInstance();
 		ObjectContainer db = connection.getDb();
-		
+
 		try {
 			Query query = db.query();
 			query.constrain(Service.class);
 			query.descend("id").constrain(service.getId());
 			List<Service> result = query.execute();
-			
+
 			if (!result.isEmpty()) {
-                Service serviceToUpdate = result.get(0);
-                serviceToUpdate.setServiceName(service.getServiceName());
-                serviceToUpdate.setPrice(service.getPrice());
-                serviceToUpdate.setStopIds(service.getStopIds());
-                db.store(serviceToUpdate);
-                db.commit();
-            } 
-		} catch(Exception e) {
-            db.rollback();
-            e.printStackTrace();
-        } finally {
-            db.close();
-        }
+				Service serviceToUpdate = result.get(0);
+				serviceToUpdate.setServiceName(service.getServiceName());
+				serviceToUpdate.setPrice(service.getPrice());
+				serviceToUpdate.setStopIds(service.getStopIds());
+				db.store(serviceToUpdate);
+				db.commit();
+			}
+		} catch (Exception e) {
+			db.rollback();
+			e.printStackTrace();
+		} finally {
+			db.close();
+		}
 	}
 
 	public List<Service> findAll() {
 		ObjectContainer db = DB4oConnection.getInstance().getDb();
 		Query query = db.query();
 		query.constrain(Service.class);
-		return query.execute();		 
+		return query.execute();
 	}
-	
+
 	public boolean findByName(String name) {
 		ObjectContainer db = DB4oConnection.getInstance().getDb();
 		try {
@@ -72,6 +72,23 @@ public class ServicesRepository {
 		}
 	}
 	
+	public boolean checkDisponibility(String serviceName, Long stopId) {
+	    ObjectContainer db = DB4oConnection.getInstance().getDb();
+	    try {
+	        Query query = db.query();
+	        query.constrain(Service.class);
+	        query.descend("serviceName").constrain(serviceName);
+	        query.descend("stopIds").constrain(stopId).contains();
+
+	        List<Service> result = query.execute();
+	        return !result.isEmpty();
+	    } catch (Exception e) {
+	        e.printStackTrace(); 
+	        return false;
+	    }
+	}
+
+
 	public Service findById(Long id) {
 		ObjectContainer db = DB4oConnection.getInstance().getDb();
 		Service service = null;
@@ -79,17 +96,28 @@ public class ServicesRepository {
 			Query query = db.query();
 			query.constrain(Service.class);
 			query.descend("id").constrain(id);
-			List<Service> result = query.execute();		
+			List<Service> result = query.execute();
 			service = result.get(0);
-		} catch(Exception ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		return service;
 	}
-	
+
+	public List<Service> findByStopId(Long stopId) {
+		ObjectContainer db = DB4oConnection.getInstance().getDb();
+
+		Query query = db.query();
+		query.constrain(Service.class);
+		query.descend("stopIds").constrain(stopId);
+		List<Service> result = query.execute();
+		return result;
+
+	}
+
 	public Long getMaxId() {
 		ObjectContainer db = DB4oConnection.getInstance().getDb();
-		
+
 		try {
 			Query query = db.query();
 			query.constrain(Service.class);

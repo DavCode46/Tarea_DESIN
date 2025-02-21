@@ -103,7 +103,7 @@
 
 			<VBox prefHeight="300.0" prefWidth="500.0" spacing="20.0"
 				alignment="CENTER" styleClass="background"
-				BorderPane.alignment="CENTER" managed="${cbStay.selected}" visible="${cbStay.selected}" fx:id="vboxSelectedList">
+				BorderPane.alignment="CENTER" fx:id="vboxSelectedList">
 				<children>
 
 
