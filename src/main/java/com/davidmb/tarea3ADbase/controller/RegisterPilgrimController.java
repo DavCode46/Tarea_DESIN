@@ -4,6 +4,8 @@ import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -28,6 +30,7 @@ import com.davidmb.tarea3ADbase.utils.HelpUtil;
 import com.davidmb.tarea3ADbase.utils.ManagePassword;
 import com.davidmb.tarea3ADbase.view.FxmlView;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -46,43 +49,43 @@ import javafx.stage.Stage;
 public class RegisterPilgrimController implements Initializable {
 
 	@FXML
-	private TextField nameField;
+	public TextField nameField;
 
 	@FXML
-	private TextField emailField;
-	
-	@FXML
-	private Button returnBtn;
-	
-	@FXML
-	private Button helpBtn;
-	
-	@FXML
-	private Button registerBtn;
+	public TextField emailField;
 
 	@FXML
-	private PasswordField passwordField;
+	public Button returnBtn;
 
 	@FXML
-	private TextField passwordVisibleField;
+	public Button helpBtn;
 
 	@FXML
-	private PasswordField confirmPasswordField;
+	public Button registerBtn;
 
 	@FXML
-	private TextField confirmPasswordVisibleField;
+	public PasswordField passwordField;
 
 	@FXML
-	private CheckBox showPasswordCheckBox;
+	public TextField passwordVisibleField;
 
 	@FXML
-	private ComboBox<String> nationalityComboBox;
+	public PasswordField confirmPasswordField;
 
 	@FXML
-	private ComboBox<Stop> stopComboBox;
+	public TextField confirmPasswordVisibleField;
 
 	@FXML
-	private Label errorLabel;
+	public CheckBox showPasswordCheckBox;
+
+	@FXML
+	public ComboBox<String> nationalityComboBox;
+
+	@FXML
+	public ComboBox<Stop> stopComboBox;
+
+	@FXML
+	public Label errorLabel;
 
 	@Lazy
 	@Autowired
@@ -101,7 +104,7 @@ public class RegisterPilgrimController implements Initializable {
 	private PilgrimStopsService pilgrimStopsService;
 
 	@FXML
-	private void registerPilgrim() {
+	public void registerPilgrim() {
 		if (validateData()) {
 
 			String password = "";
@@ -143,7 +146,7 @@ public class RegisterPilgrimController implements Initializable {
 			}
 		}
 	}
-	
+
 	@FXML
 	private void showHelp() {
 		HelpUtil.showHelp();
@@ -206,25 +209,26 @@ public class RegisterPilgrimController implements Initializable {
 		stopService.findAll().forEach(stop -> stopComboBox.getItems().add(stop));
 	}
 
-	private void showInfoAlert(User user) {
-		Alert alert = new Alert(AlertType.INFORMATION);
-		Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-		if (user != null) {
-			alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
-			alert.setTitle("Registro completado");
-			alert.setHeaderText("Registro completado");
-			alert.setContentText("Sus datos son: \nUsuario: " + user.getEmail() + " registrado correctamente.");
-		} else {
-			alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/info.png")));
-			alert.setTitle("Registro cancelado");
-			alert.setHeaderText("Registro cancelado");
-			alert.setContentText("Registro cancelado");
-		}
+	public void showInfoAlert(User user) {
+	
+			Alert alert = new Alert(AlertType.INFORMATION);
+			Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+			if (user != null) {
+				alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
+				alert.setTitle("Registro completado");
+				alert.setHeaderText("Registro completado");
+				alert.setContentText("Sus datos son: \nUsuario: " + user.getEmail() + " registrado correctamente.");
+			} else {
+				alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/info.png")));
+				alert.setTitle("Registro cancelado");
+				alert.setHeaderText("Registro cancelado");
+				alert.setContentText("Registro cancelado");
+			}
 
-		alert.showAndWait();
+			alert.showAndWait();
 	}
 
-	private boolean confirmAlert(User user, Pilgrim pilgrim) {
+	public boolean confirmAlert(User user, Pilgrim pilgrim) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Confirma tus datos");
 		alert.setHeaderText("Confirma tus datos");
@@ -238,18 +242,22 @@ public class RegisterPilgrimController implements Initializable {
 		return alert.getResult().getButtonData().isDefaultButton();
 	}
 
+
+
 	private void showErrorAlert(StringBuilder message) {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error al registrar peregrino");
-		alert.setHeaderText("Error al registrar peregrino");
-		alert.setContentText(message.toString());
-		// Cambiar el ícono de la ventana
-		Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-		alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/error.png")));
-		alert.showAndWait();
+	
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Error al registrar peregrino");
+			alert.setHeaderText("Error al registrar peregrino");
+			alert.setContentText(message.toString());
+			// Cambiar el ícono de la ventana
+			Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+			alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/error.png")));
+			alert.showAndWait();
+		
 	}
 
-	private boolean validateData() {
+	public boolean validateData() {
 		boolean ret = false;
 		StringBuilder message = new StringBuilder();
 		String name = nameField.getText();
@@ -298,7 +306,7 @@ public class RegisterPilgrimController implements Initializable {
 			} else if (!password.equals(confirmPassword)) {
 				message.append("Las contraseñas no coinciden.\n");
 			}
-		}else {
+		} else {
 			if (passwordVisible.isEmpty()) {
 				message.append("La contraseña no puede estar vacía.\n");
 			} else if (passwordVisible.length() < 8) {

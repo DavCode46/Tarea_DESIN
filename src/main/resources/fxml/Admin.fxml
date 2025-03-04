@@ -37,21 +37,18 @@
 		<VBox prefHeight="571.0" prefWidth="306.0" spacing="10.0"
 			styleClass="background" BorderPane.alignment="CENTER">
 			<children>
-				<Button fx:id="btnHelp" onAction="#showHelp"
-					styleClass="help-button"
-					style="-fx-background-radius: 50%; -fx-max-width: 40px; -fx-max-height: 40px; -fx-padding: 5px;">
-					<HBox.margin>
-						<Insets top="20" left="20" />
-					</HBox.margin>
-					<graphic>
-						<ImageView fitHeight="30" fitWidth="30"
-							preserveRatio="true">
-							<image>
-								<Image url="@../icons/ask.png" />
-							</image>
-						</ImageView>
-					</graphic>
-				</Button>
+			   <Button fx:id="btnHelp" onAction="#showHelp" styleClass="help-button" style="-fx-background-radius: 50%; -fx-max-width: 40px; -fx-max-height: 40px; -fx-padding: 5px;">
+			    <HBox.margin>
+			        <Insets top="20" left="20"/>
+			        </HBox.margin>
+			    <graphic> 
+			        <ImageView fitHeight="30" fitWidth="30" preserveRatio="true"> 
+			            <image>
+			                <Image url="@../icons/ask.png"/>  
+			            </image>
+			        </ImageView> 
+			    </graphic> 
+			</Button>
 				<Label text="Crear parada" styleClass="form-title">
 					<font>
 						<Font size="20.0" />
@@ -62,8 +59,7 @@
 				</Label>
 				<HBox prefHeight="30.0" prefWidth="265.0">
 					<children>
-						<Label fx:id="loggedInUser" text="ID -"
-							styleClass="form-title-small" />
+						<Label fx:id="loggedInUser" text="ID -" styleClass="form-title-small" />
 						<Label fx:id="stopId" styleClass="form-title-small" />
 					</children>
 					<VBox.margin>
@@ -79,27 +75,19 @@
 				<TextField fx:id="managerEmail"
 					promptText="Email del responsable" styleClass="text-field" />
 
-				<PasswordField fx:id="managerPassword"
-					promptText="Contraseña del manager" styleClass="text-field" />
-				<TextField fx:id="managerPasswordVisibleField"
-					promptText="Contraseña del manager" VBox.vgrow="NEVER"
-					visible="false" managed="false" />
-				<PasswordField fx:id="confirmManagerPassword"
-					promptText="Confirma contraseña del manager"
-					styleClass="text-field" />
-				<TextField fx:id="confirmManagerPasswordVisibleField"
-					promptText="Confirma contraseña del manager" VBox.vgrow="NEVER"
-					visible="false" managed="false" />
+           <PasswordField fx:id="managerPassword" promptText="Contraseña del manager" styleClass="text-field" />
+            <TextField fx:id="managerPasswordVisibleField" promptText="Contraseña del manager" VBox.vgrow="NEVER" visible="false" managed="false" />
+            <PasswordField fx:id="confirmManagerPassword" promptText="Confirma contraseña del manager" styleClass="text-field" />
+            <TextField fx:id="confirmManagerPasswordVisibleField" promptText="Confirma contraseña del manager" VBox.vgrow="NEVER" visible="false" managed="false" />
 
-				<HBox spacing="10">
+            <HBox spacing="10">
 
-					<Pane HBox.hgrow="ALWAYS"></Pane>
+              <Pane HBox.hgrow="ALWAYS"></Pane>
 
-					<Region />
-					<CheckBox fx:id="showPasswordCheckBox"
-						onAction="#togglePasswordVisibility" />
-					<Label text="Mostrar contraseña" />
-				</HBox>
+              <Region />
+               	<CheckBox fx:id="showPasswordCheckBox" onAction="#togglePasswordVisibility"/>
+                <Label text="Mostrar contraseña" /> 
+             </HBox>
 
 
 
@@ -110,7 +98,7 @@
 						<Button fx:id="saveStop" text="_Guardar"
 							styleClass="primary-button" onAction="#saveStop" />
 
-						<Button fx:id="exportStopsBtn" text="Exportar paradas"
+								<Button fx:id="exportStopsBtn" text="Exportar paradas"
 							styleClass="primary-button" onAction="#exportStopDataReport" />
 					</children>
 				</HBox>
@@ -123,26 +111,12 @@
 			</BorderPane.margin>
 		</VBox>
 	</left>
-
 	<center>
 		<VBox alignment="TOP_RIGHT" prefHeight="571.0" prefWidth="692.0"
 			BorderPane.alignment="CENTER">
 			<children>
 				<HBox alignment="TOP_RIGHT" prefHeight="41.0" prefWidth="640.0">
 					<children>
-						<Button fx:id="btnAddServices" text="Añadir se_rvicios"
-							styleClass="btnLogout" minWidth="150" onAction="#addService">
-							<font>
-								<Font size="14.0" />
-							</font>
-							<HBox.margin>
-								<Insets right="5.0" top="5.0" />
-							</HBox.margin>
-							<effect>
-								<DropShadow blurType="ONE_PASS_BOX" color="#00000091" />
-							</effect>
-						</Button>
-
 						<Button fx:id="btnLogout" text="Cerrar _sesión"
 							styleClass="btnLogout" onAction="#logout">
 							<font>
@@ -155,8 +129,6 @@
 								<DropShadow blurType="ONE_PASS_BOX" color="#00000091" />
 							</effect>
 						</Button>
-
-
 					</children>
 				</HBox>
 				<TableView fx:id="stopTable" prefHeight="300.0"

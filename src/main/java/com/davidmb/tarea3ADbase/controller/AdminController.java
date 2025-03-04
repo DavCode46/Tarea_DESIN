@@ -72,73 +72,73 @@ import net.sf.jasperreports.engine.util.JRLoader;
 public class AdminController implements Initializable {
 
 	@FXML
-	private Button btnLogout;
+	public Button btnLogout;
 
 	@FXML
-	private Button btnHelp;
+	public Button btnHelp;
 
 	@FXML
-	private Button btnAddServices;
+	public Button btnAddServices;
 
 	@FXML
-	private Button exportStopsBtn;
+	public Button exportStopsBtn;
 
 	@FXML
-	private Label loggedInUser;
+	public Label loggedInUser;
 
 	@FXML
-	private TextField stopName;
+	public TextField stopName;
 
 	@FXML
-	private ComboBox<String> cbregion;
+	public ComboBox<String> cbregion;
 
 	@FXML
-	private TextField managerName;
+	public TextField managerName;
 
 	@FXML
-	private TextField managerEmail;
+	public TextField managerEmail;
 
 	@FXML
-	private PasswordField managerPassword;
+	public PasswordField managerPassword;
 
 	@FXML
-	private TextField managerPasswordVisibleField;
+	public TextField managerPasswordVisibleField;
 
 	@FXML
-	private PasswordField confirmManagerPassword;
+	public PasswordField confirmManagerPassword;
 
 	@FXML
-	private TextField confirmManagerPasswordVisibleField;
+	public TextField confirmManagerPasswordVisibleField;
 
 	@FXML
-	private CheckBox showPasswordCheckBox;
+	public CheckBox showPasswordCheckBox;
 
 	@FXML
-	private Button reset;
+	public Button reset;
 
 	@FXML
-	private Button saveStop;
+	public Button saveStop;
 
 	@FXML
-	private TableView<Stop> stopTable;
+	public TableView<Stop> stopTable;
 
 	@FXML
-	private TableColumn<Stop, Long> colStopId;
+	public TableColumn<Stop, Long> colStopId;
 
 	@FXML
-	private TableColumn<Stop, String> colStopName;
+	public TableColumn<Stop, String> colStopName;
 
 	@FXML
-	private TableColumn<Stop, String> colStopRegion;
+	public TableColumn<Stop, String> colStopRegion;
 
 	@FXML
-	private TableColumn<Stop, String> colManagerEmail;
+	public TableColumn<Stop, String> colManagerEmail;
 
 	@FXML
-	private TableColumn<Stop, String> colManagerId;
+	public TableColumn<Stop, String> colManagerId;
 
 	@FXML
-	private MenuItem deleteStops;
+	public MenuItem deleteStops;
 
 	@Lazy
 	@Autowired
@@ -189,13 +189,9 @@ public class AdminController implements Initializable {
 		clearFields();
 	}
 
-	@FXML
-	public void addService(ActionEvent event) {
-		stageManager.switchScene(FxmlView.SERVICES);
-	}
 
 	@FXML
-	private void saveStop(ActionEvent event) {
+	public void saveStop(ActionEvent event) {
 
 		if (validateData()) {
 			String password = "";
@@ -290,7 +286,7 @@ public class AdminController implements Initializable {
 				confirmManagerPasswordVisibleField, confirmManagerPassword);
 	}
 
-	private void clearFields() {
+	public void clearFields() {
 		stopName.clear();
 		managerName.clear();
 		cbregion.setValue(null);
@@ -301,7 +297,7 @@ public class AdminController implements Initializable {
 		confirmManagerPasswordVisibleField.clear();
 	}
 
-	private void saveAlert(Stop stop) {
+	public void saveAlert(Stop stop) {
 
 		Alert alert = new Alert(AlertType.INFORMATION);
 		Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
@@ -323,7 +319,7 @@ public class AdminController implements Initializable {
 		alert.showAndWait();
 	}
 
-	private void showErrorAlert(StringBuilder message) {
+	public void showErrorAlert(StringBuilder message) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error al registrar parada");
 		alert.setHeaderText("Error al registrar parada");
@@ -334,7 +330,7 @@ public class AdminController implements Initializable {
 		alert.showAndWait();
 	}
 
-	private boolean showConfirmAlert(User user, Stop stop) {
+	public boolean showConfirmAlert(User user, Stop stop) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Registrar parada");
 		alert.setHeaderText("¿Confirma los datos de la parada?");
@@ -347,7 +343,7 @@ public class AdminController implements Initializable {
 		return alert.getResult().getButtonData().isDefaultButton();
 	}
 
-	private boolean validateData() {
+	public boolean validateData() {
 		boolean ret = false;
 		StringBuilder message = new StringBuilder();
 		String name = stopName.getText();
@@ -503,7 +499,7 @@ public class AdminController implements Initializable {
 		colManagerId.setCellValueFactory(new PropertyValueFactory<>("userId"));
 	}
 
-	private void loadStopDetails() {
+	public void loadStopDetails() {
 		stopList.clear();
 		stopList.addAll(stopService.findAll());
 

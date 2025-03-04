@@ -5,75 +5,149 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.text.Font?>
 
 
-<StackPane xmlns="http://javafx.com/javafx/8.0.111"
+
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.111"
 	xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="com.davidmb.tarea3ADbase.controller.PilgrimController"
 	stylesheets="@../styles/Pilgrim.css"
 	style="-fx-background-color: #FFFFFF;" prefWidth="400" prefHeight="600">
 
-	<children>
+		<left>
+			<VBox prefHeight="571.0" prefWidth="306.0" spacing="10.0"
+				styleClass="background" BorderPane.alignment="CENTER">
+				<children>
+					<Button fx:id="btnHelp" onAction="#showHelp"
+						style="-fx-background-radius: 50%; -fx-max-width: 40px; -fx-max-height: 40px; -fx-padding: 5px;">
+						<HBox.margin>
+							<Insets top="20" left="20" />
+						</HBox.margin>
+						<graphic>
+							<ImageView fitHeight="30" fitWidth="30"
+								preserveRatio="true">
+								<image>
+									<Image url="@../icons/ask.png" />
+								</image>
+							</ImageView>
+						</graphic>
+					</Button>
+					<Label text="Modificar datos" styleClass="form-title">
+						<font>
+							<Font size="20.0" />
+						</font>
+						<VBox.margin>
+							<Insets bottom="10.0" left="20.0" top="30.0" />
+						</VBox.margin>
+					</Label>
+					<TextField fx:id="userName" promptText="Su nombre"
+						styleClass="text-field" editable="false"/>
+					<TextField fx:id="userEmail" promptText="Su email"
+						styleClass="text-field" />
 
-		<VBox alignment="CENTER" spacing="20"
-			style="-fx-background-color: #FFFFFF;" prefHeight="600"
-			prefWidth="400">
-			   <Button fx:id="helpBtn" onAction="#showHelp" styleClass="help-button" style="-fx-background-radius: 50%; -fx-max-width: 40px; -fx-max-height: 40px; -fx-padding: 5px;">
-    <VBox.margin>
-        <Insets top="20"/>
-        </VBox.margin>
-    <graphic> 
-        <ImageView fitHeight="30" fitWidth="30" preserveRatio="true"> 
-            <image>
-                <Image url="@../icons/ask.png"/>  
-            </image>
-        </ImageView> 
-    </graphic> 
-</Button>
-			<!-- Fondo Superior -->
-			<Rectangle width="400" height="150" fill="#708090" />
+					<PasswordField fx:id="userPassword"
+						promptText="Su contraseña" styleClass="text-field" />
+					<TextField fx:id="userPasswordVisibleField"
+						promptText="Su contraseña" VBox.vgrow="NEVER" visible="false"
+						managed="false" />
+					<PasswordField fx:id="confirmUserPassword"
+						promptText="Confirma su contraseña" styleClass="text-field" />
+					<TextField fx:id="confirmUserPasswordVisibleField"
+						promptText="Confirma su contraseña" VBox.vgrow="NEVER"
+						visible="false" managed="false" />
 
-			<!-- Imagen de Perfil -->
-			<StackPane alignment="CENTER" style="-fx-translate-y: -50;">
-				<Circle radius="50" fill="white" />
-				<ImageView fx:id="avatarImageView"  fitHeight="120" fitWidth="120"
-					pickOnBounds="true" preserveRatio="true">
-					
-				</ImageView>
-			</StackPane>
+					<HBox spacing="10">
 
-			<!-- Información del Usuario -->
-			<VBox alignment="CENTER" spacing="5">
-				<Label fx:id="lblName" text="Nombre del Usuario"
-					styleClass="user-name" />
-				<Label fx:id="lblNationality" text="Nacionalidad"
-					styleClass="user-role" />
+						<Pane HBox.hgrow="ALWAYS"></Pane>
+
+						<Region />
+						<CheckBox fx:id="showPasswordCheckBox"
+							onAction="#togglePasswordVisibility" />
+						<Label text="Mostrar contraseña" />
+					</HBox>
+
+
+
+					<HBox spacing="10.0" alignment="CENTER">
+						<children>
+							<Button fx:id="resetBtn" text="_Cancelar"
+								styleClass="white-button" onAction="#reset" />
+							<Button fx:id="updateUserBtn" text="_Guardar"
+								styleClass="primary-button" onAction="#updateUser" />
+						</children>
+					</HBox>
+				</children>
+				<padding>
+					<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+				</padding>
+				<BorderPane.margin>
+					<Insets />
+				</BorderPane.margin>
 			</VBox>
+		</left>
+		<center>
+			<VBox alignment="CENTER" spacing="20"
+				style="-fx-background-color: #FFFFFF;" prefHeight="600"
+				prefWidth="400">
 
-			<!-- Datos del Carnet -->
-			<VBox alignment="CENTER" spacing="10" style="-fx-padding: 0 20;">
-				<Label fx:id="lblDoExp" text="Fecha de Expiración: 01/01/2025"
-					styleClass="user-info" />
-				<Label fx:id="lblDistance" text="Distancia: 0.0 km"
-					styleClass="user-info" />
-				<Label fx:id="lnlnVips" text="Vips: 0" styleClass="user-info" />
-				<Label fx:id="lblInitialStop"
-					text="Parada Inicial: Desconocida" styleClass="user-info" />
+<!-- 				Fondo Superior -->
+				<Rectangle width="400" height="150" fill="#708090" />
+
+<!-- 				Imagen de Perfil -->
+				<StackPane alignment="CENTER"
+					style="-fx-translate-y: -50;">
+					<Circle radius="50" fill="white" />
+					<ImageView fx:id="avatarImageView" fitHeight="120"
+						fitWidth="120" pickOnBounds="true" preserveRatio="true">
+
+					</ImageView>
+				</StackPane>
+
+<!-- 				Información del Usuario -->
+				<VBox alignment="CENTER" spacing="5">
+					<Label fx:id="lblName" text="Nombre del Usuario"
+						styleClass="user-name" />
+					<Label fx:id="lblNationality" text="Nacionalidad"
+						styleClass="user-role" />
+				</VBox>
+
+<!-- 				Datos del Carnet -->
+				<VBox alignment="CENTER" spacing="10"
+					style="-fx-padding: 0 20;">
+					<Label fx:id="lblDoExp"
+						text="Fecha de Expiración: 01/01/2025" styleClass="user-info" />
+					<Label fx:id="lblDistance" text="Distancia: 0.0 km"
+						styleClass="user-info" />
+					<Label fx:id="lnlnVips" text="Vips: 0" styleClass="user-info" />
+					<Label fx:id="lblInitialStop"
+						text="Parada Inicial: Desconocida" styleClass="user-info" />
+				</VBox>
+
+<!-- 				Botón -->
+				<HBox alignment="CENTER" spacing="10">
+					<Button fx:id="logoutBtn" text="_Cerrar Sesión"
+						onAction="#logout" styleClass="white-button" />
+					<Button fx:id="exportCarnetBtn" text="_Exportar Carnet XML"
+						styleClass="primary-button" onAction="#exportCarnet" />
+					<Button fx:id="exportReportBtn"
+						text="Exportar Carnet _PDF" styleClass="primary-button"
+						onAction="#exportCarnetReport" />
+				</HBox>
 			</VBox>
-
-			<!-- Botón -->
-			<HBox alignment="CENTER" spacing="10">
-				<Button fx:id="logoutBtn" text="_Cerrar Sesión" onAction="#logout"
-					styleClass="primary-button" />
-				<Button fx:id="exportCarnetBtn" text="_Exportar Carnet" styleClass="secondary-button" onAction="#exportCarnet" />
-					<Button fx:id="exportReportBtn" text="Exportar _Informe Carnet" styleClass="secondary-button" onAction="#exportCarnetReport" />
-			</HBox>
-		</VBox>
-	</children>
-</StackPane>
+		</center>
+</BorderPane>

@@ -1,53 +1,67 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <carnet>
-    <id>1</id>
-    <fechaexp>2025-01-31</fechaexp>
-    <expedidoen>Siero</expedidoen>
+    <id>4</id>
+    <fechaexp>2025-02-18</fechaexp>
+    <expedidoen>Oviedo</expedidoen>
     <peregrino>
-        <nombre>David</nombre>
+        <nombre>david</nombre>
         <nacionalidad>Emiratos Árabes Unidos</nacionalidad>
     </peregrino>
-    <hoy>2025-01-31</hoy>
-    <distanciatotal>2109,0</distanciatotal>
+    <hoy>2025-02-23</hoy>
+    <distanciatotal>1574,0</distanciatotal>
     <paradas>
         <parada>
             <orden>1</orden>
-            <nombre>Siero</nombre>
-            <region>Esp</region>
-        </parada>
-        <parada>
-            <orden>2</orden>
-            <nombre>Nava</nombre>
-            <region>Esp</region>
-        </parada>
-        <parada>
-            <orden>3</orden>
             <nombre>Oviedo</nombre>
             <region>Esp</region>
         </parada>
         <parada>
+            <orden>2</orden>
+            <nombre>Siero</nombre>
+            <region>Esp</region>
+        </parada>
+        <parada>
+            <orden>3</orden>
+            <nombre>Nava</nombre>
+            <region>Esp</region>
+        </parada>
+        <parada>
             <orden>4</orden>
-            <nombre>Navia</nombre>
-            <region>Jam</region>
+            <nombre>Gijón</nombre>
+            <region>Esp</region>
+        </parada>
+        <parada>
+            <orden>5</orden>
+            <nombre>Siero</nombre>
+            <region>Esp</region>
+        </parada>
+        <parada>
+            <orden>6</orden>
+            <nombre>Nava</nombre>
+            <region>Esp</region>
         </parada>
     </paradas>
     <estancias>
         <estancia>
-            <id>1</id>
-            <fecha>2025-01-31</fecha>
+            <id>18</id>
+            <fecha>2025-02-18</fecha>
             <parada>Nava</parada>
+        </estancia>
+        <estancia>
+            <id>19</id>
+            <fecha>2025-02-18</fecha>
+            <parada>Gijón</parada>
+        </estancia>
+        <estancia>
+            <id>21</id>
+            <fecha>2025-02-21</fecha>
+            <parada>Siero</parada>
             <vip>Sí</vip>
         </estancia>
         <estancia>
-            <id>3</id>
-            <fecha>2025-01-31</fecha>
-            <parada>Oviedo</parada>
-            <vip>Sí</vip>
-        </estancia>
-        <estancia>
-            <id>4</id>
-            <fecha>2025-01-31</fecha>
-            <parada>Navia</parada>
+            <id>23</id>
+            <fecha>2025-02-21</fecha>
+            <parada>Nava</parada>
             <vip>Sí</vip>
         </estancia>
     </estancias>

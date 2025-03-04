@@ -16,6 +16,7 @@ import com.davidmb.tarea3ADbase.utils.HelpUtil;
 import com.davidmb.tarea3ADbase.utils.ManagePassword;
 import com.davidmb.tarea3ADbase.view.FxmlView;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -39,31 +40,31 @@ import javafx.stage.Stage;
 public class LoginController implements Initializable {
 
 	@FXML
-	private Button btnLogin;
-	
-	@FXML
-	private Button btnRegisterPilgrim;
-	
-	@FXML
-	private Button btnForgotPassword;
-	
-	@FXML
-	private Button btnHelp;
+	public Button btnLogin;
 
 	@FXML
-	private PasswordField password;
+	public Button btnRegisterPilgrim;
 
 	@FXML
-	private TextField username;
+	public Button btnForgotPassword;
 
 	@FXML
-	private CheckBox showPasswordCheckBox;
-	
+	public Button btnHelp;
+
 	@FXML
-	private TextField passwordVisibleField;
-	
+	public PasswordField password;
+
 	@FXML
-	private Label lblLogin;
+	public TextField username;
+
+	@FXML
+	public CheckBox showPasswordCheckBox;
+
+	@FXML
+	public TextField passwordVisibleField;
+
+	@FXML
+	public Label lblLogin;
 
 	@Autowired
 	private UserService userService;
@@ -71,14 +72,14 @@ public class LoginController implements Initializable {
 	@Lazy
 	@Autowired
 	private StageManager stageManager;
-	
+
 	@Autowired
 	private Session session;
 
 	@FXML
-	private void login(ActionEvent event) throws IOException {
+	public void login(ActionEvent event) throws IOException {
 		String password = "";
-		if(passwordVisibleField.isVisible()) {
+		if (passwordVisibleField.isVisible()) {
 			password = passwordVisibleField.getText();
 		} else {
 			password = this.password.getText();
@@ -88,72 +89,76 @@ public class LoginController implements Initializable {
 			User user = userService.findByEmail(getUsername());
 			session.setLoggedInUser(user);
 			showSuccessAlert(user);
-			
-			switch(user.getRole().toUpperCase()) {
-				case "ADMIN" -> stageManager.switchScene(FxmlView.ADMIN);
-				case "PEREGRINO" -> stageManager.switchScene(FxmlView.PILGRIM);
-				case "PARADA" -> stageManager.switchScene(FxmlView.STOP);
+
+			switch (user.getRole().toUpperCase()) {
+			case "ADMIN" -> stageManager.switchScene(FxmlView.ADMIN);
+			case "PEREGRINO" -> stageManager.switchScene(FxmlView.PILGRIM);
+			case "PARADA" -> stageManager.switchScene(FxmlView.STOP);
 			}
-			
-			clearFields();          
+
+			clearFields();
 
 		} else {
 			showErrorAlert();
 		}
 	}
-	
+
 	@FXML
 	private void showHelp() {
 		HelpUtil.showHelp();
 	}
-	
-	  public void handleKeyPressed(KeyEvent event) {
-	        if (event.getCode().toString().equals("F1")) {
-	            // Llamar al mismo método showHelp() al presionar F1
-	            showHelp();
-	        }
-	    }
-	
-	private void showErrorAlert() {
-        Alert alert = new Alert(AlertType.ERROR);
-        alert.setTitle("Error al iniciar sesión");
-        alert.setHeaderText("Usuario o contraseña incorrectos");
-        alert.setContentText("Por favor, introduzca un usuario y contraseña válidos");
-        // Cambiar el ícono de la ventana
-	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/error.png")));
-        alert.showAndWait();
+
+	public void handleKeyPressed(KeyEvent event) {
+		if (event.getCode().toString().equals("F1")) {
+			// Llamar al mismo método showHelp() al presionar F1
+			showHelp();
+		}
 	}
-	
-	private void showSuccessAlert(User user) {
+
+	public void showErrorAlert() {
+
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error al iniciar sesión");
+		alert.setHeaderText("Usuario o contraseña incorrectos");
+		alert.setContentText("Por favor, introduzca un usuario y contraseña válidos");
+		// Cambiar el ícono de la ventana
+		Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+		alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/error.png")));
+		alert.showAndWait();
+
+	}
+
+	public void showSuccessAlert(User user) {
+
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Sesión iniciada como: " + user.getEmail());
 		alert.setHeaderText(null);
 		alert.setContentText("¡Bienvenido: " + user.getEmail() + "!\n");
-		 // Cambiar el ícono de la ventana
-	    Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-	    alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
+		// Cambiar el ícono de la ventana
+		Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+		alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/success.png")));
 		alert.showAndWait();
+
 	}
-	
-	private void clearFields() {
+
+	public void clearFields() {
 		username.clear();
 		password.clear();
 		passwordVisibleField.clear();
 	}
 
 	@FXML
-	private void openForgotPasswordView(ActionEvent event) throws IOException {
+	public void openForgotPasswordView(ActionEvent event) throws IOException {
 		// Cambiar a la vista de "Forgot Password"
 		stageManager.switchScene(FxmlView.FORGOT_PASSWORD);
 	}
-	
+
 	@FXML
-	private void openRegisterPilgrimView(ActionEvent event) throws IOException {
+	public void openRegisterPilgrimView(ActionEvent event) throws IOException {
 		// Cambiar a la vista de "RegisterPilgrim"
 		stageManager.switchScene(FxmlView.REGISTER_PILGRIM);
 	}
-	
+
 	@FXML
 	private void togglePasswordVisibility() {
 		ManagePassword.showPassword(passwordVisibleField, password, showPasswordCheckBox, null, null);
@@ -169,13 +174,45 @@ public class LoginController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		btnHelp.setTooltip(new Tooltip("Pulsa F1 para obtener ayuda"));
-		btnLogin.setTooltip(new Tooltip("Iniciar sesión"));
-		btnRegisterPilgrim.setTooltip(new Tooltip("Registrarse como peregrino"));
-		btnForgotPassword.setTooltip(new Tooltip("Recuperar contraseña"));
+		getBtnHelp().setTooltip(new Tooltip("Pulsa F1 para obtener ayuda"));
+		getBtnLogin().setTooltip(new Tooltip("Iniciar sesión"));
+		getBtnRegisterPilgrim().setTooltip(new Tooltip("Registrarse como peregrino"));
+		getBtnForgotPassword().setTooltip(new Tooltip("Recuperar contraseña"));
 		showPasswordCheckBox.setTooltip(new Tooltip("Mostrar contraseña"));
 		username.setTooltip(new Tooltip("Su Usuario"));
 		password.setTooltip(new Tooltip("Su contraseña"));
+	}
+
+	public Button getBtnLogin() {
+		return btnLogin;
+	}
+
+	public void setBtnLogin(Button btnLogin) {
+		this.btnLogin = btnLogin;
+	}
+
+	public Button getBtnRegisterPilgrim() {
+		return btnRegisterPilgrim;
+	}
+
+	public void setBtnRegisterPilgrim(Button btnRegisterPilgrim) {
+		this.btnRegisterPilgrim = btnRegisterPilgrim;
+	}
+
+	public Button getBtnForgotPassword() {
+		return btnForgotPassword;
+	}
+
+	public void setBtnForgotPassword(Button btnForgotPassword) {
+		this.btnForgotPassword = btnForgotPassword;
+	}
+
+	public Button getBtnHelp() {
+		return btnHelp;
+	}
+
+	public void setBtnHelp(Button btnHelp) {
+		this.btnHelp = btnHelp;
 	}
 
 }
