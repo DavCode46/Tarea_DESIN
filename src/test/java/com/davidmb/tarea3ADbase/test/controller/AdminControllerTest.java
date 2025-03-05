@@ -51,7 +51,7 @@ public class AdminControllerTest {
     @InjectMocks
     private AdminController controller;
 
-    // Servicios y demás dependencias inyectadas
+
     @Mock
     private StopService stopService;
     @Mock
@@ -65,7 +65,7 @@ public class AdminControllerTest {
     @Mock
     private StageManager stageManager;
 
-    // Componentes de la interfaz (mismos nombres que en la clase)
+  
     @Mock
     private TextField stopName;
     @Mock
@@ -86,7 +86,7 @@ public class AdminControllerTest {
     private CheckBox showPasswordCheckBox;
     @Mock
     private Button saveStop;
-    // Otros componentes 
+ 
     @Mock
     private Button btnLogout;
     @Mock
@@ -105,7 +105,7 @@ public class AdminControllerTest {
 
     @BeforeAll
     static void setUpAll() {
-        // Inicializar JavaFX Toolkit para los tests 
+  
         Platform.startup(() -> {
         });
     }
@@ -115,7 +115,7 @@ public class AdminControllerTest {
         MockitoAnnotations.openMocks(this);
         spyController = spy(controller);
 
-        // Inyectar los componentes de la interfaz con los mismos nombres que en la clase
+    
         spyController.stopName = stopName;
         spyController.cbregion = cbregion;
         spyController.managerName = managerName;
@@ -138,9 +138,9 @@ public class AdminControllerTest {
      */
     @Test
     void testSaveStopSuccess() throws InterruptedException {
-        // Simular que los datos son válidos
+     
         doReturn(true).when(spyController).validateData();
-        // Simular que el usuario confirma la operación
+       
         doReturn(true).when(spyController).showConfirmAlert(any(User.class), any(Stop.class));
         doNothing().when(spyController).saveAlert(any(Stop.class));
  
@@ -148,9 +148,9 @@ public class AdminControllerTest {
         doNothing().when(spyController).loadStopDetails();
         
 
-        // Configurar los valores de entrada a través de los controles
+   
         when(stopName.getText()).thenReturn("Stop1");
-        // Simular el ComboBox de regiones
+      
         when(cbregion.getSelectionModel()).thenReturn(selectionModel);
         when(selectionModel.getSelectedItem()).thenReturn("RegionName");
         when(managerName.getText()).thenReturn("Manager1");
@@ -159,7 +159,6 @@ public class AdminControllerTest {
         when(managerPassword.getText()).thenReturn("Secret@123");
       
 
-        // Simular que el usuario se guarda y se le asigna un id
         User newUser = new User();
         newUser.setUsername("Manager1");
         newUser.setEmail("manager@example.com");
@@ -168,16 +167,15 @@ public class AdminControllerTest {
         newUser.setId(10L);
         when(userService.save(any(User.class))).thenReturn(newUser);
 
-        // La lógica de la parada: el método toma el nombre y la región (los tres primeros caracteres de "RegionName" = "Reg")
-        // Simular que no existe una parada con ese nombre y región
+       
         when(stopService.existsByNameAndRegion("Stop1", "Reg")).thenReturn(false);
         
-        // Simular que se guarda la parada y se devuelve una instancia con id (por ejemplo, id=100)
+      
         Stop newStop = new Stop("Stop1", "Reg", "Manager1");
         newStop.setUserId(10L);
         when(stopService.save(any(Stop.class))).thenReturn(newStop);
 
-        // Ejecutar el método saveStop en el FX Application Thread
+      
         CountDownLatch latch = new CountDownLatch(1);
         Platform.runLater(() -> {
             spyController.saveStop(new ActionEvent());
@@ -185,13 +183,12 @@ public class AdminControllerTest {
         });
         assertTrue(latch.await(5, TimeUnit.SECONDS));
 
-        // Verificar que se haya guardado el usuario y la parada
         verify(userService, times(1)).save(any(User.class));
         verify(stopService, times(1)).save(any(Stop.class));
-        // llamar a clearFields() y loadStopDetails()
+      
         verify(spyController, times(1)).clearFields();
         verify(spyController, times(1)).loadStopDetails();
-        // llamar a saveAlert(newStop)
+      
         verify(spyController, times(1)).saveAlert(newStop);
     }
 
@@ -200,12 +197,12 @@ public class AdminControllerTest {
      */
     @Test
     void testSaveStopCancelled() throws InterruptedException {
-        // Datos válidos
+  
         doReturn(true).when(spyController).validateData();
         doReturn(false).when(spyController).showConfirmAlert(any(User.class), any(Stop.class));
         doNothing().when(spyController).saveAlert((Stop) null);
 
-        // Configurar valores de entrada (no es necesario profundizar, ya que no se guardará)
+  
         when(stopName.getText()).thenReturn("Stop1");
         when(cbregion.getSelectionModel()).thenReturn(selectionModel);
         when(selectionModel.getSelectedItem()).thenReturn("RegionName");
@@ -213,7 +210,7 @@ public class AdminControllerTest {
         when(managerEmail.getText()).thenReturn("manager@example.com");
         when(managerPassword.getText()).thenReturn("Secret@123");
 
-        // Ejecutar el método
+      
         CountDownLatch latch = new CountDownLatch(1);
         Platform.runLater(() -> {
             spyController.saveStop(new ActionEvent());
@@ -221,11 +218,9 @@ public class AdminControllerTest {
         });
         assertTrue(latch.await(5, TimeUnit.SECONDS));
 
-        // Como se canceló la operación, se debe llamar a saveAlert(null) y no se debe guardar usuario o parada
         verify(userService, never()).save(any(User.class));
         verify(stopService, never()).save(any(Stop.class));
         verify(spyController, times(1)).saveAlert((Stop) null);
-        // Tampoco se debe limpiar la vista
         verify(spyController, never()).clearFields();
     }
 
@@ -234,12 +229,10 @@ public class AdminControllerTest {
      */
     @Test
     void testSaveStopDuplicate() throws InterruptedException {
-        // Datos válidos y confirmación positiva
         doReturn(true).when(spyController).validateData();
         doReturn(true).when(spyController).showConfirmAlert(any(User.class), any(Stop.class));
         doNothing().when(spyController).showErrorAlert(any(StringBuilder.class));
 
-        // Configurar los valores de entrada
         when(stopName.getText()).thenReturn("Stop1");
         when(cbregion.getSelectionModel()).thenReturn(selectionModel);
         when(selectionModel.getSelectedItem()).thenReturn("RegionName");
@@ -249,7 +242,6 @@ public class AdminControllerTest {
         when(managerPassword.getText()).thenReturn("Secret@123");
 
 
-        // Simular que el usuario se guarda (aunque en este caso no se procederá a guardar la parada)
         User newUser = new User();
         newUser.setUsername("Manager1");
         newUser.setEmail("manager@example.com");
@@ -258,10 +250,8 @@ public class AdminControllerTest {
         newUser.setId(10L);
         when(userService.save(any(User.class))).thenReturn(newUser);
 
-        // Simular que ya existe una parada con el mismo nombre y región
         when(stopService.existsByNameAndRegion("Stop1", "Reg")).thenReturn(true);
 
-        // Ejecutar el método
         CountDownLatch latch = new CountDownLatch(1);
         Platform.runLater(() -> {
             spyController.saveStop(new ActionEvent());
@@ -269,13 +259,10 @@ public class AdminControllerTest {
         });
         assertTrue(latch.await(5, TimeUnit.SECONDS));
 
-        // Se debe guardar el usuario (porque se confirma) pero NO se guarda la parada, y se muestra la alerta de error
         verify(userService, times(1)).save(any(User.class));
         verify(stopService, never()).save(any(Stop.class));
         verify(spyController, never()).saveAlert(any(Stop.class));
-        // Se espera que se llame a showErrorAlert con el mensaje "La parada ya existe."
         verify(spyController, times(1)).showErrorAlert(any(StringBuilder.class));
-        // Tampoco se limpia la vista ni se actualizan los detalles
         verify(spyController, never()).clearFields();
         verify(spyController, never()).loadStopDetails();
     }
