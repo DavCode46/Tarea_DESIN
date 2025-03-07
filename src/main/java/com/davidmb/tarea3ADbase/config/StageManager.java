@@ -16,7 +16,16 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 /**
- * Manages switching Scenes on the Primary Stage
+ * Clase que gestiona la navegación entre escenas en la aplicación JavaFX.
+ * 
+ * Se encarga de cambiar las vistas (`Scene`) dentro del `Stage` principal de la aplicación, 
+ * asegurando que las vistas FXML sean cargadas correctamente mediante `SpringFXMLLoader`.
+ * 
+ * - Permite cambiar entre vistas de manera dinámica.
+ * - Configura la ventana principal con tamaño y posición adecuados.
+ * - Maneja errores en la carga de vistas y cierra la aplicación en caso de fallo crítico.
+ * 
+ * @author DavidMB
  */
 public class StageManager {
 
@@ -24,17 +33,34 @@ public class StageManager {
     private final Stage primaryStage;
     private final SpringFXMLLoader springFXMLLoader;
 
+    /**
+     * Constructor de `StageManager`.
+     * 
+     * @param springFXMLLoader Cargador de vistas FXML integrado con Spring.
+     * @param stage `Stage` principal donde se mostrarán las vistas.
+     */
     public StageManager(SpringFXMLLoader springFXMLLoader, Stage stage) {
         this.springFXMLLoader = springFXMLLoader;
         this.primaryStage = stage;
     }
 
+    /**
+     * Cambia la escena actual a la vista especificada.
+     * 
+     * @param view Enumeración `FxmlView` que contiene la información de la vista a cargar.
+     */
     public void switchScene(final FxmlView view) {
     	System.out.println("Cargando vista desde: " + view.getFxmlFile());
         Parent viewRootNodeHierarchy = loadViewNodeHierarchy(view.getFxmlFile());
         show(viewRootNodeHierarchy, view.getTitle());
     }
     
+    /**
+     * Muestra la nueva escena en la ventana principal.
+     * 
+     * @param rootnode Nodo raíz de la vista a mostrar.
+     * @param title Título de la ventana.
+     */
     private void show(final Parent rootnode, String title) {
         Scene scene = prepareScene(rootnode);
         primaryStage.setTitle(title);
@@ -52,6 +78,12 @@ public class StageManager {
         }
     }
     
+    /**
+     * Prepara y devuelve la escena correspondiente al nodo raíz proporcionado.
+     * 
+     * @param rootnode Nodo raíz de la nueva escena.
+     * @return `Scene` configurada con el nodo raíz.
+     */
     private Scene prepareScene(Parent rootnode){
         Scene scene = primaryStage.getScene();
 
@@ -63,10 +95,10 @@ public class StageManager {
     }
 
     /**
-     * Loads the object hierarchy from a FXML document and returns to root node
-     * of that hierarchy.
-     *
-     * @return Parent root node of the FXML document hierarchy
+     * Carga la jerarquía de nodos desde un archivo FXML y devuelve su nodo raíz.
+     * 
+     * @param fxmlFilePath Ruta del archivo FXML a cargar.
+     * @return Nodo raíz (`Parent`) de la vista cargada.
      */
     private Parent loadViewNodeHierarchy(String fxmlFilePath) {
         Parent rootNode = null;
@@ -79,7 +111,12 @@ public class StageManager {
         return rootNode;
     }
     
-    
+    /**
+     * Registra un error en los logs y cierra la aplicación en caso de fallo crítico.
+     * 
+     * @param errorMsg Mensaje de error.
+     * @param exception Excepción ocurrida.
+     */
     private void logAndExit(String errorMsg, Exception exception) {
         LOG.error(errorMsg, exception, exception.getCause());
         Platform.exit();

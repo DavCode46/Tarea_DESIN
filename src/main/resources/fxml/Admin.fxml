@@ -98,7 +98,7 @@
 						<Button fx:id="saveStop" text="_Guardar"
 							styleClass="primary-button" onAction="#saveStop" />
 
-								<Button fx:id="exportStopsBtn" text="Exportar paradas"
+								<Button fx:id="exportStopsBtn" text="Exportar"
 							styleClass="primary-button" onAction="#exportStopDataReport" />
 					</children>
 				</HBox>

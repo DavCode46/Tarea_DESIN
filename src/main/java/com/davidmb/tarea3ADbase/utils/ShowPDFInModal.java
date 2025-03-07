@@ -20,108 +20,134 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+/**
+ * Clase que permite visualizar un archivo PDF dentro de una ventana modal en la aplicación.
+ * 
+ * Utiliza `PDFBox` para cargar y renderizar las páginas del documento PDF, y muestra la imagen 
+ * generada en un `ImageView`. La navegación entre páginas se realiza mediante botones.
+ * 
+ * @author DavidMB
+ */
 public class ShowPDFInModal {
-	public void showPdfInModal(String pdfPath) {
-	    // Usar AtomicInteger para manejar el índice de la página
-	    AtomicInteger pageIndex = new AtomicInteger(0); 
 
-	    // Crear la ventana modal
-	    Stage modalStage = new Stage();
-	    modalStage.initModality(Modality.APPLICATION_MODAL);
-	    modalStage.setTitle("Reporte de Paradas Visitadas");
-	    modalStage.setWidth(800);
-	    modalStage.setHeight(600);
-	    modalStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/report.png")));
+    /**
+     * Muestra un archivo PDF en una ventana modal con controles para navegar entre sus páginas.
+     * 
+     * @param pdfPath Ruta del archivo PDF a visualizar.
+     */
+    public void showPdfInModal(String pdfPath) {
+        // Usar AtomicInteger para manejar el índice de la página actual
+        AtomicInteger pageIndex = new AtomicInteger(0); 
 
-	    ImageView imageView = new ImageView();
-	    imageView.setFitWidth(750);
-	    imageView.setFitHeight(550);
-	    imageView.setPreserveRatio(true);
+        // Crear la ventana modal
+        Stage modalStage = new Stage();
+        modalStage.initModality(Modality.APPLICATION_MODAL);
+        modalStage.setTitle("Reporte de Paradas Visitadas");
+        modalStage.setWidth(800);
+        modalStage.setHeight(600);
+        modalStage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/report.png")));
 
-	    // Botón para retroceder en las páginas
-	    Button pageBackwardButton = new Button("<");
-	    pageBackwardButton.setTooltip(new Tooltip("Página anterior"));
-	    pageBackwardButton.setOnAction(e -> {
-	        if (pageIndex.get() > 0) {
-	            pageIndex.decrementAndGet();  // Disminuir el índice
-	            render(pdfPath, imageView, pageIndex.get()); // Llamar al método render para actualizar la imagen
-	        }
-	    });
+        // Configurar la vista de imagen donde se renderizará la página del PDF
+        ImageView imageView = new ImageView();
+        imageView.setFitWidth(750);
+        imageView.setFitHeight(550);
+        imageView.setPreserveRatio(true);
 
-	    // Botón para avanzar en las páginas
-	    Button pageForwardButton = new Button(">");
-	    pageForwardButton.setTooltip(new Tooltip("Página siguiente"));
-	    pageForwardButton.setOnAction(e -> {
-	        try {
-	            PDDocument document = Loader.loadPDF(new File(pdfPath));
-	            if (pageIndex.get() < document.getNumberOfPages() - 1) {
-	                pageIndex.incrementAndGet();  // Aumentar el índice
-	                render(pdfPath, imageView, pageIndex.get()); // Llamar al método render para actualizar la imagen
-	            }
-	            document.close();
-	        } catch (IOException ex) {
-	            ex.printStackTrace();
-	        }
-	    });
+        // Botón para retroceder en las páginas
+        Button pageBackwardButton = new Button("<");
+        pageBackwardButton.setTooltip(new Tooltip("Página anterior"));
+        pageBackwardButton.setOnAction(e -> {
+            if (pageIndex.get() > 0) {
+                pageIndex.decrementAndGet();  // Disminuir el índice
+                render(pdfPath, imageView, pageIndex.get()); // Actualizar la imagen
+            }
+        });
 
-	    ToolBar toolbar = new ToolBar(pageBackwardButton, pageForwardButton);
-	    BorderPane root = new BorderPane();
-	    root.setTop(toolbar);
-	    root.setCenter(imageView);
+        // Botón para avanzar en las páginas
+        Button pageForwardButton = new Button(">");
+        pageForwardButton.setTooltip(new Tooltip("Página siguiente"));
+        pageForwardButton.setOnAction(e -> {
+            try {
+                PDDocument document = Loader.loadPDF(new File(pdfPath));
+                if (pageIndex.get() < document.getNumberOfPages() - 1) {
+                    pageIndex.incrementAndGet();  // Aumentar el índice
+                    render(pdfPath, imageView, pageIndex.get()); // Actualizar la imagen
+                }
+                document.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
 
-	    Scene scene = new Scene(root);
-	    modalStage.setScene(scene);
+        // Crear la barra de herramientas con los botones de navegación
+        ToolBar toolbar = new ToolBar(pageBackwardButton, pageForwardButton);
+        BorderPane root = new BorderPane();
+        root.setTop(toolbar);
+        root.setCenter(imageView);
 
-	    try {
-	        File pdfFile = new File(pdfPath);
-	        if (!pdfFile.exists()) {
-	            System.out.println("El archivo PDF no existe: " + pdfPath);
-	            return;
-	        }
+        // Configurar la escena y mostrar la ventana modal
+        Scene scene = new Scene(root);
+        modalStage.setScene(scene);
 
-	        // Cargar el documento PDF
-	        PDDocument document = Loader.loadPDF(pdfFile);
-	     
+        try {
+            File pdfFile = new File(pdfPath);
+            if (!pdfFile.exists()) {
+                System.out.println("El archivo PDF no existe: " + pdfPath);
+                return;
+            }
 
-	        // Renderizar la primera página
-	        render(pdfPath, imageView, pageIndex.get());
+            // Cargar el documento PDF
+            PDDocument document = Loader.loadPDF(pdfFile);
 
-	        modalStage.setOnCloseRequest(event -> {
-	            try {
-	                if (document != null) {
-	                    document.close();
-	                }
-	            } catch (IOException e) {
-	                e.printStackTrace();
-	            }
-	        });
+            // Renderizar la primera página del PDF
+            render(pdfPath, imageView, pageIndex.get());
 
-	        modalStage.showAndWait();
+            // Cerrar el documento al cerrar la ventana modal
+            modalStage.setOnCloseRequest(event -> {
+                try {
+                    if (document != null) {
+                        document.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
 
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
-	}
+            modalStage.showAndWait();
 
-	private void render(String pdfPath, ImageView imageView, int pageIndex) {
-	    try {
-	        File pdfFile = new File(pdfPath);
-	        if (!pdfFile.exists()) {
-	            System.out.println("El archivo PDF no existe: " + pdfPath);
-	            return;
-	        }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-	        PDDocument document = Loader.loadPDF(pdfFile);
-	        PDFRenderer pdfRenderer = new PDFRenderer(document);
+    /**
+     * Renderiza y muestra una página específica del documento PDF en un `ImageView`.
+     * 
+     * @param pdfPath Ruta del archivo PDF.
+     * @param imageView Componente `ImageView` donde se mostrará la página renderizada.
+     * @param pageIndex Índice de la página a visualizar.
+     */
+    private void render(String pdfPath, ImageView imageView, int pageIndex) {
+        try {
+            File pdfFile = new File(pdfPath);
+            if (!pdfFile.exists()) {
+                System.out.println("El archivo PDF no existe: " + pdfPath);
+                return;
+            }
 
-	        // Renderizar la página solicitada
-	        BufferedImage bufferedImage = pdfRenderer.renderImageWithDPI(pageIndex, 150); // 150 DPI
-	        Image fxImage = SwingFXUtils.toFXImage(bufferedImage, null);
-	        imageView.setImage(fxImage);
+            // Cargar el documento PDF
+            PDDocument document = Loader.loadPDF(pdfFile);
+            PDFRenderer pdfRenderer = new PDFRenderer(document);
 
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
-	}
+            // Renderizar la página solicitada a imagen
+            BufferedImage bufferedImage = pdfRenderer.renderImageWithDPI(pageIndex, 150); // 150 DPI
+            Image fxImage = SwingFXUtils.toFXImage(bufferedImage, null);
+            imageView.setImage(fxImage);
 
+            document.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 import com.davidmb.tarea3ADbase.models.Stay;
 import com.davidmb.tarea3ADbase.repositories.StayRepository;
 
+
+/**
+ * Servicio que gestiona operaciones de la entidad estancias
+ */
 @Service
 public class StayService {
 

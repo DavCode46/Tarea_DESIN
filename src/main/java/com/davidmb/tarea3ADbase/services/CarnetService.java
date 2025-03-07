@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import com.davidmb.tarea3ADbase.models.Carnet;
 import com.davidmb.tarea3ADbase.repositories.CarnetRepository;
 
+/**
+ * Servicio que gestiona operaciones de la entidad carnet
+ */
 @Service
 public class CarnetService {
 

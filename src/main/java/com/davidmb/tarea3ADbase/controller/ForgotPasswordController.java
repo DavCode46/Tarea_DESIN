@@ -24,8 +24,20 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+/**
+ * Controlador para la funcionalidad de restablecimiento de contraseña.
+ * 
+ * Permite a los usuarios restablecer su contraseña ingresando su correo electrónico 
+ * y estableciendo una nueva contraseña. Incluye validaciones y alertas para notificar 
+ * al usuario sobre el estado del proceso.
+ * 
+ * Implementa `Initializable` para la configuración inicial de la interfaz gráfica.
+ * 
+ * @author DavidMB
+ */
 @Controller
 public class ForgotPasswordController implements Initializable{
+	 /** Expresión regular para validar el formato del email. */
 	private static final String EMAIL_PATTERN = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 
 	
@@ -60,6 +72,14 @@ public class ForgotPasswordController implements Initializable{
     @Autowired
     private UserService userService;
  
+    /**
+     * Método que gestiona el proceso de restablecimiento de contraseña.
+     * 
+     * - Valida los datos ingresados.
+     * - Verifica si el email existe en la base de datos.
+     * - Restablece la contraseña del usuario si los datos son correctos.
+     * - Muestra una alerta de confirmación o error según el resultado.
+     */
     @FXML
     private void resetPassword() {
         if (!validateData()) {
@@ -82,18 +102,34 @@ public class ForgotPasswordController implements Initializable{
         }
     }
     
+    /**
+     * Muestra la ventana de ayuda de la aplicación.
+     */
     @FXML
 	private void showHelp() {
 		HelpUtil.showHelp();
 	}
 
 
+    /**
+     * Vuelve a la pantalla de inicio de sesión.
+     */
     @FXML
     private void backToLogin() {
 		// Cambiar a la vista de "Login"
 		stageManager.switchScene(FxmlView.LOGIN);
     }
     
+    /**
+     * Valida los datos ingresados en el formulario antes de proceder con el restablecimiento de contraseña.
+     * 
+     * - Verifica que el email no esté vacío y tenga el formato correcto.
+     * - Comprueba si el email existe en la base de datos.
+     * - Valida que la nueva contraseña cumpla con los requisitos de seguridad.
+     * - Confirma que la contraseña y su confirmación coincidan.
+     * 
+     * @return `true` si los datos son válidos, `false` en caso contrario.
+     */
     private boolean validateData() {
 
         boolean ret = false;
@@ -140,6 +176,11 @@ public class ForgotPasswordController implements Initializable{
       		return ret;
     }
 
+    /**
+     * Muestra una alerta informativa tras restablecer la contraseña correctamente.
+     * 
+     * @param email Dirección de correo electrónico del usuario.
+     */
     private void showSuccessAlert(String email) {
 
 		Alert alert = new Alert(AlertType.INFORMATION);
@@ -152,6 +193,11 @@ public class ForgotPasswordController implements Initializable{
 		alert.showAndWait();
 	}
 	
+    /**
+     * Muestra una alerta de error con un mensaje específico.
+     * 
+     * @param message Mensaje de error que se mostrará en la alerta.
+     */
 	private void showErrorAlert(StringBuilder message) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error");
@@ -164,6 +210,12 @@ public class ForgotPasswordController implements Initializable{
 	}
 
     
+	/**
+     * Inicializa la interfaz gráfica y configura los tooltips para mejorar la usabilidad.
+     * 
+     * @param location URL de inicialización.
+     * @param resources Recursos utilizados en la inicialización.
+     */
     @Override
 	public void initialize(URL location, ResourceBundle resources) {
 		helpBtn.setTooltip(new Tooltip("Ayuda"));

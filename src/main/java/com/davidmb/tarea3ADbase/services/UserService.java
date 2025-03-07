@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 import com.davidmb.tarea3ADbase.models.User;
 import com.davidmb.tarea3ADbase.repositories.UserRepository;
 
+
+/**
+ * Servicio que gestiona operaciones de la entidad usuarios
+ */
 @Service
 public class UserService {
 

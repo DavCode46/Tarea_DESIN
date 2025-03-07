@@ -64,10 +64,18 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRLoader;
 
-/**
- * 
- */
 
+/**
+ * Controlador para la interfaz de administración de paradas.
+ * 
+ * Esta clase gestiona las funcionalidades disponibles para un administrador de paradas,
+ * incluyendo la gestión de paradas, la asignación de responsables, la exportación de reportes
+ * y la autenticación de usuarios.
+ * 
+ * Implementa `Initializable` para la inicialización de la interfaz gráfica de JavaFX.
+ * 
+ * @author DavidMB
+ */
 @Controller
 public class AdminController implements Initializable {
 
@@ -157,19 +165,28 @@ public class AdminController implements Initializable {
 	private ObservableList<Stop> stopList = FXCollections.observableArrayList();
 	private ObservableList<String> regions = FXCollections.observableArrayList();
 
+    /**
+     * Cierra la aplicación.
+     * @param event Evento de acción.
+     */
 	@FXML
 	private void exit(ActionEvent event) {
 		Platform.exit();
 	}
 
+    /**
+     * Muestra la ventana de ayuda de la aplicación.
+     */
 	@FXML
 	private void showHelp() {
 		HelpUtil.showHelp();
 	}
 
-	/**
-	 * Logout and go to the login page
-	 */
+    /**
+     * Cierra la sesión del usuario y redirige a la pantalla de inicio de sesión.
+     * @param event Evento de acción.
+     * @throws IOException Si ocurre un error al cambiar de vista.
+     */
 	@FXML
 	private void logout(ActionEvent event) throws IOException {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -184,12 +201,20 @@ public class AdminController implements Initializable {
 		}
 	}
 
+    /**
+     * Limpia los campos del formulario de registro de parada.
+     * @param event Evento de acción.
+     */
 	@FXML
 	void reset(ActionEvent event) {
 		clearFields();
 	}
 
 
+	   /**
+     * Guarda una nueva parada en la base de datos y asigna un responsable.
+     * @param event Evento de acción.
+     */
 	@FXML
 	public void saveStop(ActionEvent event) {
 
@@ -229,6 +254,10 @@ public class AdminController implements Initializable {
 		}
 	}
 
+	   /**
+     * Exporta los datos de paradas visitadas en un informe PDF y lo muestra en una ventana modal.
+     * @throws JRException Si ocurre un error al generar el informe.
+     */
 	@FXML
 	private void exportStopDataReport() throws JRException {
 		String outputPath = "src/main/resources/reports/paradas/paradasVisitadas.pdf";
@@ -280,12 +309,20 @@ public class AdminController implements Initializable {
 		showPDFInModal.showPdfInModal(outputPath);
 	}
 
+	  /**
+     * Alterna la visibilidad de los campos de contraseña entre un `PasswordField` y un `TextField`.
+     * 
+     * Permite que el usuario vea u oculte la contraseña al activar o desactivar un `CheckBox`.
+     */
 	@FXML
 	private void togglePasswordVisibility() {
 		ManagePassword.showPassword(managerPasswordVisibleField, managerPassword, showPasswordCheckBox,
 				confirmManagerPasswordVisibleField, confirmManagerPassword);
 	}
 
+    /**
+     * Limpia todos los campos del formulario de registro de parada.
+     */
 	public void clearFields() {
 		stopName.clear();
 		managerName.clear();
@@ -297,6 +334,14 @@ public class AdminController implements Initializable {
 		confirmManagerPasswordVisibleField.clear();
 	}
 
+    /**
+     * Muestra una alerta informativa tras intentar registrar una parada.
+     * 
+     * Si la parada se registró correctamente, muestra su información y el ID del responsable.
+     * Si el registro fue cancelado, muestra un mensaje de cancelación.
+     * 
+     * @param stop La parada que se intentó registrar.
+     */
 	public void saveAlert(Stop stop) {
 
 		Alert alert = new Alert(AlertType.INFORMATION);
@@ -319,6 +364,11 @@ public class AdminController implements Initializable {
 		alert.showAndWait();
 	}
 
+    /**
+     * Muestra una alerta de error con un mensaje específico.
+     * 
+     * @param message Mensaje de error que se mostrará en la alerta.
+     */
 	public void showErrorAlert(StringBuilder message) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error al registrar parada");
@@ -330,6 +380,13 @@ public class AdminController implements Initializable {
 		alert.showAndWait();
 	}
 
+    /**
+     * Muestra una alerta de confirmación antes de registrar una parada.
+     * 
+     * @param user Usuario responsable de la parada.
+     * @param stop Parada que se registrará.
+     * @return `true` si el usuario confirma el registro, `false` en caso contrario.
+     */
 	public boolean showConfirmAlert(User user, Stop stop) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Registrar parada");
@@ -343,6 +400,15 @@ public class AdminController implements Initializable {
 		return alert.getResult().getButtonData().isDefaultButton();
 	}
 
+
+    /**
+     * Valida los datos ingresados en el formulario antes de registrar una parada.
+     * 
+     * Comprueba que los campos no estén vacíos y que cumplan con los criterios establecidos
+     * (longitud, formato, coincidencia de contraseñas, etc.).
+     * 
+     * @return `true` si los datos son válidos, `false` si hay errores.
+     */
 	public boolean validateData() {
 		boolean ret = false;
 		StringBuilder message = new StringBuilder();
@@ -432,26 +498,57 @@ public class AdminController implements Initializable {
 		return ret;
 	}
 
+    /**
+     * Obtiene el nombre del responsable de la parada.
+     * 
+     * @return Nombre del responsable.
+     */
 	public String getManagerName() {
 		return managerName.getText();
 	}
 
+	   /**
+     * Obtiene el nombre de la parada ingresado en el formulario.
+     * 
+     * @return Nombre de la parada.
+     */
 	public String getStopName() {
 		return stopName.getText();
 	}
 
+    /**
+     * Obtiene la región seleccionada en el formulario.
+     * 
+     * @return Nombre de la región seleccionada.
+     */
 	public String getRegion() {
 		return cbregion.getSelectionModel().getSelectedItem();
 	}
 
+	/**
+     * Obtiene el email del responsable ingresado en el formulario.
+     * 
+     * @return Email del responsable.
+     */
 	public String getManagerEmail() {
 		return managerEmail.getText();
 	}
 
+
+    /**
+     * Obtiene la contraseña ingresada en el formulario.
+     * 
+     * @return Contraseña del responsable.
+     */
 	public String getManagerPassword() {
 		return managerPassword.getText();
 	}
 
+    /**
+     * Inicializa la interfaz de usuario y configura las propiedades de los elementos gráficos.
+     * 
+     * Se cargan las regiones, se configuran las columnas de la tabla y se muestran los datos existentes.
+     */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
@@ -487,9 +584,10 @@ public class AdminController implements Initializable {
 		loadStopDetails();
 	}
 
-	/*
-	 * Set All userTable column properties
-	 */
+
+    /**
+     * Configura las columnas de la tabla de paradas con los valores correspondientes.
+     */
 	private void setColumnProperties() {
 
 		colStopId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -499,6 +597,9 @@ public class AdminController implements Initializable {
 		colManagerId.setCellValueFactory(new PropertyValueFactory<>("userId"));
 	}
 
+    /**
+     * Carga la lista de paradas en la tabla de la interfaz gráfica.
+     */
 	public void loadStopDetails() {
 		stopList.clear();
 		stopList.addAll(stopService.findAll());
@@ -506,6 +607,9 @@ public class AdminController implements Initializable {
 		stopTable.setItems(stopList);
 	}
 
+    /**
+     * Carga las nacionalidades disponibles desde un archivo XML.
+     */
 	private void loadNationalities() {
 		try {
 			File file = new File("src/main/resources/paises.xml");

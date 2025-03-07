@@ -33,9 +33,15 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 /**
-
+ * Controlador para la pantalla de inicio de sesión.
+ * 
+ * Permite a los usuarios autenticarse en la aplicación con su usuario y contraseña,
+ * así como acceder a las opciones de registro y recuperación de contraseña.
+ * 
+ * Implementa `Initializable` para la configuración inicial de la interfaz gráfica.
+ * 
+ * @author DavidMB
  */
-
 @Controller
 public class LoginController implements Initializable {
 
@@ -76,6 +82,17 @@ public class LoginController implements Initializable {
 	@Autowired
 	private Session session;
 
+	  /**
+     * Maneja el proceso de inicio de sesión.
+     * 
+     * - Obtiene las credenciales del usuario.
+     * - Autentica al usuario en el sistema.
+     * - Redirige a la vista correspondiente según su rol.
+     * - Muestra una alerta en caso de error.
+     * 
+     * @param event Evento de acción generado por el botón de inicio de sesión.
+     * @throws IOException Si ocurre un error al cambiar de escena.
+     */
 	@FXML
 	public void login(ActionEvent event) throws IOException {
 		String password = "";
@@ -103,11 +120,19 @@ public class LoginController implements Initializable {
 		}
 	}
 
+	/**
+     * Muestra la ventana de ayuda de la aplicación.
+     */
 	@FXML
 	private void showHelp() {
 		HelpUtil.showHelp();
 	}
 
+	  /**
+     * Captura eventos de teclado para detectar la tecla F1 y mostrar la ayuda.
+     * 
+     * @param event Evento de teclado generado.
+     */
 	public void handleKeyPressed(KeyEvent event) {
 		if (event.getCode().toString().equals("F1")) {
 			// Llamar al mismo método showHelp() al presionar F1
@@ -115,6 +140,9 @@ public class LoginController implements Initializable {
 		}
 	}
 
+	/**
+     * Muestra una alerta de error en caso de credenciales incorrectas.
+     */
 	public void showErrorAlert() {
 
 		Alert alert = new Alert(AlertType.ERROR);
@@ -128,6 +156,11 @@ public class LoginController implements Initializable {
 
 	}
 
+	 /**
+     * Muestra una alerta de éxito al iniciar sesión correctamente.
+     * 
+     * @param user Usuario autenticado.
+     */
 	public void showSuccessAlert(User user) {
 
 		Alert alert = new Alert(AlertType.INFORMATION);
@@ -141,37 +174,71 @@ public class LoginController implements Initializable {
 
 	}
 
+	/**
+     * Limpia los campos del formulario de inicio de sesión.
+     */
 	public void clearFields() {
 		username.clear();
 		password.clear();
 		passwordVisibleField.clear();
 	}
 
+	  /**
+     * Permite abrir la ventana de recuperación de contraseña.
+     * 
+     * @param event Evento de acción generado al hacer clic en "¿Olvidaste tu contraseña?".
+     * @throws IOException Si ocurre un error al cambiar de escena.
+     */
 	@FXML
 	public void openForgotPasswordView(ActionEvent event) throws IOException {
 		// Cambiar a la vista de "Forgot Password"
 		stageManager.switchScene(FxmlView.FORGOT_PASSWORD);
 	}
 
+	/**
+     * Permite abrir la ventana de registro de peregrino.
+     * 
+     * @param event Evento de acción generado al hacer clic en "Registrarse como peregrino".
+     * @throws IOException Si ocurre un error al cambiar de escena.
+     */
 	@FXML
 	public void openRegisterPilgrimView(ActionEvent event) throws IOException {
 		// Cambiar a la vista de "RegisterPilgrim"
 		stageManager.switchScene(FxmlView.REGISTER_PILGRIM);
 	}
 
+	/**
+     * Alterna la visibilidad de la contraseña entre un `PasswordField` y un `TextField`.
+     */
 	@FXML
 	private void togglePasswordVisibility() {
 		ManagePassword.showPassword(passwordVisibleField, password, showPasswordCheckBox, null, null);
 	}
 
+	/**
+     * Obtiene la contraseña ingresada en el formulario.
+     * 
+     * @return Contraseña ingresada por el usuario.
+     */
 	public String getPassword() {
 		return password.getText();
 	}
 
+	/**
+     * Obtiene el nombre de usuario ingresado en el formulario.
+     * 
+     * @return Nombre de usuario ingresado.
+     */
 	public String getUsername() {
 		return username.getText();
 	}
 
+	/**
+     * Inicializa la interfaz gráfica y configura los tooltips para mejorar la usabilidad.
+     * 
+     * @param location URL de inicialización.
+     * @param resources Recursos utilizados en la inicialización.
+     */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		getBtnHelp().setTooltip(new Tooltip("Pulsa F1 para obtener ayuda"));
@@ -183,34 +250,75 @@ public class LoginController implements Initializable {
 		password.setTooltip(new Tooltip("Su contraseña"));
 	}
 
+	 /**
+     * Obtiene el botón de inicio de sesión.
+     * 
+     * @return Botón de inicio de sesión.
+     */
 	public Button getBtnLogin() {
 		return btnLogin;
 	}
 
+	/**
+     * Establece el botón de inicio de sesión.
+     * 
+     * @param btnLogin Botón de inicio de sesión.
+     */
 	public void setBtnLogin(Button btnLogin) {
 		this.btnLogin = btnLogin;
 	}
 
+
+    /**
+     * Obtiene el botón de registro de peregrino.
+     * 
+     * @return Botón de registro de peregrino.
+     */
 	public Button getBtnRegisterPilgrim() {
 		return btnRegisterPilgrim;
 	}
 
+	/**
+     * Establece el botón de registro de peregrino.
+     * 
+     * @param btnRegisterPilgrim Botón de registro de peregrino.
+     */
 	public void setBtnRegisterPilgrim(Button btnRegisterPilgrim) {
 		this.btnRegisterPilgrim = btnRegisterPilgrim;
 	}
 
+	 /**
+     * Obtiene el botón de recuperación de contraseña.
+     * 
+     * @return Botón de recuperación de contraseña.
+     */
 	public Button getBtnForgotPassword() {
 		return btnForgotPassword;
 	}
 
+	 /**
+     * Establece el botón de recuperación de contraseña.
+     * 
+     * @param btnForgotPassword Botón de recuperación de contraseña.
+     */
 	public void setBtnForgotPassword(Button btnForgotPassword) {
 		this.btnForgotPassword = btnForgotPassword;
 	}
 
+	/**
+     * Obtiene el botón de ayuda.
+     * 
+     * @return Botón de ayuda.
+     */
 	public Button getBtnHelp() {
 		return btnHelp;
 	}
 
+	/**
+     * Establece el botón de ayuda.
+     * 
+     * @param btnHelp Botón de ayuda.
+     */
 	public void setBtnHelp(Button btnHelp) {
 		this.btnHelp = btnHelp;
 	}

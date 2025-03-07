@@ -10,6 +10,10 @@ import com.davidmb.tarea3ADbase.models.PilgrimStops;
 import com.davidmb.tarea3ADbase.models.Stop;
 import com.davidmb.tarea3ADbase.repositories.PilgrimStopsRepository;
 
+
+/**
+ * Servicio que gestiona operaciones de la entidad peregrino_paradas
+ */
 @Service
 public class PilgrimStopsService {
 

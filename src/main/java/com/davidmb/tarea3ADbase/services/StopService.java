@@ -14,6 +14,10 @@ import com.davidmb.tarea3ADbase.repositories.StopRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
+
+/**
+ * Servicio que gestiona operaciones de la entidad paradas
+ */
 @Service
 public class StopService {
 

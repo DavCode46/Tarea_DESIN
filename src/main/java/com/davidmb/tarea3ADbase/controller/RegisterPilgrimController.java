@@ -45,6 +45,16 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+/**
+ * Controlador para la vista de registro de peregrinos.
+ * 
+ * Permite a un nuevo usuario registrarse como peregrino, seleccionando su nacionalidad
+ * y la parada inicial, validando los datos antes de proceder con el registro.
+ * 
+ * Implementa `Initializable` para configurar la interfaz de usuario en su inicialización.
+ * 
+ * @author DavidMB
+ */
 @Controller
 public class RegisterPilgrimController implements Initializable {
 
@@ -103,6 +113,13 @@ public class RegisterPilgrimController implements Initializable {
 	@Autowired
 	private PilgrimStopsService pilgrimStopsService;
 
+	 /**
+     * Registra un nuevo peregrino si la validación de datos es correcta.
+     * 
+     * - Se crea un nuevo usuario y peregrino.
+     * - Se le asigna un carnet con su parada inicial.
+     * - Se almacena en la base de datos.
+     */
 	@FXML
 	public void registerPilgrim() {
 		if (validateData()) {
@@ -147,23 +164,38 @@ public class RegisterPilgrimController implements Initializable {
 		}
 	}
 
+	/**
+     * Muestra la ventana de ayuda de la aplicación.
+     */
 	@FXML
 	private void showHelp() {
 		HelpUtil.showHelp();
 	}
 
+	   /**
+     * Alterna la visibilidad de la contraseña.
+     */
 	@FXML
 	private void togglePasswordVisibility() {
 		ManagePassword.showPassword(passwordVisibleField, passwordField, showPasswordCheckBox,
 				confirmPasswordVisibleField, confirmPasswordField);
 	}
 
+    /**
+     * Regresa a la pantalla de inicio de sesión.
+     */
 	@FXML
 	private void backToLogin() {
 		// Cambiar a la vista de "Login"
 		stageManager.switchScene(FxmlView.LOGIN);
 	}
 
+	  /**
+     * Inicializa la vista de registro de peregrinos.
+     * 
+     * - Carga las nacionalidades desde un archivo XML.
+     * - Carga las paradas disponibles en la base de datos.
+     */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		registerBtn.setTooltip(new Tooltip("Registrarse"));
@@ -204,11 +236,19 @@ public class RegisterPilgrimController implements Initializable {
 		}
 	}
 
+	/**
+     * Carga las paradas disponibles desde la base de datos en la interfaz.
+     */
 	private void loadStops() {
 		stopComboBox.getItems().clear();
 		stopService.findAll().forEach(stop -> stopComboBox.getItems().add(stop));
 	}
 
+	  /**
+     * Muestra una alerta informativa tras registrar el peregrino.
+     * 
+     * @param user Usuario registrado.
+     */
 	public void showInfoAlert(User user) {
 	
 			Alert alert = new Alert(AlertType.INFORMATION);
@@ -228,6 +268,14 @@ public class RegisterPilgrimController implements Initializable {
 			alert.showAndWait();
 	}
 
+
+    /**
+     * Muestra un cuadro de diálogo para confirmar los datos ingresados antes del registro.
+     * 
+     * @param user Usuario a registrar.
+     * @param pilgrim Datos del peregrino.
+     * @return `true` si el usuario confirma, `false` en caso contrario.
+     */
 	public boolean confirmAlert(User user, Pilgrim pilgrim) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Confirma tus datos");
@@ -244,6 +292,10 @@ public class RegisterPilgrimController implements Initializable {
 
 
 
+	/**
+	 * Muestra una alerta de error con el mensaje especificado.
+	 * @param message
+	 */
 	private void showErrorAlert(StringBuilder message) {
 	
 			Alert alert = new Alert(AlertType.ERROR);
@@ -257,6 +309,11 @@ public class RegisterPilgrimController implements Initializable {
 		
 	}
 
+	 /**
+     * Valida los datos ingresados en el formulario.
+     * 
+     * @return `true` si los datos son válidos, `false` en caso contrario.
+     */
 	public boolean validateData() {
 		boolean ret = false;
 		StringBuilder message = new StringBuilder();
@@ -344,6 +401,9 @@ public class RegisterPilgrimController implements Initializable {
 
 	}
 
+	/**
+     * Limpia los campos del formulario.
+     */
 	private void clearFields() {
 		nameField.clear();
 		emailField.clear();

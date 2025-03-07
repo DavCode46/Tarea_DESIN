@@ -1,68 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <carnet>
-    <id>4</id>
-    <fechaexp>2025-02-18</fechaexp>
-    <expedidoen>Oviedo</expedidoen>
+    <id>1</id>
+    <fechaexp>2025-03-07</fechaexp>
+    <expedidoen>Siero</expedidoen>
     <peregrino>
-        <nombre>david</nombre>
+        <nombre>David</nombre>
         <nacionalidad>Emiratos Árabes Unidos</nacionalidad>
     </peregrino>
-    <hoy>2025-02-23</hoy>
-    <distanciatotal>1574,0</distanciatotal>
+    <hoy>2025-03-07</hoy>
+    <distanciatotal>0,0</distanciatotal>
     <paradas>
         <parada>
             <orden>1</orden>
-            <nombre>Oviedo</nombre>
-            <region>Esp</region>
-        </parada>
-        <parada>
-            <orden>2</orden>
             <nombre>Siero</nombre>
-            <region>Esp</region>
-        </parada>
-        <parada>
-            <orden>3</orden>
-            <nombre>Nava</nombre>
-            <region>Esp</region>
-        </parada>
-        <parada>
-            <orden>4</orden>
-            <nombre>Gijón</nombre>
-            <region>Esp</region>
-        </parada>
-        <parada>
-            <orden>5</orden>
-            <nombre>Siero</nombre>
-            <region>Esp</region>
-        </parada>
-        <parada>
-            <orden>6</orden>
-            <nombre>Nava</nombre>
             <region>Esp</region>
         </parada>
     </paradas>
-    <estancias>
-        <estancia>
-            <id>18</id>
-            <fecha>2025-02-18</fecha>
-            <parada>Nava</parada>
-        </estancia>
-        <estancia>
-            <id>19</id>
-            <fecha>2025-02-18</fecha>
-            <parada>Gijón</parada>
-        </estancia>
-        <estancia>
-            <id>21</id>
-            <fecha>2025-02-21</fecha>
-            <parada>Siero</parada>
-            <vip>Sí</vip>
-        </estancia>
-        <estancia>
-            <id>23</id>
-            <fecha>2025-02-21</fecha>
-            <parada>Nava</parada>
-            <vip>Sí</vip>
-        </estancia>
-    </estancias>
+    <estancias/>
 </carnet>

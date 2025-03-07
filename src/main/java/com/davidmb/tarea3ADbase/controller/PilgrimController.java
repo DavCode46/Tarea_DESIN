@@ -49,6 +49,16 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
 
+/**
+ * Controlador para la vista del perfil del peregrino.
+ * 
+ * Permite al usuario peregrino visualizar y actualizar sus datos personales,
+ * exportar su carnet en formato XML y PDF, y cerrar sesión.
+ * 
+ * Implementa `Initializable` para configurar la interfaz de usuario en su inicialización.
+ * 
+ * @author DavidMB
+ */
 @Controller
 public class PilgrimController implements Initializable {
 	
@@ -133,6 +143,12 @@ public class PilgrimController implements Initializable {
 	@Autowired
 	private StageManager stageManager;
 
+	 /**
+     * Inicializa la vista del peregrino cargando su perfil y configurando los tooltips.
+     * 
+     * @param location URL de inicialización.
+     * @param resources Recursos utilizados en la inicialización.
+     */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		btnHelp.setTooltip(new Tooltip("Pulsa F1 para ver la ayuda"));
@@ -144,17 +160,27 @@ public class PilgrimController implements Initializable {
 		loadUserProfile(user);
 	}
 	
+	/**
+     * Muestra la ventana de ayuda de la aplicación.
+     */
 	@FXML
 	private void showHelp() {
 		HelpUtil.showHelp();
 	}
 	
+	  
+    /**
+     * Restablece los campos del formulario.
+     */
 	@FXML
 	private void reset() {
 		clearFields();
 	}
 	
 
+	 /**
+     * Limpia los campos de edición del usuario.
+     */
 	private void clearFields() {
 		userEmail.clear();
 		userPassword.clear();
@@ -163,6 +189,9 @@ public class PilgrimController implements Initializable {
 		confirmUserPasswordVisibleField.clear();
 	}
 	
+	 /**
+     * Actualiza los datos del usuario peregrino si la validación es correcta.
+     */
 	@FXML
 	public void updateUser() {
 		if(validateData()) {
@@ -187,7 +216,11 @@ public class PilgrimController implements Initializable {
 		}
 	}
 	
-	
+	/**
+     * Valida los datos ingresados en el formulario.
+     * 
+     * @return `true` si los datos son válidos, `false` en caso contrario.
+     */
 	public boolean validateData() {
 		boolean ret = false;
 		StringBuilder message = new StringBuilder();
@@ -254,6 +287,12 @@ public class PilgrimController implements Initializable {
 		return ret;
 	}
 	
+	/**
+	 * Muestra una alerta de información con el título, cabecera y mensaje especifico
+	 * @param title
+	 * @param header
+	 * @param message
+	 */
 	public void showInfoAlert(String title, String header, String message) {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle(title);
@@ -265,6 +304,11 @@ public class PilgrimController implements Initializable {
 		alert.showAndWait();
 	}
 	
+	/**
+	 * Muestra una alerta de éxito con los datos modificados.
+	 * @param pilgrim
+	 * @param user
+	 */
 	public void saveAlert(Pilgrim pilgrim, User user) {
 
 		Alert alert = new Alert(AlertType.INFORMATION);
@@ -278,6 +322,10 @@ public class PilgrimController implements Initializable {
 		alert.showAndWait();
 	}
 
+	/**
+	 * Muestra una alerta de error con el mensaje
+	 * @param message
+	 */
 	private void showErrorAlert(StringBuilder message) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error al modificar los datos");
@@ -289,6 +337,12 @@ public class PilgrimController implements Initializable {
 		alert.showAndWait();
 	}
 
+	/**
+	 * Muestra una alerta de confirmación con los datos a modificar.
+	 * @param user
+	 * @param pilgrim
+	 * @return
+	 */
 	public boolean showConfirmAlert(User user, Pilgrim pilgrim) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Modificar datos");
@@ -309,9 +363,11 @@ public class PilgrimController implements Initializable {
 				confirmUserPasswordVisibleField, confirmUserPassword);
 	}
 
-	/**
-	 * Cargar los datos del usuario y actualizarlos en la vista
-	 */
+	 /**
+     * Carga los datos del peregrino en la vista.
+     * 
+     * @param user Usuario peregrino autenticado.
+     */
 	public void loadUserProfile(User user) {
 		Pilgrim pilgrim = pilgrimService.findByUserId(user.getId());
 		
@@ -332,9 +388,9 @@ public class PilgrimController implements Initializable {
 		}
 	}
 
-	/**
-	 * Exportar los datos del carnet
-	 */
+	 /**
+     * Exporta el carnet del peregrino en formato XML.
+     */
 	@FXML
 	private void exportCarnet() {
 		exportarCarnet = new ExportarCarnetXML(stayService, stopService);
@@ -346,6 +402,9 @@ public class PilgrimController implements Initializable {
 		}
 	}
 	
+	 /**
+     * Exporta el carnet del peregrino en formato PDF.
+     */
 	@FXML
 	private void exportCarnetReport() {
 	    try {
@@ -393,6 +452,12 @@ public class PilgrimController implements Initializable {
 	    }
 	}
 
+	 /**
+     * Cierra la sesión del peregrino y lo redirige a la pantalla de inicio de sesión.
+     * 
+     * @param event Evento de acción.
+     * @throws IOException Si ocurre un error al cambiar de escena.
+     */
 	@FXML
 	private void logout(ActionEvent event) throws IOException {
 		Alert alert = new Alert(AlertType.CONFIRMATION);

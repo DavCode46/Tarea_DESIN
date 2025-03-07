@@ -18,6 +18,9 @@ import com.davidmb.tarea3ADbase.repositories.PilgrimRepository;
 import com.davidmb.tarea3ADbase.repositories.StayRepository;
 
 
+/**
+ * Servicio que gestiona operaciones de la entidad peregrino
+ */
 @Service
 public class PilgrimService {
 

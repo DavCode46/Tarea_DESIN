@@ -2,7 +2,20 @@ package com.davidmb.tarea3ADbase.view;
 
 import java.util.ResourceBundle;
 
+/**
+ * Enumeración que representa las diferentes vistas FXML utilizadas en la aplicación.
+ * Cada valor enum contiene el título de la vista y la ruta del archivo FXML correspondiente.
+ * 
+ * Proporciona métodos para obtener el título de la vista y la ruta del archivo FXML.
+ * 
+ * Uso de `ResourceBundle` para obtener los títulos de las vistas desde un archivo de recursos `Bundle.properties`.
+ * 
+ * @author DavidMB
+ */
 public enum FxmlView {
+	/**
+	 * Vista de administrador.	
+	 */
 	ADMIN {
 		@Override
 		public String getTitle() {
@@ -14,6 +27,9 @@ public enum FxmlView {
 			return "/fxml/Admin.fxml";
 		}
 	},
+	/**
+	 * Vista de peregrino.
+     */
 	PILGRIM {
 		@Override
 		public String getTitle() {
@@ -25,6 +41,9 @@ public enum FxmlView {
 			return "/fxml/Pilgrim.fxml";
 		}
 	},
+	/**
+	 * Vista de parada.
+	 */
 	STOP {
 		@Override
 		public String getTitle() {
@@ -36,6 +55,9 @@ public enum FxmlView {
 			return "/fxml/Stop.fxml";
 		}
 	},
+	/**
+	 * Vista de recuperación de contraseña.
+	 */
 	FORGOT_PASSWORD {
 		@Override
 		public String getTitle() {
@@ -47,6 +69,9 @@ public enum FxmlView {
 			return "/fxml/ForgotPassword.fxml";
 		}
 	},
+	/**
+	 * Vista de inicio
+	 */
 	LOGIN {
 		@Override
 		public String getTitle() {
@@ -58,6 +83,9 @@ public enum FxmlView {
 			return "/fxml/Login.fxml";
 		}
 	},
+	/**
+	 * Vista de registro
+	 */
 	REGISTER_PILGRIM {
 		@Override
 		public String getTitle() {

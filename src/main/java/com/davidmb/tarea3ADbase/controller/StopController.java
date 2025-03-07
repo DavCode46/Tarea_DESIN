@@ -51,9 +51,15 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 /**
+ * Controlador para la vista de gestión de paradas en la aplicación.
  * 
+ * Permite a los responsables de parada gestionar los peregrinos que pasan por su parada,
+ * aplicar filtros de fecha, registrar estancias y sellar carnets.
+ * 
+ * Implementa `Initializable` para configurar la interfaz de usuario en su inicialización.
+ * 
+ * @author DavidMB
  */
-
 @Controller
 public class StopController implements Initializable {
 
@@ -135,19 +141,26 @@ public class StopController implements Initializable {
 
 	private User user;
 
+	/**
+	 * Cerrar la aplicación
+	 * @param event
+	 */
 	@FXML
 	private void exit(ActionEvent event) {
 		Platform.exit();
 	}
 
+	/**
+	 * Mostrar la ventana de ayuda
+	 */
 	@FXML
 	private void showHelp() {
 		HelpUtil.showHelp();
 	}
 
-	/**
-	 * Logout and go to the login page
-	 */
+	   /**
+     * Cierra la sesión del usuario y redirige a la pantalla de inicio de sesión.
+     */
 	@FXML
 	private void logout(ActionEvent event) throws IOException {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -162,6 +175,9 @@ public class StopController implements Initializable {
 		}
 	}
 
+	 /**
+     * Filtra las estancias de los peregrinos en la parada entre las fechas seleccionadas.
+     */
 	@FXML
 	private void filterStays() {
 		if (dpStart.getValue() != null && dpEnd.getValue() != null) {
@@ -183,6 +199,9 @@ public class StopController implements Initializable {
 		}
 	}
 
+	/**
+	 * Limpiar los filtros de fecha
+     */
 	@FXML
 	private void clearFilters() {
 		dpStart.setValue(null);
@@ -190,11 +209,18 @@ public class StopController implements Initializable {
 		loadStayViews();
 	}
 
+	/**
+	 * Limpiar los campos del formulario
+	 * @param event
+	 */
 	@FXML
 	void reset(ActionEvent event) {
 		clearFields();
 	}
 
+	 /**
+     * Sella el carnet de un peregrino en la parada actual.
+     */
 	@FXML
 	public void stampCard(ActionEvent event) {
 		if (validateData()) {
@@ -230,11 +256,19 @@ public class StopController implements Initializable {
 		}
 	}
 
+	/**
+	 * Limpiar los campos del formulario
+	 */
 	public void clearFields() {
 		stopId.setText(null);
 		cbPilgrims.getSelectionModel().clearSelection();
 	}
 
+	/**
+	 * Muestra una alerta de éxito tras sellar el carnet del peregrino.
+	 * @param serviceResponse
+	 * @param pilgrim
+	 */
 	public void saveAlert(ServiceResponse<Pilgrim> serviceResponse, Pilgrim pilgrim) {
 		
 			Alert alert = new Alert(AlertType.INFORMATION);
@@ -252,6 +286,11 @@ public class StopController implements Initializable {
 		
 	}
 
+	/**
+	 * Muestra una alerta de error tras sellar el carnet del peregrino.
+	 * @param serviceResponse
+	 * @param pilgrim
+	 */
 	public void showServiceResponseError(ServiceResponse<Pilgrim> serviceResponse, Pilgrim pilgrim) {
 	
 			Alert alert = new Alert(AlertType.ERROR);
@@ -266,6 +305,11 @@ public class StopController implements Initializable {
 	
 	}
 
+	/**
+	 * Muestra una alerta de error.
+	 * @param message
+	 * @param header
+	 */
 	public void showErrorAlert(StringBuilder message, String header) {
 		
 			Alert alert = new Alert(AlertType.ERROR);
@@ -280,6 +324,10 @@ public class StopController implements Initializable {
 
 	}
 
+	/**
+	 * Valida que se haya seleccionado un peregrino antes de sellar el carnet.
+	 * @return true si valida false si no
+	 */
 	public boolean validateData() {
 		boolean ret = false;
 		StringBuilder message = new StringBuilder();
@@ -297,6 +345,9 @@ public class StopController implements Initializable {
 		return ret;
 	}
 
+	/**
+     * Inicializa la vista y carga la lista de peregrinos y estancias.
+     */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
@@ -327,8 +378,8 @@ public class StopController implements Initializable {
 		loadStayViews();
 	}
 
-	/*
-	 * Set All userTable column properties
+	/**
+	 * Configura las propiedades de las columnas de la tabla de peregrinos.
 	 */
 	private void setColumnProperties() {
 
@@ -379,8 +430,8 @@ public class StopController implements Initializable {
 
 	}
 
-	/*
-	 * Add All users to observable list and update table
+	/**
+	 * Carga las estancias de los peregrinos en la parada actual.
 	 */
 	public void loadStayViews() {
 		ObservableList<StayView> stayViews = FXCollections.observableArrayList();
@@ -391,18 +442,22 @@ public class StopController implements Initializable {
 		pilgrimsTable.setItems(stayViews);
 	}
 
+	/**
+	 * Carga la lista de peregrinos en el combobox.
+	 */
 	private void loadPilgrims() {
 		cbPilgrims.getItems().clear();
 		pilgrimService.findAll()
 				.forEach(pilgrim -> cbPilgrims.getItems().addAll("ID: " + pilgrim.getId() + " - " + pilgrim.getName()));
 	}
 	
+	/**
+	 * Carga la tabla de peregrinos
+	 * @param pilgrimsTable
+	 */
 	public void setPilgrimsTable(TableView<StayView> pilgrimsTable) {
 	    this.pilgrimsTable = pilgrimsTable;
 	}
 
-	/*
-	 * Validations
-	 */
 
 }
